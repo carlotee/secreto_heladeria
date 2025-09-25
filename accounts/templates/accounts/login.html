@@ -1,18 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesion</title>
+    <title>Iniciar Sesión</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <h1>
-        Inicio de Sesion
-    </h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Iniciar Sesion</button>
-    </form>
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Ingresar</button>
+        </form>
+        <a href="{% url 'registro' %}" class="btn-volver">Registrarse</a>
+    </div>
 </body>
 </html>
