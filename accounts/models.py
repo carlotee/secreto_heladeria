@@ -16,8 +16,7 @@ class Registro(models.Model):
     usuario = models.CharField(max_length=50)
     correo = models.EmailField()
     contraseña = models.CharField(max_length=128)
-    numero = models.CharField(max_length=15)
-    fecha = models.DateTimeField(auto_now_add=True)  
+    telefono = models.CharField(max_length=15)
 
     def __str__(self):
-        return f"{self.usuario} - {self.correo} - {self.fecha.strftime('%Y-%m-%d %H:%M')}"
+        return f"{self.usuario} - {self.correo}"
