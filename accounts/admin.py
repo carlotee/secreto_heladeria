@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Registro
 
-# Register your models here.
+@admin.register(Registro)
+class RegistroAdmin(admin.ModelAdmin):
+    list_display = ('usuario', 'correo','contraseña','telefono')  # columnas que quieres ver en el listado
