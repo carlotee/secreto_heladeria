@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include   # importa bien include
 from accounts import views as accounts_views
 from organizations import views as org_views
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("dashboard/", org_views.dashboard, name="dashboard"),   

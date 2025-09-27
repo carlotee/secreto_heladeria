@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-
 import os
 from dotenv import load_dotenv
 
@@ -28,7 +27,10 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-ALLOWED_HOSTS = []
+if DEBUG:
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
+else:
+    ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
 
 # Application definition
@@ -83,9 +85,9 @@ if ENGINE == "mysql":
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.mysql",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "NAME": os.getenv("DB_NAME","secreto_heladería"),
+            "USER": os.getenv("DB_USER","mysql"),
+            "PASSWORD": os.getenv("DB_PASSWORD",""),
             "HOST": os.getenv("DB_HOST", "localhost"),
             "PORT": os.getenv("DB_PORT", "3306"),
             "OPTIONS": {"charset": "utf8mb4"},
@@ -98,6 +100,8 @@ else:  # SQLite por defecto
             "NAME": BASE_DIR / os.getenv("DB_NAME", "db.sqlite3"),
         }
     }
+    
+
 
 
 # Password validation
