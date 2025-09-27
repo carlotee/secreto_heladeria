@@ -18,5 +18,8 @@ class Registro(models.Model):
     contraseña = models.CharField(max_length=128)
     telefono = models.CharField(max_length=15)
 
+    class meta:
+        db_table = 'login'
+        
     def __str__(self):
         return f"{self.usuario} - {self.correo}"
