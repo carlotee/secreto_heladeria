@@ -33,7 +33,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="{% url 'producto_lista' %}">Productos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'producto_lista' %}">Gastos Comunes</a></li>
             </ul>
         </div>
     </div>
@@ -41,31 +41,32 @@
 
 <div class="container mt-4 content-wrapper">
     {% block content %}
-    <h2 class="text-header mb-4">Productos</h2>
+    <h2 class="text-header mb-4">Gastos Comunes</h2>
 
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card mb-3">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <span>Lista Productos</span>
+                    <span>Gastos Comunes</span>
                 </div>
 
                 <div class="card-body p-0">
                     <table class="table table-striped mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Nombre</th>
-                                <th>Precio</th>
+                                <th>Total de Gastos</th>
+                                <th>Total de Boletas</th>
+                                <th>Ultimas Boletas</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for producto in productos %}
+                            {% for gastos_comunes in gastos_comunes %}
                             <tr>
-                                <td>{{ producto.nombre }}</td>
+                                <td>{{ gastos_comunes.nombre }}</td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <td colspan="4" class="text-center">No hay productos disponibles</td>
+                                <td colspan="4" class="text-center">No hay nada por ahora</td>
                             </tr>
                             {% endfor %}
                         </tbody>
