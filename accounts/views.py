@@ -1,37 +1,11 @@
 from django.shortcuts import render, redirect
 from .forms import RegistroForm
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate,login as auth_login
 from .forms import LoginForm
 from .models import Registro
 from django.db import connection
 import traceback
-
-def login_view(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            usuario = form.cleaned_data['usuario']
-            password = form.cleaned_data['password']
-            try:
-                usuario_obj = Registro.objects.get(usuario=usuario)
-            except Registro.DoesNotExist:
-                try:
-                    usuario_obj = Registro.objects.get(correo=usuario)
-                except Registro.DoesNotExist:
-                    usuario_obj = None
-
-            if usuario_obj and usuario_obj.verificar_contraseña(password):
-                # Guardar sesión manualmente
-                request.session['usuario_id'] = usuario_obj.id
-                request.session['usuario_nombre'] = usuario_obj.usuario
-                return redirect('dashboard')
-            else:
-                form.add_error(None, "Usuario o contraseña incorrectos")
-    else:
-        form = LoginForm()
-
-    return render(request, 'accounts/login.html', {'form': form})
-
+from django.contrib.auth import get_user_model
 
 def registro(request):
     try:
@@ -47,7 +21,6 @@ def registro(request):
                 print("Formulario válido")
                 print("Datos limpios:", form.cleaned_data)
                 
-                # Verificar conexión a BD
                 try:
                     with connection.cursor() as cursor:
                         cursor.execute("SELECT 1")
@@ -59,7 +32,6 @@ def registro(request):
                         'error': f'Error de base de datos: {str(db_error)}'
                     })
                 
-                # Intentar guardar manualmente
                 try:
                     print("Intentando crear registro manualmente...")
                     nuevo_registro = Registro(
@@ -80,7 +52,6 @@ def registro(request):
                     print("Error al guardar:", str(save_error))
                     print("Traceback del error:", traceback.format_exc())
                     
-                    # Intentar con form.save()
                     try:
                         print("Intentando con form.save()...")
                         registro = form.save()
@@ -109,3 +80,34 @@ def registro(request):
             'form': RegistroForm(),
             'error': f'Error interno: {str(e)}'
         })
+
+def login_view(request):
+    User = get_user_model()  # Esta línea obtiene tu modelo Usuario personalizado
+    
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            usuario = form.cleaned_data['usuario']
+            password = form.cleaned_data['password']
+            try:
+                usuario_obj = Registro.objects.get(usuario=usuario)
+            except Registro.DoesNotExist:
+                try:
+                    usuario_obj = Registro.objects.get(correo=usuario)
+                except Registro.DoesNotExist:
+                    usuario_obj = None
+
+            if usuario_obj and usuario_obj.contraseña == password:
+                django_user, created = User.objects.get_or_create(username=usuario_obj.usuario)
+                if created: 
+                    django_user.set_password(password)
+                    django_user.save()
+                auth_login(request, django_user)
+                
+                return redirect('dashboard')
+            else:
+                form.add_error(None, "Usuario o contraseña incorrectos")
+    else:
+        form = LoginForm()
+
+    return render(request, 'accounts/login.html', {'form': form})

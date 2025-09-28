@@ -1,0 +1,17 @@
+[{
+    "model": "produccion.producto",
+    "pk": 1,
+    "fields": {
+      "nombre": "Helado de Vainilla",
+      "precio": "500"
+    }
+  },
+  {
+    "model": "produccion.producto", 
+    "pk": 2,
+    "fields": {
+      "nombre": "Helado de Chocolate",
+      "precio": "500"
+    }
+  }
+]
