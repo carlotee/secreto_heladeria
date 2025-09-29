@@ -44,6 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'organizations',
+    'centro_costos',
+    'gastos_comunes',
+    'produccion',
+    'reparto',
 ]
 
 MIDDLEWARE = [
@@ -100,7 +104,7 @@ else:  # SQLite por defecto
             "NAME": BASE_DIR / os.getenv("DB_NAME", "db.sqlite3"),
         }
     }
-    
+
 
 
 
