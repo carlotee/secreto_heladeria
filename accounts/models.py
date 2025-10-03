@@ -21,5 +21,8 @@ class Registro(models.Model):
     class Meta:
         db_table = 'login'
 
+    class meta:
+        db_table = 'login'
+        
     def __str__(self):
         return f"{self.usuario} - {self.correo})"
