@@ -17,12 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include   
 from accounts import views as accounts_views
-from gastos_comunes import views as gc_views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('registro/', accounts_views.registro, name='registro'),
     path('login/', accounts_views.login_view, name='login'),
-    path('gastos_comunes/', gc_views.gastos_comunes, name='gastos_comunes'),
 ]
