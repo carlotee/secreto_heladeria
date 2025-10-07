@@ -14,11 +14,11 @@ class TipoCosto(models.Model):
 
 class Centro_Costos(models.Model):
     TIPO_COSTO_CHOICES = [
-        ("Fijo", "Fijo")
+        ("Fijo", "Fijo"),
         ("Variable","Variable"),
     ]
-    nombre = models.CharField(max_length=120)
-    tipo_costo = models.CharField(max_length=10, choices=TIPO_COSTO_CHOICES)
+    nombre = models.CharField(max_length=120,null=True, blank=True)
+    tipo_costo = models.CharField(max_length=10, choices=TIPO_COSTO_CHOICES, default="Fijo")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
