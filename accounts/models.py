@@ -20,9 +20,9 @@ class Registro(models.Model):
 
     class Meta:
         db_table = 'login'
-
+        managed = False
     class meta:
         db_table = 'login'
-        
+        managed = False
     def __str__(self):
         return f"{self.usuario} - {self.correo})"
