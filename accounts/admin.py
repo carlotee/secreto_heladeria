@@ -3,4 +3,4 @@ from .models import Registro
 
 @admin.register(Registro)
 class RegistroAdmin(admin.ModelAdmin):
-    list_display = ('usuario', 'correo','contraseña','telefono')  # columnas que quieres ver en el listado
+    list_display = ('usuario', 'correo', 'contraseña', 'telefono')
