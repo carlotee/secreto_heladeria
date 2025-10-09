@@ -5,7 +5,6 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from .models import Proveedor
-from django.http import JsonResponse
 from django.core.paginator import Paginator
 import re
 

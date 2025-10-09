@@ -3,7 +3,6 @@ from django.contrib import messages
 from django.db.models import Q
 from django.utils import timezone
 from .models import Producto
-from django.http import JsonResponse
 from django.core.paginator import Paginator
 
 def producto(request):
