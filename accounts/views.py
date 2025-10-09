@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 
 def registro(request):
     try:
-        print("=== INICIO REGISTRO ===")
+        print("=== REGISTRO ===")
         if request.method == 'POST':
             print("Método POST detectado")
             print("Datos POST:", request.POST)
@@ -42,7 +42,6 @@ def registro(request):
                     )
                     print("Objeto creado:", nuevo_registro)
                     
-                    # Guardar
                     nuevo_registro.save()
                     print("¡Guardado exitosamente!")
                     
@@ -64,7 +63,7 @@ def registro(request):
                             'error': f'Error al guardar: {str(form_save_error)}'
                         })
             else:
-                print("Formulario NO válido")
+                print("Formulario no válido")
                 print("Errores del formulario:", form.errors)
                 
         else:
