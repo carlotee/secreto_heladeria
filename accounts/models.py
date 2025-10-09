@@ -8,7 +8,6 @@ class Usuario(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
     def __str__(self):
         return f"{self.username} ({self.email})"
 
@@ -20,9 +19,7 @@ class Registro(models.Model):
 
     class Meta:
         db_table = 'login'
+        managed = False  
 
-    class meta:
-        db_table = 'login'
-        
     def __str__(self):
-        return f"{self.usuario} - {self.correo})"
+        return f"{self.usuario} - {self.correo}"
