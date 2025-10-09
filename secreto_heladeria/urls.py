@@ -17,31 +17,32 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include   
 from accounts import views as accounts_views
-<<<<<<< HEAD
-from centro_costos import views
-from django.urls import path
+from centro_costos import views as centro_costos_views
 from produccion import views as produccion_views
 from proveedores import views as proveedores_views
 
 urlpatterns = [
-    path('', views.dashboard, name='dashboard'),
-    path('periodos/', views.periodo, name='periodo'),
-    path('periodos/crear/', views.periodo_crear, name='periodo_crear'),
-    path('periodos/<int:pk>/editar/', views.periodo_act, name='periodo_act'),
-    path('periodos/<int:pk>/eliminar/', views.periodo_eliminar, name='periodo_eliminar'),
-    path('tipos-costo/', views.tipo_costo, name='tipo_costo'),
-    path('tipos-costo/crear/', views.tipo_costo_crear, name='tipo_costo_crear'),
-    path('tipos-costo/<int:pk>/editar/', views.tipo_costo_act, name='tipo_costo_act'),
-    path('tipos-costo/<int:pk>/eliminar/', views.tipo_costo_elim, name='tipo_costo_elim'),
-    path('centros-costos/', views.centro_costos, name='centro_costos'),
-    path('centros-costos/crear/', views.centro_costos_crear, name='centro_costos_crear'),
-    path('centros-costos/<int:pk>/editar/', views.centro_costos_act, name='centro_costos_act'),
-    path('centros-costos/<int:pk>/eliminar/', views.centro_costos_elim, name='centro_costos_elim'),
-    path('costos/', views.costo, name='costo'),
-    path('costos/crear/', views.costo_crear, name='costo_crear'),
-    path('costos/<int:pk>/editar/', views.costo_act, name='costo_act'),
-    path('costos/<int:pk>/eliminar/', views.costo_eliminar, name='costo_eliminar'),
-    path('reportes/periodo/<int:periodo_id>/', views.reporte_periodo, name='reporte_periodo'),
+    path('', centro_costos_views.dashboard, name='dashboard'),
+    path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/register/', accounts_views.registro, name='registro'),
+    path('periodos/', centro_costos_views.periodo, name='periodo'),
+    path('periodos/crear/', centro_costos_views.periodo_crear, name='periodo_crear'),
+    path('periodos/<int:pk>/editar/', centro_costos_views.periodo_act, name='periodo_act'),
+    path('periodos/<int:pk>/eliminar/', centro_costos_views.periodo_eliminar, name='periodo_eliminar'),
+    path('tipos-costo/', centro_costos_views.tipo_costo, name='tipo_costo'),
+    path('tipos-costo/crear/', centro_costos_views.tipo_costo_crear, name='tipo_costo_crear'),
+    path('tipos-costo/<int:pk>/editar/', centro_costos_views.tipo_costo_act, name='tipo_costo_act'),
+    path('tipos-costo/<int:pk>/eliminar/', centro_costos_views.tipo_costo_elim, name='tipo_costo_elim'),
+    path('centros-costos/', centro_costos_views.centro_costos, name='centro_costos'),
+    path('centros-costos/crear/', centro_costos_views.centro_costos_crear, name='centro_costos_crear'),
+    path('centros-costos/<int:pk>/editar/', centro_costos_views.centro_costos_act, name='centro_costos_act'),
+    path('centros-costos/<int:pk>/eliminar/', centro_costos_views.centro_costos_elim, name='centro_costos_elim'),
+    path('costos/', centro_costos_views.costo, name='costo'),
+    path('costos/crear/', centro_costos_views.costo_crear, name='costo_crear'),
+    path('costos/<int:pk>/editar/', centro_costos_views.costo_act, name='costo_act'),
+    path('costos/<int:pk>/eliminar/', centro_costos_views.costo_eliminar, name='costo_eliminar'),
+    path('reportes/periodo/<int:periodo_id>/', centro_costos_views.reporte_periodo, name='reporte_periodo'),
     path('', produccion_views.producto, name='producto'),
     path('crear/', produccion_views.producto_crear, name='producto_crear'),
     path('<int:pk>/', produccion_views.producto_detalle, name='producto_detalle'),
@@ -53,14 +54,3 @@ urlpatterns = [
     path('<int:pk>/editar/', proveedores_views.proveedor_act, name='proveedor_act'),
     path('<int:pk>/eliminar/', proveedores_views.proveedor_eliminar, name='proveedor_eliminar'),
 ]
-=======
-from centro_costos import views as centro_costos_views
-
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('registro/', accounts_views.registro, name='registro'),
-    path('login/', accounts_views.login_view, name='login'),
-    path('tipo_costo/', centro_costos_views.tipo_costo, name='tipo_costo'),
-]
->>>>>>> main

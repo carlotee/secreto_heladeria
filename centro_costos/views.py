@@ -3,7 +3,6 @@ from django.contrib import messages
 from django.db.models import Q, Sum
 from .models import Periodo, TipoCosto, Centro_Costos, Costo
 
-<<<<<<< HEAD
 # ==================== PERIODO ====================
 
 def periodo(request):
@@ -331,14 +330,3 @@ def reporte_periodo(request, periodo_id):
         'total_variables': total_variables,
     }
     return render(request, 'centro_costos/reporte_periodo.html', context)
-=======
-# Create your views here.
-def centro_costos_view(request):
-    return render(request, 'centro_costos/centro_costos.html')
-
-def costo(request, id):
-    return render(request, 'centro_costos/costo.html', {'id': id})
-
-def tipo_costo(request):
-    return render(request, 'centro_costos/tipo_costo.html')
->>>>>>> main
