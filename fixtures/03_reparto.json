@@ -1,0 +1,12 @@
+[
+  {
+    "model": "reparto.reparto",
+    "pk": 1,
+    "fields": {
+      "valor": "15000",
+      "fecha_reparto": "2025-09-29T10:00:00Z",
+      "fecha_ingreso": "2025-09-28T18:30:00Z",
+      "usuario": 1
+    }
+  }
+]

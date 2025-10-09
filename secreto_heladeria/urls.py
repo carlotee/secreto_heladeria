@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include   
 from accounts import views as accounts_views
+<<<<<<< HEAD
 from centro_costos import views
 from django.urls import path
 from produccion import views as produccion_views
@@ -52,3 +53,14 @@ urlpatterns = [
     path('<int:pk>/editar/', proveedores_views.proveedor_act, name='proveedor_act'),
     path('<int:pk>/eliminar/', proveedores_views.proveedor_eliminar, name='proveedor_eliminar'),
 ]
+=======
+from centro_costos import views as centro_costos_views
+
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('registro/', accounts_views.registro, name='registro'),
+    path('login/', accounts_views.login_view, name='login'),
+    path('tipo_costo/', centro_costos_views.tipo_costo, name='tipo_costo'),
+]
+>>>>>>> main

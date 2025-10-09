@@ -46,7 +46,7 @@ def registro(request):
                     nuevo_registro.save()
                     print("¡Guardado exitosamente!")
                     
-                    return redirect('dashboard')
+                    return redirect('tipo_costo')
                     
                 except Exception as save_error:
                     print("Error al guardar:", str(save_error))
@@ -56,7 +56,7 @@ def registro(request):
                         print("Intentando con form.save()...")
                         registro = form.save()
                         print("Form.save() exitoso:", registro)
-                        return redirect('dashboard')
+                        return redirect('tipo_costo')
                     except Exception as form_save_error:
                         print("Error con form.save():", str(form_save_error))
                         return render(request, 'accounts/registro.html', {
@@ -82,32 +82,27 @@ def registro(request):
         })
 
 def login_view(request):
-    User = get_user_model()  # Esta línea obtiene tu modelo Usuario personalizado
+    User = get_user_model()
     
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             usuario = form.cleaned_data['usuario']
             password = form.cleaned_data['password']
-            try:
-                usuario_obj = Registro.objects.get(usuario=usuario)
-            except Registro.DoesNotExist:
-                try:
-                    usuario_obj = Registro.objects.get(correo=usuario)
-                except Registro.DoesNotExist:
-                    usuario_obj = None
+
+            usuario_obj = (Registro.objects.filter(usuario=usuario).first() or
+                           Registro.objects.filter(correo=usuario).first())
 
             if usuario_obj and usuario_obj.contraseña == password:
                 django_user, created = User.objects.get_or_create(username=usuario_obj.usuario)
-                if created: 
+                if created:
                     django_user.set_password(password)
                     django_user.save()
                 auth_login(request, django_user)
-                
-                return redirect('dashboard')
+                return redirect('tipo_costo')
             else:
                 form.add_error(None, "Usuario o contraseña incorrectos")
     else:
         form = LoginForm()
-
+    
     return render(request, 'accounts/login.html', {'form': form})
