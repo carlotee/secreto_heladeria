@@ -46,7 +46,7 @@ def registro(request):
                     nuevo_registro.save()
                     print("¡Guardado exitosamente!")
                     
-                    return redirect('tipo_costo')
+                    return redirect('dashboard')
                     
                 except Exception as save_error:
                     print("Error al guardar:", str(save_error))
@@ -56,7 +56,7 @@ def registro(request):
                         print("Intentando con form.save()...")
                         registro = form.save()
                         print("Form.save() exitoso:", registro)
-                        return redirect('tipo_costo')
+                        return redirect('dashboard')
                     except Exception as form_save_error:
                         print("Error con form.save():", str(form_save_error))
                         return render(request, 'accounts/registro.html', {
@@ -99,7 +99,7 @@ def login_view(request):
                     django_user.set_password(password)
                     django_user.save()
                 auth_login(request, django_user)
-                return redirect('tipo_costo')
+                return redirect('dashboard')
             else:
                 form.add_error(None, "Usuario o contraseña incorrectos")
     else:

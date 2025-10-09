@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Q, Sum
@@ -270,7 +271,7 @@ def costo_eliminar(request, pk):
 
 
 # ==================== REPORTES Y DASHBOARD ====================
-
+@login_required
 def dashboard(request):
     """Dashboard con resumen de costos"""
     from django.db.models import Count
