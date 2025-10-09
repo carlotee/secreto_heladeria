@@ -2,8 +2,6 @@ from django import forms
 from .models import Periodo, TipoCosto, Centro_Costos, Costo
 
 
-# ==================== PERIODO ====================
-
 class PeriodoForm(forms.ModelForm):
     """Formulario para crear o actualizar un periodo"""
     class Meta:
@@ -20,9 +18,6 @@ class PeriodoForm(forms.ModelForm):
             }),
         }
 
-
-# ==================== TIPO DE COSTO ====================
-
 class TipoCostoForm(forms.ModelForm):
     """Formulario para crear o actualizar un tipo de costo"""
     class Meta:
@@ -35,8 +30,6 @@ class TipoCostoForm(forms.ModelForm):
             }),
         }
 
-
-# ==================== CENTRO DE COSTOS ====================
 
 class CentroCostosForm(forms.ModelForm):
     """Formulario para crear o actualizar un centro de costos"""
@@ -53,8 +46,6 @@ class CentroCostosForm(forms.ModelForm):
             }),
         }
 
-
-# ==================== COSTO ====================
 
 class CostoForm(forms.ModelForm):
     """Formulario para crear o actualizar un costo"""
@@ -83,8 +74,6 @@ class CostoForm(forms.ModelForm):
             }),
         }
 
-
-# ==================== CONFIRMAR ELIMINACIÓN ====================
 
 class ConfirmarEliminarCostoForm(forms.Form):
     """Formulario simple para confirmar la eliminación de un costo"""

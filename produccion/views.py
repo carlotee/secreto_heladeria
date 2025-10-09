@@ -6,16 +6,9 @@ from .models import Producto
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 
-# ==================== PRODUCTO VIEWS ====================
-
 def producto(request):
-    """
-    Lista todos los productos activos (no eliminados)
-    Incluye búsqueda y paginación
-    """
     productos = Producto.objects.filter(deleted_at__isnull=True).order_by('-created_at')
     
-    # Búsqueda
     search = request.GET.get('search', '')
     if search:
         productos = productos.filter(
@@ -23,7 +16,6 @@ def producto(request):
             Q(descripcion__icontains=search)
         )
     
-    # Filtro por rango de precio
     precio_min = request.GET.get('precio_min')
     precio_max = request.GET.get('precio_max')
     
@@ -32,8 +24,7 @@ def producto(request):
     if precio_max:
         productos = productos.filter(precio__lte=precio_max)
     
-    # Paginación
-    paginator = Paginator(productos, 10)  # 10 productos por página
+    paginator = Paginator(productos, 10)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -48,9 +39,6 @@ def producto(request):
 
 
 def producto_detalle(request, pk):
-    """
-    Detalle de un producto específico
-    """
     producto = get_object_or_404(Producto, pk=pk, deleted_at__isnull=True)
     
     context = {
@@ -60,15 +48,11 @@ def producto_detalle(request, pk):
 
 
 def producto_crear(request):
-    """
-    Crear nuevo producto
-    """
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         descripcion = request.POST.get('descripcion')
         precio = request.POST.get('precio')
         
-        # Validaciones
         if not nombre:
             messages.error(request, 'El nombre del producto es obligatorio')
         elif not precio:
@@ -93,9 +77,6 @@ def producto_crear(request):
 
 
 def producto_act(request, pk):
-    """
-    Actualizar producto existente
-    """
     producto = get_object_or_404(Producto, pk=pk, deleted_at__isnull=True)
     
     if request.method == 'POST':
@@ -103,7 +84,6 @@ def producto_act(request, pk):
         descripcion = request.POST.get('descripcion')
         precio = request.POST.get('precio')
         
-        # Validaciones
         if not nombre:
             messages.error(request, 'El nombre del producto es obligatorio')
         elif not precio:
@@ -131,10 +111,6 @@ def producto_act(request, pk):
 
 
 def producto_eliminar(request, pk):
-    """
-    Eliminación lógica del producto (soft delete)
-    Establece deleted_at en lugar de eliminar el registro
-    """
     producto = get_object_or_404(Producto, pk=pk, deleted_at__isnull=True)
     
     if request.method == 'POST':

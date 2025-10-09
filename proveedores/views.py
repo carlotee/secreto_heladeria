@@ -9,28 +9,19 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 import re
 
-# ==================== FUNCIONES DE VALIDACIÓN ====================
 
 def validar_rut(rut):
-    """
-    Valida formato de RUT chileno
-    Formato esperado: 12345678-9 o 12.345.678-9
-    """
-    # Eliminar puntos y guiones
     rut_limpio = rut.replace(".", "").replace("-", "")
     
     if len(rut_limpio) < 2:
         return False
     
-    # Separar número y dígito verificador
     rut_numero = rut_limpio[:-1]
     dv = rut_limpio[-1].upper()
     
-    # Validar que el número sea numérico
     if not rut_numero.isdigit():
         return False
     
-    # Calcular dígito verificador
     suma = 0
     multiplo = 2
     
@@ -51,37 +42,23 @@ def validar_rut(rut):
 
 
 def validar_telefono(telefono):
-    """
-    Valida formato de teléfono chileno
-    Acepta: +56912345678, 912345678, +56 9 1234 5678, etc.
-    """
     if not telefono:
-        return True  # Teléfono es opcional
+        return True  
     
-    # Eliminar espacios, guiones y paréntesis
     tel_limpio = re.sub(r'[\s\-\(\)]', '', telefono)
     
-    # Validar que solo contenga números y opcionalmente un +
     if not re.match(r'^\+?\d+$', tel_limpio):
         return False
     
-    # Eliminar el + para contar dígitos
     tel_numeros = tel_limpio.replace('+', '')
     
-    # Debe tener entre 8 y 15 dígitos
     return 8 <= len(tel_numeros) <= 15
 
 
-# ==================== PROVEEDOR VIEWS ====================
 
 def proveedor(request):
-    """
-    Lista todos los proveedores activos (no eliminados)
-    Incluye búsqueda, filtros y paginación
-    """
     proveedores = Proveedor.objects.filter(deleted_at__isnull=True).order_by('nombre')
     
-    # Búsqueda
     search = request.GET.get('search', '')
     if search:
         proveedores = proveedores.filter(
@@ -91,18 +68,15 @@ def proveedor(request):
             Q(ciudad__icontains=search)
         )
     
-    # Filtro por ciudad
     ciudad = request.GET.get('ciudad')
     if ciudad:
         proveedores = proveedores.filter(ciudad__iexact=ciudad)
     
-    # Obtener lista de ciudades para el filtro
     ciudades = Proveedor.objects.filter(
         deleted_at__isnull=True
     ).values_list('ciudad', flat=True).distinct().order_by('ciudad')
     
-    # Paginación
-    paginator = Paginator(proveedores, 15)  # 15 proveedores por página
+    paginator = Paginator(proveedores, 15)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -117,9 +91,6 @@ def proveedor(request):
 
 
 def proveedor_detalle(request, pk):
-    """
-    Detalle de un proveedor específico
-    """
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
     
     context = {
@@ -129,9 +100,6 @@ def proveedor_detalle(request, pk):
 
 
 def proveedor_crear(request):
-    """
-    Crear nuevo proveedor con validaciones
-    """
     if request.method == 'POST':
         nombre = request.POST.get('nombre', '').strip()
         rut = request.POST.get('rut', '').strip()
@@ -140,7 +108,6 @@ def proveedor_crear(request):
         direccion = request.POST.get('direccion', '').strip()
         ciudad = request.POST.get('ciudad', '').strip()
         
-        # Validaciones
         errores = []
         
         if not nombre:
@@ -187,9 +154,6 @@ def proveedor_crear(request):
 
 
 def proveedor_act(request, pk):
-    """
-    Actualizar proveedor existente
-    """
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
     
     if request.method == 'POST':
@@ -200,7 +164,6 @@ def proveedor_act(request, pk):
         direccion = request.POST.get('direccion', '').strip()
         ciudad = request.POST.get('ciudad', '').strip()
         
-        # Validaciones
         errores = []
         
         if not nombre:
@@ -250,9 +213,6 @@ def proveedor_act(request, pk):
 
 
 def proveedor_eliminar(request, pk):
-    """
-    Eliminación lógica del proveedor (soft delete)
-    """
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
     
     if request.method == 'POST':
@@ -268,9 +228,6 @@ def proveedor_eliminar(request, pk):
 
 
 def proveedor_restore(request, pk):
-    """
-    Restaurar proveedor eliminado
-    """
     proveedor = get_object_or_404(Proveedor, pk=pk)
     
     if request.method == 'POST':
@@ -289,12 +246,8 @@ def proveedor_restore(request, pk):
 
 
 def proveedor_deleted_list(request):
-    """
-    Lista de proveedores eliminados (papelera)
-    """
     proveedores = Proveedor.objects.filter(deleted_at__isnull=False).order_by('-deleted_at')
     
-    # Búsqueda en eliminados
     search = request.GET.get('search', '')
     if search:
         proveedores = proveedores.filter(
@@ -311,14 +264,11 @@ def proveedor_deleted_list(request):
 
 
 def proveedor_permanent_delete(request, pk):
-    """
-    Eliminación permanente del proveedor (hard delete)
-    """
     proveedor = get_object_or_404(Proveedor, pk=pk)
     
     if request.method == 'POST':
         nombre = proveedor.nombre
-        proveedor.delete()  # Eliminación permanente
+        proveedor.delete() 
         messages.success(request, f'Proveedor "{nombre}" eliminado permanentemente')
         return redirect('proveedor_deleted_list')
     
@@ -326,30 +276,3 @@ def proveedor_permanent_delete(request, pk):
         'proveedor': proveedor
     }
     return render(request, 'proveedores/proveedor_confirm_permanent_delete.html', context)
-
-
-# ==================== API / AJAX VIEWS ====================
-
-def proveedor_search_ajax(request):
-    """
-    Búsqueda de proveedores vía AJAX
-    """
-    search = request.GET.get('q', '')
-    proveedores = Proveedor.objects.filter(
-        deleted_at__isnull=True,
-        nombre__icontains=search
-    )[:10]
-    
-    results = [
-        {
-            'id': p.id,
-            'nombre': p.nombre,
-            'rut': p.rut,
-            'correo': p.correo,
-            'telefono': p.telefono,
-            'ciudad': p.ciudad
-        }
-        for p in proveedores
-    ]
-    
-    return JsonResponse({'proveedores': results})
