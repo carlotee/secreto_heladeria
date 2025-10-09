@@ -1,0 +1,25 @@
+<h1>Proveedores Eliminados</h1>
+
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Nombre</th>
+    <th>Correo</th>
+    <th>Eliminado en</th>
+    <th>Acciones</th>
+  </tr>
+  {% for p in proveedores %}
+  <tr>
+    <td>{{ p.nombre }}</td>
+    <td>{{ p.correo }}</td>
+    <td>{{ p.deleted_at }}</td>
+    <td>
+      <a href="{% url 'proveedor_restore' p.id %}">Restaurar</a> |
+      <a href="{% url 'proveedor_permanent_delete' p.id %}">Eliminar definitivo</a>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="4">No hay proveedores eliminados.</td></tr>
+  {% endfor %}
+</table>
+
+<a href="{% url 'proveedor_list' %}">Volver al listado</a>

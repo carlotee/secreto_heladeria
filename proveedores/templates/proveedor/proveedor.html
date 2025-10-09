@@ -1,0 +1,47 @@
+<h1>Listado de Proveedores</h1>
+
+<form method="get">
+  <input type="text" name="search" placeholder="Buscar proveedor..." value="{{ search }}">
+  <button type="submit">Buscar</button>
+</form>
+
+<p>Total: {{ total_proveedores }}</p>
+
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Nombre</th>
+    <th>RUT</th>
+    <th>Correo</th>
+    <th>Ciudad</th>
+    <th>Acciones</th>
+  </tr>
+  {% for p in proveedores %}
+  <tr>
+    <td>{{ p.nombre }}</td>
+    <td>{{ p.rut }}</td>
+    <td>{{ p.correo }}</td>
+    <td>{{ p.ciudad }}</td>
+    <td>
+      <a href="{% url 'proveedor_detalle' p.id %}">Ver</a> |
+      <a href="{% url 'proveedor_edit' p.id %}">Editar</a> |
+      <a href="{% url 'proveedor_eliminar' p.id %}">Eliminar</a>
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td colspan="5">No hay proveedores registrados.</td></tr>
+  {% endfor %}
+</table>
+
+<a href="{% url 'proveedor_crear' %}">➕ Nuevo proveedor</a>
+
+{% if proveedores.has_other_pages %}
+  <div>
+    {% if proveedores.has_previous %}
+      <a href="?page={{ proveedores.previous_page_number }}">Anterior</a>
+    {% endif %}
+    Página {{ proveedores.number }} de {{ proveedores.paginator.num_pages }}
+    {% if proveedores.has_next %}
+      <a href="?page={{ proveedores.next_page_number }}">Siguiente</a>
+    {% endif %}
+  </div>
+{% endif %}

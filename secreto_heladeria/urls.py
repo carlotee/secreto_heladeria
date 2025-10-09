@@ -49,4 +49,6 @@ urlpatterns = [
     path('<int:pk>/editar/', proveedores_views.proveedor_act, name='proveedor_act'),
     path('<int:pk>/eliminar/', proveedores_views.proveedor_eliminar, name='proveedor_eliminar'),
     path('logout/', accounts_views.logout_view, name='logout'),
+    path('<int:proveedor_id>/dashboard/', proveedores_views.proveedor_dashboard, name='proveedor_dashboard'),
+
 ]

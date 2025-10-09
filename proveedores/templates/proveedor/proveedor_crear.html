@@ -1,0 +1,14 @@
+<h1>Agregar Proveedor</h1>
+
+<form method="post">
+  {% csrf_token %}
+  <p><label>Nombre:</label> <input type="text" name="nombre" required></p>
+  <p><label>RUT:</label> <input type="text" name="rut" required></p>
+  <p><label>Teléfono:</label> <input type="text" name="telefono"></p>
+  <p><label>Correo:</label> <input type="email" name="correo" required></p>
+  <p><label>Dirección:</label> <input type="text" name="direccion" required></p>
+  <p><label>Ciudad:</label> <input type="text" name="ciudad" required></p>
+
+  <button type="submit">Guardar</button>
+  <a href="{% url 'proveedor_list' %}">Cancelar</a>
+</form>
