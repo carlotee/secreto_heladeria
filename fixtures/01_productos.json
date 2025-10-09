@@ -77,5 +77,93 @@
       "nombre": "Helado de Tiramisú",
       "precio": "700"
     }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 11,
+    "fields": {
+      "nombre": "Helado de Cheesecake",
+      "precio": "700"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 12,
+    "fields": {
+      "nombre": "Helado Vegano de Coco",
+      "precio": "800"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 13,
+    "fields": {
+      "nombre": "Helado Vegano de Mango",
+      "precio": "800"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 14,
+    "fields": {
+      "nombre": "Helado Vegano de Frambuesa",
+      "precio": "800"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 15,
+    "fields": {
+      "nombre": "Helado Sin Azúcar de Vainilla",
+      "precio": "900"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 16,
+    "fields": {
+      "nombre": "Helado Sin Azúcar de Chocolate",
+      "precio": "900"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 17,
+    "fields": {
+      "nombre": "Helado Sin Azúcar de Frutilla",
+      "precio": "900"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 18,
+    "fields": {
+      "nombre": "Helado Premium de Pistacho",
+      "precio": "1000"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 19,
+    "fields": {
+      "nombre": "Helado Premium de Avellana",
+      "precio": "1000"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 20,
+    "fields": {
+      "nombre": "Helado Premium de Dulce de Leche con Brownie",
+      "precio": "1200"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 21,
+    "fields": {
+      "nombre": "Cucurucho",
+      "precio": "200"
+    }
   }
 ]
