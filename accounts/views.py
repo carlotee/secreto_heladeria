@@ -81,9 +81,14 @@ def registro(request):
             'error': f'Error interno: {str(e)}'
         })
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login as auth_login, get_user_model
+from .forms import LoginForm
+from .models import Registro
+
 def login_view(request):
     User = get_user_model()
-    
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -95,14 +100,24 @@ def login_view(request):
 
             if usuario_obj and usuario_obj.contraseña == password:
                 django_user, created = User.objects.get_or_create(username=usuario_obj.usuario)
+
                 if created:
                     django_user.set_password(password)
+                    django_user.email = usuario_obj.correo
                     django_user.save()
-                auth_login(request, django_user)
-                return redirect('dashboard')
+
+                user = authenticate(username=django_user.username, password=password)
+                if user is not None:
+                    auth_login(request, user)
+                    print("✅ Login correcto, redirigiendo al dashboard...")
+                    return redirect('dashboard')
+                else:
+                    print("⚠️ Error al autenticar con Django")
+                    form.add_error(None, "Error al autenticar el usuario")
             else:
+                print("⚠️ Usuario o contraseña incorrectos")
                 form.add_error(None, "Usuario o contraseña incorrectos")
     else:
         form = LoginForm()
-    
+
     return render(request, 'accounts/login.html', {'form': form})
