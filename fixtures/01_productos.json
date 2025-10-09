@@ -13,5 +13,69 @@
       "nombre": "Helado de Chocolate",
       "precio": "500"
     }
+  },
+  {
+    "model" : "produccion.producto",
+    "pk": 3,
+    "fields": {
+      "nombre": "Helado de Fresa",
+      "precio": "500"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 4,
+    "fields": {
+      "nombre": "Helado de Limón",
+      "precio": "500"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 5,
+    "fields": {
+      "nombre": "Helado de Menta Granizada",
+      "precio": "500"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 6,
+    "fields": {
+      "nombre": "Helado de Dulce de Leche",
+      "precio": "600"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 7,
+    "fields": {
+      "nombre": "Helado de Oreo",
+      "precio": "600"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 8,
+    "fields": {
+      "nombre": "Helado de Frutilla con Crema",
+      "precio": "600"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 9,
+    "fields": {
+      "nombre": "Helado de Chocolate con Almendras",
+      "precio": "700"
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 10,
+    "fields": {
+      "nombre": "Helado de Tiramisú",
+      "precio": "700"
+    }
   }
 ]
