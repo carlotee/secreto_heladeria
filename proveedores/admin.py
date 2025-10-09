@@ -1,35 +1,29 @@
 from django.contrib import admin
 from .models import Proveedor, Producto
-from produccion.models import Costo  # importas el hijo
+from produccion.models import Costo
 
-# --- INLINE: COSTO ---
 class CostoInline(admin.TabularInline):
     model = Costo
     extra = 0
     fields = ("descripcion", "valor")
     show_change_link = True
-    # exclude = ("producto",)
 
 
-# --- INLINE: PRODUCTO ---
 class ProductoInline(admin.TabularInline):
     model = Producto
     extra = 0
     fields = ("nombre", "precio", "stock")
     show_change_link = True
-    # exclude = ("proveedor",)
 
 
-# --- ADMIN: PROVEEDOR ---
 @admin.register(Proveedor)
 class ProveedorAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "email", "telefono")
+    list_display = ("nombre", "correo", "telefono")  
     search_fields = ("nombre", "rut")
     ordering = ("nombre",)
     inlines = [ProductoInline]
 
 
-# --- ADMIN: PRODUCTO (con costos inline) ---
 @admin.register(Producto)
 class ProductoAdmin(admin.ModelAdmin):
     list_display = ("nombre", "proveedor", "precio", "stock")
