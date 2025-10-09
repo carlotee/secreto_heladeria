@@ -1,0 +1,41 @@
+{% extends 'centro_costos/base.html' %}
+
+{% block content %}
+  <h1>Costos</h1>
+
+  <a href="{% url 'costo_crear' %}">Crear nuevo costo</a>
+
+  {% if costos %}
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descripción</th>
+        <th>Valor</th>
+        <th>Tipo de Costo</th>
+        <th>Centro de Costo</th>
+        <th>Periodo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for costo in costos %}
+      <tr>
+        <td>{{ costo.id }}</td>
+        <td>{{ costo.descripcion }}</td>
+        <td>{{ costo.valor }}</td>
+        <td>{{ costo.tipo_costo.nombre }}</td>
+        <td>{% if costo.centro_costo %}{{ costo.centro_costo.nombre }}{% else %}-{% endif %}</td>
+        <td>{{ costo.periodo.año }} - {{ costo.periodo.mes }}</td>
+        <td>
+          <a href="{% url 'costo_act' costo.id %}">Editar</a>
+          <a href="{% url 'costo_eliminar' costo.id %}">Eliminar</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No hay costos registrados.</p>
+  {% endif %}
+{% endblock %}

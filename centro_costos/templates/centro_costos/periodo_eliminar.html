@@ -1,0 +1,19 @@
+{% extends 'centro_costos/base.html' %}
+
+{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <title>Eliminar Período</title>
+</head>
+<body>
+  <h1>Eliminar Período</h1>
+
+  <p>¿Estás seguro de que quieres eliminar el período <strong>{{ periodo.nombre }}</strong>?</p>
+
+  <form method="post" action="{% url 'periodo_elim' periodo.id %}">
+    {% csrf_token %}
+    <button type="submit">Sí, eliminar</button>
+  </form>
+
+  <a href="{% url 'periodo' %}">Cancelar</a>
+  {% endblock %}

@@ -58,42 +58,6 @@ def tipo_costo(request):
     }
     return render(request, 'centro_costos/tipo_costo.html', context)
 
-def tipo_costo_crear(request):
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        
-        if nombre:
-            TipoCosto.objects.create(nombre=nombre)
-            messages.success(request, 'Tipo de costo creado exitosamente')
-            return redirect('tipo_costo')
-        else:
-            messages.error(request, 'El nombre es obligatorio')
-    
-    return render(request, 'centro_costos/tipo_costo_crear.html')
-
-def tipo_costo_act(request, pk):
-    tipo = get_object_or_404(TipoCosto, pk=pk)
-    
-    if request.method == 'POST':
-        tipo.nombre = request.POST.get('nombre')
-        tipo.save()
-        messages.success(request, 'Tipo de costo actualizado exitosamente')
-        return redirect('tipo_costo')
-    
-    context = {'tipo': tipo}
-    return render(request, 'centro_costos/tipo_costo_act.html', context)
-
-def tipo_costo_elim(request, pk):
-    tipo = get_object_or_404(TipoCosto, pk=pk)
-    
-    if request.method == 'POST':
-        tipo.delete()
-        messages.success(request, 'Tipo de costo eliminado exitosamente')
-        return redirect('tipo_costo')
-    
-    context = {'tipo': tipo}
-    return render(request, 'centro_costos/tipo_costo_confirm_elim.html', context)
-
 
 def centro_costos(request):
     """Lista todos los centros de costos (excluyendo eliminados)"""
@@ -102,55 +66,6 @@ def centro_costos(request):
         'centros': centros
     }
     return render(request, 'centro_costos/centro_costos.html', context)
-
-def centro_costos_crear(request):
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        tipo_costo = request.POST.get('tipo_costo')
-        
-        if nombre and tipo_costo:
-            Centro_Costos.objects.create(
-                nombre=nombre,
-                tipo_costo=tipo_costo
-            )
-            messages.success(request, 'Centro de costos creado exitosamente')
-            return redirect('centro_costos')
-        else:
-            messages.error(request, 'Todos los campos son obligatorios')
-    
-    context = {
-        'tipo_choices': Centro_Costos.TIPO_COSTO_CHOICES
-    }
-    return render(request, 'centro_costos/centro_costos_crear.html', context)
-
-def centro_costos_act(request, pk):
-    centro = get_object_or_404(Centro_Costos, pk=pk, deleted_at__isnull=True)
-    
-    if request.method == 'POST':
-        centro.nombre = request.POST.get('nombre')
-        centro.tipo_costo = request.POST.get('tipo_costo')
-        centro.save()
-        messages.success(request, 'Centro de costos actualizado exitosamente')
-        return redirect('centro_costos')
-    
-    context = {
-        'centro': centro,
-        'tipo_choices': Centro_Costos.TIPO_COSTO_CHOICES
-    }
-    return render(request, 'centro_costos/centro_costos_act.html', context)
-
-def centro_costos_elim(request, pk):
-    from django.utils import timezone
-    centro = get_object_or_404(Centro_Costos, pk=pk, deleted_at__isnull=True)
-    
-    if request.method == 'POST':
-        centro.deleted_at = timezone.now()
-        centro.save()
-        messages.success(request, 'Centro de costos eliminado exitosamente')
-        return redirect('centro_costos')
-    
-    context = {'centro': centro}
-    return render(request, 'centro_costos/centro_costos_confirm_elim.html', context)
 
 
 

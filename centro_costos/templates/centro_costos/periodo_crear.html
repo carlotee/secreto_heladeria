@@ -1,0 +1,18 @@
+{% extends 'centro_costos/base.html' %}
+
+{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Período</title>
+</head>
+<body>
+  <h1>Crear Período</h1>
+
+  <form method="post" action="{% url 'periodo_crear' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar</button>
+  </form>
+
+  <a href="{% url 'periodo' %}">Volver al listado</a>
+{% endblock %}

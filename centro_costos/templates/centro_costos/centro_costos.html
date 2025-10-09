@@ -1,13 +1,37 @@
 {% extends 'centro_costos/base.html' %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro costos</title>
-</head>
-<body>
-    <h1>Centro de costos</h1>
-    <p>Bienvenido al centro de costos.</p>
-</body>
-</html>
+
+{% block content %}
+  <h1>Centros de Costo</h1>
+
+  <a href="{% url 'centro_costos_crear' %}">Crear nuevo centro de costo</a>
+
+  {% if centros %}
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Código</th>
+        <th>Fecha de creación</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for centro in centros %}
+      <tr>
+        <td>{{ centro.id }}</td>
+        <td>{{ centro.nombre }}</td>
+        <td>{{ centro.codigo }}</td>
+        <td>{{ centro.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          <a href="{% url 'centro_costos_act' centro.id %}">Editar</a>
+          <a href="{% url 'centro_costos_elim' centro.id %}">Eliminar</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No hay centros de costo registrados.</p>
+  {% endif %}
+{% endblock %}

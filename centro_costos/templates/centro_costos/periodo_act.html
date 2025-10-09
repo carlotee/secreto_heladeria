@@ -1,0 +1,19 @@
+{% extends 'centro_costos/base.html' %}
+
+{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Período</title>
+</head>
+<body>
+  <h1>Editar Período</h1>
+
+  <form method="post" action="{% url 'periodo_act' periodo.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Actualizar</button>
+  </form>
+
+  <a href="{% url 'periodo' %}">Cancelar</a>
+</body>
+</html>
