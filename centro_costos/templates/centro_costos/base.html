@@ -39,9 +39,9 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}"><i class="fas fa-home me-1"></i>Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'centro_costo' %}"><i class="fas fa-microchip me-1"></i>Centro de Costos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'centro_costos' %}"><i class="fas fa-microchip me-1"></i>Centro de Costos</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'periodo' %}"><i class="fas fa-chart-line me-1"></i>Periodo</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'costos' %}"><i class="fas fa-bell me-1"></i>Costos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'costo' %}"><i class="fas fa-bell me-1"></i>Costos</a></li>
             </ul>
 
             <!-- 🔑 Navbar dinámico -->
@@ -51,11 +51,6 @@
                         <span class="navbar-text text-light me-3">
                             Bienvenido, {{ user.first_name|default:user.username }}
                         </span>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-light me-2" href="{% url 'edit_profile' %}">
-                            <i class="fas fa-user me-1"></i>Perfil
-                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="btn btn-danger" href="{% url 'logout' %}">
@@ -88,7 +83,7 @@
 
 <!-- Footer -->
 <footer class="footer bg-dark text-light text-center p-3">
-    <p class="mb-0">© 2025 EcoEnergy</p>
+    <p class="mb-0">© 2025 Secreto Heladeria</p>
 </footer>
 
 <!-- Bootstrap JS -->

@@ -6,6 +6,7 @@ from .models import Registro
 from django.db import connection
 import traceback
 from django.contrib.auth import get_user_model
+from django.contrib.auth import logout
 
 def registro(request):
     try:
@@ -80,11 +81,6 @@ def registro(request):
             'error': f'Error interno: {str(e)}'
         })
 
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login as auth_login, get_user_model
-from .forms import LoginForm
-from .models import Registro
-
 def login_view(request):
     User = get_user_model()
 
@@ -120,3 +116,7 @@ def login_view(request):
         form = LoginForm()
 
     return render(request, 'accounts/login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')  

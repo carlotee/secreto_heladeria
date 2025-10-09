@@ -54,4 +54,5 @@ urlpatterns = [
     path('<int:pk>/', proveedores_views.proveedor_detalle, name='proveedor_detalle'),
     path('<int:pk>/editar/', proveedores_views.proveedor_act, name='proveedor_act'),
     path('<int:pk>/eliminar/', proveedores_views.proveedor_eliminar, name='proveedor_eliminar'),
+    path('logout/', accounts_views.logout_view, name='logout'),
 ]
