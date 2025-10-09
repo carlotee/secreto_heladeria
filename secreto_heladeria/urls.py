@@ -25,6 +25,8 @@ urlpatterns = [
     path('', centro_costos_views.dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('registro/', accounts_views.registro, name='registro'),
+    path('login/', accounts_views.login_view, name='login'),
     path('accounts/register/', accounts_views.registro, name='registro'),
     path('periodos/', centro_costos_views.periodo, name='periodo'),
     path('periodos/crear/', centro_costos_views.periodo_crear, name='periodo_crear'),
