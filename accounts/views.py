@@ -46,8 +46,7 @@ def registro(request):
                     nuevo_registro.save()
                     print("¡Guardado exitosamente!")
                     
-                    # ✅ CORREGIDO: pasa proveedor_id=1
-                    return redirect('dashboard')
+                    return redirect('login')
                     
                 except Exception as save_error:
                     print("Error al guardar:", str(save_error))
@@ -57,7 +56,6 @@ def registro(request):
                         print("Intentando con form.save()...")
                         registro = form.save()
                         print("Form.save() exitoso:", registro)
-                        # ✅ CORREGIDO: pasa proveedor_id=1
                         return redirect('dashboard')
                     except Exception as form_save_error:
                         print("Error con form.save():", str(form_save_error))

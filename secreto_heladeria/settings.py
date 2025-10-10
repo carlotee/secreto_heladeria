@@ -14,8 +14,12 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+import pymysql
+pymysql.install_as_MySQLdb()
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env")  # ← carga el .env
+load_dotenv(BASE_DIR / ".env")  
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-unsafe")
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
@@ -95,7 +99,7 @@ if ENGINE == "mysql":
             "OPTIONS": {"charset": "utf8mb4"},
         }
     }
-else:  # SQLite por defecto
+else:  
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
