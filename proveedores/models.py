@@ -11,11 +11,6 @@ class Proveedor(models.Model):
 
     def __str__(self):
         return self.nombre
-
-<<<<<<< HEAD
-=======
-
-
 class Producto(models.Model):
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='productos')
     nombre = models.CharField(max_length=100)
@@ -25,4 +20,3 @@ class Producto(models.Model):
 
     def __str__(self):
         return f"{self.nombre} ({self.proveedor.nombre})"
->>>>>>> ad2bf0e890e817e649c9511ad21c9524ddb558fb
