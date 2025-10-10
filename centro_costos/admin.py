@@ -28,6 +28,6 @@ class CentroCostosAdmin(admin.ModelAdmin):
 
 @admin.register(Costo)
 class CostoAdmin(admin.ModelAdmin):
-    list_display = ('descripcion', 'valor', 'tipo_costo', 'centro_costo', 'periodo')
+    list_display = ('descripcion','valor','tipo_costo', 'centro_costo', 'periodo')
     list_filter = ('tipo_costo', 'periodo')
     search_fields = ('descripcion',)

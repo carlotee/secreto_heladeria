@@ -63,16 +63,11 @@ class CostoForm(forms.ModelForm):
                 'placeholder': 'Valor del costo',
                 'min': 0
             }),
-            'tipo_costo': forms.Select(attrs={
-                'class': 'form-control',
-            }),
-            'centro_costo': forms.Select(attrs={
-                'class': 'form-control',
-            }),
-            'periodo': forms.Select(attrs={
-                'class': 'form-control',
-            }),
+            'tipo_costo': forms.Select(attrs={'class': 'form-control'}),
+            'centro_costo': forms.Select(attrs={'class': 'form-control'}),
+            'periodo': forms.Select(attrs={'class': 'form-control'}),
         }
+
 
 
 class ConfirmarEliminarCostoForm(forms.Form):
