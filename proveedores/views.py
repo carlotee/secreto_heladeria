@@ -6,9 +6,11 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from .models import Proveedor
 from django.core.paginator import Paginator
-from .models import Proveedor, Producto
-from .forms import ProductoForm, ProveedorForm
+from .models import Proveedor
+from .forms import ProveedorForm
 import re
+from produccion.models import Producto
+from produccion.forms import ProductoForm
 
 def validar_rut(rut):
     rut_limpio = rut.replace(".", "").replace("-", "")

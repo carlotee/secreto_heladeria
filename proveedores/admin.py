@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Proveedor, Producto
-from produccion.models import Costo  
+from .models import Proveedor 
+from produccion.models import Costo, Producto
 
 class CostoInline(admin.TabularInline):
     model = Costo
