@@ -37,7 +37,6 @@ urlpatterns = [
     path('costos/crear/', centro_costos_views.costo_crear, name='costo_crear'),
     path('costos/<int:pk>/editar/', centro_costos_views.costo_act, name='costo_act'),
     path('costos/<int:pk>/eliminar/', centro_costos_views.costo_eliminar, name='costo_eliminar'),
-    path('reportes/periodo/<int:periodo_id>/', centro_costos_views.reporte_periodo, name='reporte_periodo'),
     path('', produccion_views.producto, name='producto'),
     path('crear/', produccion_views.producto_crear, name='producto_crear'),
     path('<int:pk>/', produccion_views.producto_detalle, name='producto_detalle'),

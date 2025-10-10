@@ -9,26 +9,112 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
+        /* 💙 Paleta Celeste Crema */
+        :root {
+            --celeste-principal: #b3e5fc;
+            --celeste-oscuro: #81d4fa;
+            --crema-claro: #fffaf3;
+            --texto-oscuro: #2c3e50;
+            --navbar-bg: linear-gradient(90deg, #b3e5fc, #fff3e0);
+            --navbar-text: #2c3e50;
+        }
+
         html, body {
             height: 100%;
+            background-color: var(--crema-claro);
+            color: var(--texto-oscuro);
+            font-family: "Poppins", sans-serif;
         }
-        body {
-            display: flex;
-            flex-direction: column;
+
+        /* 💙 Navbar */
+        .navbar {
+            background: var(--navbar-bg);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
+        .navbar-brand, .nav-link, .navbar-text {
+            color: var(--navbar-text) !important;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            color: var(--celeste-oscuro) !important;
+        }
+        .btn-danger {
+            background-color: var(--celeste-oscuro);
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #4fc3f7;
+        }
+        .btn-outline-light {
+            color: var(--texto-oscuro);
+            border-color: var(--celeste-oscuro);
+        }
+        .btn-outline-light:hover {
+            background-color: var(--celeste-oscuro);
+            color: white;
+        }
+        .btn-light {
+            background-color: var(--celeste-principal);
+            border: none;
+            color: var(--texto-oscuro);
+        }
+        .btn-light:hover {
+            background-color: var(--celeste-oscuro);
+            color: white;
+        }
+
+        /* 💙 Contenido */
         .content-wrapper {
             flex: 1;
+            padding-bottom: 2rem;
         }
+
+        /* 💙 Footer */
         .footer {
-            margin-top: auto;
+            background: var(--navbar-bg);
+            color: var(--texto-oscuro);
+            font-weight: 500;
+        }
+
+        /* 💙 Tablas y secciones */
+        table {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th {
+            background-color: var(--celeste-principal);
+            color: var(--texto-oscuro);
+        }
+        tr:nth-child(even) {
+            background-color: #e3f2fd;
+        }
+        section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: var(--texto-oscuro);
+        }
+
+        /* 💙 Enlaces */
+        a {
+            color: var(--celeste-oscuro);
+        }
+        a:hover {
+            color: #0288d1;
         }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'dashboard' %}">Secreto Heladería</a>
+        <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">
+            🍦 Secreto Heladería
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -37,14 +123,14 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}"><i class="fas fa-home me-1"></i>Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'periodo' %}"><i class="fas fa-chart-line me-1"></i>Periodo</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'costo' %}"><i class="fas fa-chart-line me-1"></i>Costos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'periodo' %}"><i class="fas fa-calendar me-1"></i>Periodo</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'costo' %}"><i class="fas fa-coins me-1"></i>Costos</a></li>
             </ul>
 
             <ul class="navbar-nav">
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <span class="navbar-text text-light me-3">
+                        <span class="navbar-text me-3">
                             Bienvenido, {{ user.first_name|default:user.username }}
                         </span>
                     </li>
@@ -76,7 +162,7 @@
     </div>
 </div>
 
-<footer class="footer bg-dark text-light text-center p-3">
+<footer class="footer text-center p-3">
     <p class="mb-0">© 2025 Secreto Heladería</p>
 </footer>
 
