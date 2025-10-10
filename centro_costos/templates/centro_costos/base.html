@@ -106,6 +106,16 @@
         a:hover {
             color: #0288d1;
         }
+
+        /* 💙 Dropdown */
+        .dropdown-menu {
+            background-color: white;
+            border: 1px solid var(--celeste-principal);
+        }
+        .dropdown-item:hover {
+            background-color: var(--celeste-principal);
+            color: var(--texto-oscuro);
+        }
     </style>
 </head>
 <body>
@@ -122,9 +132,27 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}"><i class="fas fa-home me-1"></i>Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'periodo' %}"><i class="fas fa-calendar me-1"></i>Periodo</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'costo' %}"><i class="fas fa-coins me-1"></i>Costos</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}">
+                        <i class="fas fa-home me-1"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'periodo' %}">
+                        <i class="fas fa-calendar me-1"></i>Periodo
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'costo' %}">
+                        <i class="fas fa-coins me-1"></i>Costos
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'proveedor' %}">
+                        <i class="fas fa-truck me-1"></i>Proveedores
+                    </a>
+                </li>
             </ul>
 
             <ul class="navbar-nav">

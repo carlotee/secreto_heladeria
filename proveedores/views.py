@@ -298,4 +298,4 @@ def proveedor_dashboard(request, proveedor_id):
         'productos': productos,
         'producto_form': producto_form,
     }
-    return render(request, 'proveedores/dashboard.html', context)
+    return render(request, 'proveedores/prov_dashboard.html', context)

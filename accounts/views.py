@@ -47,7 +47,7 @@ def registro(request):
                     print("¡Guardado exitosamente!")
                     
                     # ✅ CORREGIDO: pasa proveedor_id=1
-                    return redirect('proveedor_dashboard', proveedor_id=1)
+                    return redirect('dashboard')
                     
                 except Exception as save_error:
                     print("Error al guardar:", str(save_error))

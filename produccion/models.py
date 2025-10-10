@@ -4,7 +4,7 @@ from django.utils import timezone
 
 
 class Producto(models.Model):
-    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='productos')
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='productos',blank=True, null=True)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True)
     precio = models.DecimalField(max_digits=10, decimal_places=2)

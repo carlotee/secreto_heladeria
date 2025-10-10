@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.db.models import Q, Sum
 from .models import Periodo, TipoCosto, Centro_Costos, Costo
 from .forms import PeriodoForm, TipoCostoForm, CentroCostosForm, CostoForm, ConfirmarEliminarCostoForm
+from proveedores.models import Proveedor
 
 
 def periodo(request):
@@ -165,6 +166,8 @@ def dashboard(request):
         Costo.objects.filter(periodo=ultimo_periodo).aggregate(total=Sum('valor'))['total']
         if ultimo_periodo else 0
     )
+    
+    proveedores = Proveedor.objects.all()
 
     context = {
         'centros_con_periodos': centros_con_periodos,
@@ -172,6 +175,7 @@ def dashboard(request):
         'costos_recientes': costos_recientes,
         'total_centros': Centro_Costos.objects.filter(deleted_at__isnull=True).count(),
         'total_tipos': TipoCosto.objects.count(),
+        'proveedores': proveedores,
     }
 
     return render(request, 'centro_costos/dashboard.html', context)
