@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import RegistroForm
-from django.contrib.auth import authenticate,login as auth_login
+from django.contrib.auth import authenticate, login as auth_login
 from .forms import LoginForm
 from .models import Registro
 from django.db import connection
@@ -46,7 +46,8 @@ def registro(request):
                     nuevo_registro.save()
                     print("¡Guardado exitosamente!")
                     
-                    return redirect('dashboard')
+                    # ✅ CORREGIDO: pasa proveedor_id=1
+                    return redirect('proveedor_dashboard', proveedor_id=1)
                     
                 except Exception as save_error:
                     print("Error al guardar:", str(save_error))
@@ -56,7 +57,8 @@ def registro(request):
                         print("Intentando con form.save()...")
                         registro = form.save()
                         print("Form.save() exitoso:", registro)
-                        return redirect('dashboard')
+                        # ✅ CORREGIDO: pasa proveedor_id=1
+                        return redirect('proveedor_dashboard', proveedor_id=1)
                     except Exception as form_save_error:
                         print("Error con form.save():", str(form_save_error))
                         return render(request, 'accounts/registro.html', {
@@ -80,6 +82,7 @@ def registro(request):
             'form': RegistroForm(),
             'error': f'Error interno: {str(e)}'
         })
+
 
 def login_view(request):
     User = get_user_model()
@@ -105,7 +108,8 @@ def login_view(request):
                 if user is not None:
                     auth_login(request, user)
                     print("✅ Login correcto, redirigiendo al dashboard...")
-                    return redirect('dashboard')
+                    # ✅ CORREGIDO: pasa proveedor_id=1
+                    return redirect('proveedor_dashboard', proveedor_id=1)
                 else:
                     print("⚠️ Error al autenticar con Django")
                     form.add_error(None, "Error al autenticar el usuario")
@@ -117,6 +121,7 @@ def login_view(request):
 
     return render(request, 'accounts/login.html', {'form': form})
 
+
 def logout_view(request):
     logout(request)
-    return redirect('login')  
+    return redirect('login')

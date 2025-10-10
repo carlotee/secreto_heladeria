@@ -278,6 +278,7 @@ def proveedor_permanent_delete(request, pk):
     return render(request, 'proveedores/proveedor_confirm_permanent_delete.html', context)
 
 def proveedor_dashboard(request, proveedor_id):
+    """Muestra el panel del proveedor, con sus productos y formulario para agregar más."""
     proveedor = get_object_or_404(Proveedor, pk=proveedor_id, deleted_at__isnull=True)
     productos = Producto.objects.filter(proveedor=proveedor).order_by('nombre')
 
@@ -298,5 +299,6 @@ def proveedor_dashboard(request, proveedor_id):
         'productos': productos,
         'producto_form': producto_form,
     }
-    # 👇 Usa el nombre real de tu archivo HTML
+
+    # 👇 usa tu archivo dashboard.html
     return render(request, 'proveedores/dashboard.html', context)
