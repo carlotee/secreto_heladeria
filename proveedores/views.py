@@ -6,7 +6,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from .models import Proveedor
 from django.core.paginator import Paginator
-from .models import Proveedor
 from .forms import ProveedorForm
 import re
 from produccion.models import Producto
