@@ -58,7 +58,7 @@ def registro(request):
                         registro = form.save()
                         print("Form.save() exitoso:", registro)
                         # ✅ CORREGIDO: pasa proveedor_id=1
-                        return redirect('proveedor_dashboard', proveedor_id=1)
+                        return redirect('dashboard')
                     except Exception as form_save_error:
                         print("Error con form.save():", str(form_save_error))
                         return render(request, 'accounts/registro.html', {
@@ -108,8 +108,7 @@ def login_view(request):
                 if user is not None:
                     auth_login(request, user)
                     print("✅ Login correcto, redirigiendo al dashboard...")
-                    # ✅ CORREGIDO: pasa proveedor_id=1
-                    return redirect('proveedor_dashboard', proveedor_id=1)
+                    return redirect('dashboard')
                 else:
                     print("⚠️ Error al autenticar con Django")
                     form.add_error(None, "Error al autenticar el usuario")

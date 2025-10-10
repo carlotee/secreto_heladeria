@@ -58,8 +58,8 @@ MATRIX = {
     },
     # EcoEnergy Admin: ve catálogo y organización a nivel global
     "Secreto Heladería - Admin": {
-        "": "all",
-        "": "all",
+        "costo": "all",
+        "periodo": "all",
         # "operacion": "all",  # agrega si deben ver también operación global
     },
 }
@@ -72,16 +72,16 @@ SYNC_NATIVE_DJANGO_PERMS = True
 # AJUSTA ESTO a tus apps y modelos reales.
 APP_MODEL_MAP = {
     "operacion": {
-        "app_label": "devices",                         # ej: app "devices"
-        "models": ["device", "measurement", "alert", "zone"],
+        "app_label": "centro_costos",                         # ej: app "devices"
+        "models": ["centro_costos", "costo", "periodo", "tipo_costo"],
     },
     "catalogo": {
-        "app_label": "catalog",                         # ej: app "catalog"
-        "models": ["product", "category"],
+        "app_label": "produccion",                         # ej: app "catalog"
+        "models": ["producto", "costo"],
     },
-    "organizacion": {
+    "usuario": {
         "app_label": "accounts",                        # ej: app "accounts"
-        "models": ["organization", "userprofile"],      # o "membership" si aplica
+        "models": ["userprofile"],      # o "membership" si aplica
     },
 }
 
@@ -89,7 +89,7 @@ APP_MODEL_MAP = {
 # Útil para granularidad fina (p.ej., permitir add_measurement a Cliente - Electrónico)
 EXTRA_NATIVE_PERMS = {
     "Cliente - Electrónico": [
-        ("devices", "add_measurement"),
+        ("centro_costos", "costo_crear"),
         # ("devices", "change_measurement"),  # descomenta si quieres editar mediciones
     ],
     # "Cliente - Admin": [],      # no necesario si tiene "all"

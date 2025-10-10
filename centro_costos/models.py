@@ -1,10 +1,12 @@
 from django.db import models
-from produccion.models import Costo
 
 # Create your models here.
 class Periodo(models.Model):
     año = models.CharField(max_length=4)
     mes = models.CharField(max_length=10)
+    
+    def __str__(self):
+        return f"{self.mes} {self.año}"
 
     
 class TipoCosto(models.Model):
@@ -24,8 +26,6 @@ class Centro_Costos(models.Model):
         return f"{self.nombre} - {self.tipo_costo}"
 
 
-from django.db import models
-
 class Costo(models.Model):
     descripcion = models.TextField()
     valor = models.DecimalField(
@@ -34,9 +34,9 @@ class Costo(models.Model):
         default=0, 
         verbose_name="Valor del costo"
     )
-    tipo_costo = models.ForeignKey('TipoCosto', on_delete=models.CASCADE)
-    centro_costo = models.ForeignKey('Centro_Costos', on_delete=models.CASCADE)
-    periodo = models.ForeignKey('Periodo', on_delete=models.CASCADE)
+    tipo_costo = models.ForeignKey(TipoCosto, on_delete=models.CASCADE)
+    centro_costo = models.ForeignKey(Centro_Costos, on_delete=models.CASCADE)
+    periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.descripcion} - ${self.valor}"

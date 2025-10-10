@@ -49,7 +49,7 @@ def periodo_eliminar(request, pk):
         messages.success(request, 'Periodo eliminado exitosamente')
         return redirect('periodo')
 
-    return render(request, 'centro_costos/periodo_confirm_eliminar.html', {'periodo': periodo})
+    return render(request, 'centro_costos/periodo_eliminar.html', {'periodo': periodo})
 
 
 
@@ -133,15 +133,11 @@ def costo_eliminar(request, pk):
     costo = get_object_or_404(Costo, pk=pk)
 
     if request.method == 'POST':
-        form = ConfirmarEliminarCostoForm(request.POST)
-        if form.is_valid() and form.cleaned_data['confirmar']:
             costo.delete()
             messages.success(request, 'Costo eliminado exitosamente')
             return redirect('costo')
-    else:
-        form = ConfirmarEliminarCostoForm()
 
-    return render(request, 'centro_costos/costo_eliminar.html', {'costo': costo, 'form': form})
+    return render(request, 'centro_costos/costo_eliminar.html', {'costo': costo})
 
 
 @login_required

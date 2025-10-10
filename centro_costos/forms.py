@@ -13,8 +13,10 @@ class PeriodoForm(forms.ModelForm):
                 'placeholder': 'Ingrese el año',
                 'min': 2000
             }),
-            'mes': forms.Select(attrs={
+            'mes': forms.NumberInput(attrs={
                 'class': 'form-control',
+                'placeholder': 'Ingrese el mes',
+                'min': 1
             }),
         }
 

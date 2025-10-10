@@ -10,7 +10,7 @@
 
   <p>¿Estás seguro de que quieres eliminar el período <strong>{{ periodo.nombre }}</strong>?</p>
 
-  <form method="post" action="{% url 'periodo_elim' periodo.id %}">
+  <form method="post" action="{% url 'periodo_eliminar' periodo.id %}">
     {% csrf_token %}
     <button type="submit">Sí, eliminar</button>
   </form>
