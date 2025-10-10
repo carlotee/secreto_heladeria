@@ -37,7 +37,6 @@ urlpatterns = [
     path('costos/crear/', centro_costos_views.costo_crear, name='costo_crear'),
     path('costos/<int:pk>/editar/', centro_costos_views.costo_act, name='costo_act'),
     path('costos/<int:pk>/eliminar/', centro_costos_views.costo_eliminar, name='costo_eliminar'),
-    path('reportes/periodo/<int:periodo_id>/', centro_costos_views.reporte_periodo, name='reporte_periodo'),
     path('', produccion_views.producto, name='producto'),
     path('crear/', produccion_views.producto_crear, name='producto_crear'),
     path('<int:pk>/', produccion_views.producto_detalle, name='producto_detalle'),
@@ -49,5 +48,9 @@ urlpatterns = [
     path('<int:pk>/editar/', proveedores_views.proveedor_act, name='proveedor_act'),
     path('<int:pk>/eliminar/', proveedores_views.proveedor_eliminar, name='proveedor_eliminar'),
     path('logout/', accounts_views.logout_view, name='logout'),
+<<<<<<< HEAD
+]
+=======
     path('<int:proveedor_id>/dashboard/', proveedores_views.proveedor_dashboard, name='proveedor_dashboard'),
 ]
+>>>>>>> ad2bf0e890e817e649c9511ad21c9524ddb558fb

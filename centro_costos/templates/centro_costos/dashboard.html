@@ -1,76 +1,45 @@
 {% extends 'centro_costos/base.html' %}
 
 {% block content %}
-  <h1>Dashboard – Centro de Costos</h1>
-  <p>Bienvenido al panel general de gestión.</p>
+  <h1>Sistema de Gestión</h1>
 
   <section>
     <h2>Centro de Costos</h2>
 
-    <section>
-      <h3>Costos</h3>
+    {% if centros_con_periodos %}
+      {% for item in centros_con_periodos %}
+        {% with centro=item.centro costos=item.costos periodos=item.periodos %}
+          <section style="margin-bottom: 40px; border: 1px solid #ccc; padding: 10px;">
+            <h3>{{ centro.nombre }}</h3>
+            <p><strong>Tipo de Costo:</strong> {{ centro.tipo_costo.nombre }}</p>
 
-      <form method="get">
-        <label for="tipo">Filtrar por tipo de costo:</label>
-        <select name="tipo" id="tipo" onchange="this.form.submit()">
-          <option value="">Todos</option>
-          <option value="Fijo" {% if request.GET.tipo == 'Fijo' %}selected{% endif %}>Fijo</option>
-          <option value="Variable" {% if request.GET.tipo == 'Variable' %}selected{% endif %}>Variable</option>
-        </select>
-      </form>
-
-      {% if costos_filtrados %}
-        <table border="1">
-          <thead>
-            <tr>
-              <th>Descripción</th>
-              <th>Valor</th>
-              <th>Tipo</th>
-              <th>Centro de Costo</th>
-              <th>Periodo</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for costo in costos_filtrados %}
-            <tr>
-              <td>{{ costo.descripcion }}</td>
-              <td>{{ costo.valor }}</td>
-              <td>{{ costo.tipo_costo.nombre }}</td>
-              <td>{% if costo.centro_costo %}{{ costo.centro_costo.nombre }}{% else %}-{% endif %}</td>
-              <td>{{ costo.periodo.año }} - {{ costo.periodo.mes }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-        <p>No hay costos registrados con este filtro.</p>
-      {% endif %}
-    </section>
-
-    <hr>
-
-    <section>
-      <h3>Periodos</h3>
-      {% if periodos %}
-        <table border="1">
-          <thead>
-            <tr>
-              <th>Año</th>
-              <th>Mes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for periodo in periodos %}
-            <tr>
-              <td>{{ periodo.año }}</td>
-              <td>{{ periodo.mes }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-        <p>No hay periodos registrados.</p>
-      {% endif %}
-    </section>
+            <h4>Costos Asociados</h4>
+            {% if costos %}
+              <table border="1" cellpadding="5">
+                <thead>
+                  <tr>
+                    <th>Descripción</th>
+                    <th>Valor</th>
+                    <th>Periodo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for costo in costos %}
+                    <tr>
+                      <td>{{ costo.descripcion }}</td>
+                      <td>${{ costo.valor }}</td>
+                      <td>{{ costo.periodo.año }} - {{ costo.periodo.mes }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% else %}
+              <p>No hay costos asociados.</p>
+            {% endif %}
+        {% endwith %}
+      {% endfor %}
+    {% else %}
+      <p>No hay centros de costos registrados.</p>
+    {% endif %}
   </section>
 {% endblock %}

@@ -12,6 +12,8 @@ class Proveedor(models.Model):
     def __str__(self):
         return self.nombre
 
+<<<<<<< HEAD
+=======
 
 
 class Producto(models.Model):
@@ -23,3 +25,4 @@ class Producto(models.Model):
 
     def __str__(self):
         return f"{self.nombre} ({self.proveedor.nombre})"
+>>>>>>> ad2bf0e890e817e649c9511ad21c9524ddb558fb

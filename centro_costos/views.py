@@ -6,8 +6,6 @@ from .models import Periodo, TipoCosto, Centro_Costos, Costo
 from .forms import PeriodoForm, TipoCostoForm, CentroCostosForm, CostoForm, ConfirmarEliminarCostoForm
 
 
-# ---------- PERIODOS ----------
-
 def periodo(request):
     periodos = Periodo.objects.all().order_by('-año', '-mes')
     return render(request, 'centro_costos/periodo.html', {'periodos': periodos})
@@ -54,21 +52,18 @@ def periodo_eliminar(request, pk):
     return render(request, 'centro_costos/periodo_confirm_eliminar.html', {'periodo': periodo})
 
 
-# ---------- TIPO DE COSTO ----------
 
 def tipo_costo(request):
     tipos = TipoCosto.objects.all()
     return render(request, 'centro_costos/tipo_costo.html', {'tipos': tipos})
 
 
-# ---------- CENTRO DE COSTOS ----------
 
 def centro_costos(request):
     centros = Centro_Costos.objects.filter(deleted_at__isnull=True).order_by('-created_at')
     return render(request, 'centro_costos/centro_costos.html', {'centros': centros})
 
 
-# ---------- COSTOS ----------
 
 def costo(request):
     costos = Costo.objects.select_related('tipo_costo', 'centro_costo', 'periodo').all()
@@ -149,60 +144,38 @@ def costo_eliminar(request, pk):
     return render(request, 'centro_costos/costo_eliminar.html', {'costo': costo, 'form': form})
 
 
-# ---------- DASHBOARD / REPORTES ----------
-
 @login_required
 def dashboard(request):
-    from django.db.models import Count
+    centros = Centro_Costos.objects.prefetch_related('costo_set__periodo', 'tipo_costo')
 
-    costos_por_tipo = Costo.objects.values('tipo_costo__nombre').annotate(
-        total=Sum('valor'),
-        cantidad=Count('id')
-    )
+    centros_con_periodos = []
+    for centro in centros:
+        costos = centro.costo_set.all()
+        periodos = (
+            Periodo.objects
+            .filter(costo__centro_costo=centro)
+            .distinct()
+            .order_by('-año', '-mes')
+        )
 
-    costos_por_centro = Costo.objects.filter(
-        centro_costo__isnull=False
-    ).values('centro_costo__nombre', 'centro_costo__tipo_costo').annotate(
-        total=Sum('valor')
-    )
+        centros_con_periodos.append({
+            'centro': centro,
+            'costos': costos,
+            'periodos': periodos,
+        })
 
     ultimo_periodo = Periodo.objects.order_by('-año', '-mes').first()
-    costos_recientes = None
-    if ultimo_periodo:
-        costos_recientes = Costo.objects.filter(
-            periodo=ultimo_periodo
-        ).aggregate(total=Sum('valor'))['total'] or 0
+    costos_recientes = (
+        Costo.objects.filter(periodo=ultimo_periodo).aggregate(total=Sum('valor'))['total']
+        if ultimo_periodo else 0
+    )
 
     context = {
-        'costos_por_tipo': costos_por_tipo,
-        'costos_por_centro': costos_por_centro,
-        'costos_recientes': costos_recientes,
+        'centros_con_periodos': centros_con_periodos,
         'ultimo_periodo': ultimo_periodo,
+        'costos_recientes': costos_recientes,
         'total_centros': Centro_Costos.objects.filter(deleted_at__isnull=True).count(),
         'total_tipos': TipoCosto.objects.count(),
     }
+
     return render(request, 'centro_costos/dashboard.html', context)
-
-
-def reporte_periodo(request, periodo_id):
-    periodo = get_object_or_404(Periodo, pk=periodo_id)
-    costos = Costo.objects.filter(periodo=periodo).select_related(
-        'tipo_costo', 'centro_costo'
-    )
-
-    total_general = costos.aggregate(total=Sum('valor'))['total'] or 0
-    total_fijos = costos.filter(centro_costo__tipo_costo='Fijo').aggregate(
-        total=Sum('valor')
-    )['total'] or 0
-    total_variables = costos.filter(centro_costo__tipo_costo='Variable').aggregate(
-        total=Sum('valor')
-    )['total'] or 0
-
-    context = {
-        'periodo': periodo,
-        'costos': costos,
-        'total_general': total_general,
-        'total_fijos': total_fijos,
-        'total_variables': total_variables,
-    }
-    return render(request, 'centro_costos/reporte_periodo.html', context)
