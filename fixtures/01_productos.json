@@ -1,169 +1,233 @@
-[{
+[
+  {
     "model": "produccion.producto",
     "pk": 1,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado de Vainilla",
-      "precio": "500"
+      "descripcion": "",
+      "precio": "500.00",
+      "stock": 0
     }
   },
   {
-    "model": "produccion.producto", 
+    "model": "produccion.producto",
     "pk": 2,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado de Chocolate",
-      "precio": "500"
+      "descripcion": "",
+      "precio": "500.00",
+      "stock": 0
     }
   },
   {
-    "model" : "produccion.producto",
+    "model": "produccion.producto",
     "pk": 3,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado de Fresa",
-      "precio": "500"
+      "descripcion": "",
+      "precio": "500.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 4,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado de Limón",
-      "precio": "500"
+      "descripcion": "",
+      "precio": "500.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 5,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado de Menta Granizada",
-      "precio": "500"
+      "descripcion": "",
+      "precio": "500.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 6,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado de Dulce de Leche",
-      "precio": "600"
+      "descripcion": "",
+      "precio": "600.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 7,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado de Oreo",
-      "precio": "600"
+      "descripcion": "",
+      "precio": "600.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 8,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado de Frutilla con Crema",
-      "precio": "600"
+      "descripcion": "",
+      "precio": "600.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 9,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado de Chocolate con Almendras",
-      "precio": "700"
+      "descripcion": "",
+      "precio": "700.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 10,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado de Tiramisú",
-      "precio": "700"
+      "descripcion": "",
+      "precio": "700.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 11,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado de Cheesecake",
-      "precio": "700"
+      "descripcion": "",
+      "precio": "700.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 12,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado Vegano de Coco",
-      "precio": "800"
+      "descripcion": "",
+      "precio": "800.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 13,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado Vegano de Mango",
-      "precio": "800"
+      "descripcion": "",
+      "precio": "800.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 14,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado Vegano de Frambuesa",
-      "precio": "800"
+      "descripcion": "",
+      "precio": "800.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 15,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado Sin Azúcar de Vainilla",
-      "precio": "900"
+      "descripcion": "",
+      "precio": "900.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 16,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado Sin Azúcar de Chocolate",
-      "precio": "900"
+      "descripcion": "",
+      "precio": "900.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 17,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado Sin Azúcar de Frutilla",
-      "precio": "900"
+      "descripcion": "",
+      "precio": "900.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 18,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado Premium de Pistacho",
-      "precio": "1000"
+      "descripcion": "",
+      "precio": "1000.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 19,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado Premium de Avellana",
-      "precio": "1000"
+      "descripcion": "",
+      "precio": "1000.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 20,
     "fields": {
+      "proveedor": 1,
       "nombre": "Helado Premium de Dulce de Leche con Brownie",
-      "precio": "1200"
+      "descripcion": "",
+      "precio": "1200.00",
+      "stock": 0
     }
   },
   {
     "model": "produccion.producto",
     "pk": 21,
     "fields": {
+      "proveedor": 1,
       "nombre": "Cucurucho",
-      "precio": "200"
+      "descripcion": "",
+      "precio": "200.00",
+      "stock": 0
     }
   }
 ]

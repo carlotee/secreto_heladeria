@@ -1,4 +1,5 @@
 from django.db import models
+from produccion.models import Costo
 
 # Create your models here.
 class Periodo(models.Model):
@@ -25,7 +26,7 @@ class Centro_Costos(models.Model):
 
 class Costo(models.Model):
     descripcion = models.CharField(max_length=120)
-    valor = models.DecimalField(max_digits=15, decimal_places=2)
+    costo = models.ForeignKey(Costo, on_delete=models.CASCADE, related_name='costos')
     tipo_costo = models.ForeignKey(TipoCosto, on_delete=models.PROTECT)
     centro_costo = models.ForeignKey(Centro_Costos, on_delete=models.SET_NULL, null=True, blank=True)
     periodo = models.ForeignKey(Periodo, on_delete=models.PROTECT)
