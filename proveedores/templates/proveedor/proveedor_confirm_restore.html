@@ -1,0 +1,8 @@
+<h1>Restaurar Proveedor</h1>
+<p>¿Deseas restaurar al proveedor <strong>{{ proveedor.nombre }}</strong>?</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Sí, restaurar</button>
+  <a href="{% url 'proveedor_deleted_list' %}">Cancelar</a>
+</form>

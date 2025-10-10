@@ -1,6 +1,10 @@
 from django.contrib import admin
 from .models import Proveedor, Producto
+<<<<<<< HEAD
 from produccion.models import Costo  
+=======
+from produccion.models import Costo
+>>>>>>> ad2bf0e890e817e649c9511ad21c9524ddb558fb
 
 class CostoInline(admin.TabularInline):
     model = Costo
@@ -18,7 +22,7 @@ class ProductoInline(admin.TabularInline):
 
 @admin.register(Proveedor)
 class ProveedorAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "email", "telefono")
+    list_display = ("nombre", "correo", "telefono")  
     search_fields = ("nombre", "rut")
     ordering = ("nombre",)
     inlines = [ProductoInline]

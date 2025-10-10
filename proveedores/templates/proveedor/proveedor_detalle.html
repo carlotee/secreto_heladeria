@@ -1,0 +1,12 @@
+<h1>Detalle del Proveedor</h1>
+
+<p><strong>Nombre:</strong> {{ proveedor.nombre }}</p>
+<p><strong>RUT:</strong> {{ proveedor.rut }}</p>
+<p><strong>Teléfono:</strong> {{ proveedor.telefono|default:"No registrado" }}</p>
+<p><strong>Correo:</strong> {{ proveedor.correo }}</p>
+<p><strong>Dirección:</strong> {{ proveedor.direccion }}</p>
+<p><strong>Ciudad:</strong> {{ proveedor.ciudad }}</p>
+
+<a href="{% url 'proveedor_edit' proveedor.id %}">Editar</a> |
+<a href="{% url 'proveedor_eliminar' proveedor.id %}">Eliminar</a> |
+<a href="{% url 'proveedor_list' %}">Volver</a>

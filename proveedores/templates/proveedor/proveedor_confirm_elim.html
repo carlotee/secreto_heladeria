@@ -1,0 +1,8 @@
+<h1>Eliminar Proveedor</h1>
+<p>¿Estás seguro que deseas eliminar a <strong>{{ proveedor.nombre }}</strong>?</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Sí, eliminar</button>
+  <a href="{% url 'proveedor_list' %}">Cancelar</a>
+</form>

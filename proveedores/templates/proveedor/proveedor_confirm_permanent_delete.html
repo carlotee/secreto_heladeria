@@ -1,0 +1,8 @@
+<h1>Eliminar Definitivamente</h1>
+<p>¿Eliminar para siempre a <strong>{{ proveedor.nombre }}</strong>? Esta acción no se puede deshacer.</p>
+
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Eliminar definitivamente</button>
+  <a href="{% url 'proveedor_deleted_list' %}">Cancelar</a>
+</form>
