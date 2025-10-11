@@ -10,7 +10,10 @@ class Usuario(AbstractUser):
 
     def __str__(self):
         return f"{self.username} ({self.email})"
-
+    
+class Meta:
+    db_table = 'login'
+    
 class Registro(models.Model):
     usuario = models.CharField(max_length=50, db_column='usuario')
     correo = models.EmailField(max_length=191, db_column='correo')
