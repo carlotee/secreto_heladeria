@@ -16,8 +16,12 @@ class TipoCosto(models.Model):
         return self.nombre
 
 class Centro_Costos(models.Model):
-    nombre = models.CharField(max_length=120,null=True, blank=True)
-    tipo_costo = models.ForeignKey(TipoCosto, on_delete=models.PROTECT)
+    nombre = models.CharField(max_length=120, null=True, blank=True)
+    tipo_costo = models.ForeignKey(
+        'TipoCosto',
+        on_delete=models.PROTECT,
+        default=1  # 👈 Esto evita que Django intente guardar un 0
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
