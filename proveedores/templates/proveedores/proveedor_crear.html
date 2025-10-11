@@ -1,14 +1,34 @@
-<h1>Agregar Proveedor</h1>
+<h1>Crear Proveedor</h1>
 
 <form method="post">
   {% csrf_token %}
-  <p><label>Nombre:</label> <input type="text" name="nombre" required></p>
-  <p><label>RUT:</label> <input type="text" name="rut" required></p>
-  <p><label>Teléfono:</label> <input type="text" name="telefono"></p>
-  <p><label>Correo:</label> <input type="email" name="correo" required></p>
-  <p><label>Dirección:</label> <input type="text" name="direccion" required></p>
-  <p><label>Ciudad:</label> <input type="text" name="ciudad" required></p>
+
+  <p><label>Nombre:</label>
+     <input type="text" name="nombre" value="{{ nombre }}" required></p>
+
+  <p><label>RUT:</label>
+     <input type="text" name="rut" value="{{ rut }}" required></p>
+
+  <p><label>Teléfono:</label>
+     <input type="text" name="telefono" value="{{ telefono }}"></p>
+
+  <p><label>Correo:</label>
+     <input type="email" name="correo" value="{{ correo }}"></p>
+
+  <p><label>Dirección:</label>
+     <input type="text" name="direccion" value="{{ direccion }}"></p>
+
+  <p><label>Ciudad:</label>
+     <input type="text" name="ciudad" value="{{ ciudad }}"></p>
 
   <button type="submit">Guardar</button>
-  <a href="{% url 'proveedor' %}">Cancelar</a>
+  <a href="{% url 'proveedor' %}">Volver</a>
 </form>
+
+{% if messages %}
+  <ul style="color: red;">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}

@@ -99,8 +99,18 @@ def proveedor_detalle(request, pk):
     }
     return render(request, 'proveedores/proveedor_detalle.html', context)
 
+def validar_rut(rut):
+    """Valida formato simple de RUT chileno: 12.345.678-9 o 12345678-9"""
+    return bool(re.match(r'^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$', rut))
 
+def validar_telefono(telefono):
+    """Valida formato chileno: +569XXXXXXXX o 9XXXXXXXX"""
+    return bool(re.match(r'^(\+?56)?(\s?9\d{8})$', telefono))
+
+
+# --- CREAR PROVEEDOR ---
 def proveedor_crear(request):
+    """Crea un nuevo proveedor según el modelo actual."""
     if request.method == 'POST':
         nombre = request.POST.get('nombre', '').strip()
         rut = request.POST.get('rut', '').strip()
@@ -108,50 +118,63 @@ def proveedor_crear(request):
         correo = request.POST.get('correo', '').strip()
         direccion = request.POST.get('direccion', '').strip()
         ciudad = request.POST.get('ciudad', '').strip()
-        
+
         errores = []
-        
+
+        # ✅ Validar nombre (obligatorio)
         if not nombre:
-            errores.append('El nombre es obligatorio')
-        
+            errores.append('El nombre es obligatorio.')
+
+        # ✅ Validar RUT (obligatorio y único)
         if not rut:
-            errores.append('El RUT es obligatorio')
+            errores.append('El RUT es obligatorio.')
         elif not validar_rut(rut):
-            errores.append('El RUT ingresado no es válido')
-            
+            errores.append('El formato del RUT no es válido (usa 12.345.678-9).')
+        elif Proveedor.objects.filter(rut=rut).exists():
+            errores.append('Ya existe un proveedor con ese RUT.')
+
+        # ✅ Validar teléfono (solo si se ingresó)
         if telefono and not validar_telefono(telefono):
-            errores.append('El formato del teléfono no es válido')
-        
-        if not correo:
-            errores.append('El correo es obligatorio')
-        else:
+            errores.append('El formato del teléfono no es válido (usa +569XXXXXXXX).')
+
+        # ✅ Validar correo (solo si se ingresó)
+        if correo:
             try:
                 validate_email(correo)
             except ValidationError:
-                errores.append('El formato del correo no es válido')
-        
-        if not direccion:
-            errores.append('La dirección es obligatoria')
-        
-        if not ciudad:
-            errores.append('La ciudad es obligatoria')
-        
+                errores.append('El formato del correo no es válido.')
+
+        # ✅ Mostrar errores si existen
         if errores:
             for error in errores:
                 messages.error(request, error)
-        else:
-            Proveedor.objects.create(
-                nombre=nombre,
-                rut=rut,
-                telefono=telefono if telefono else None,
-                correo=correo,
-                direccion=direccion,
-                ciudad=ciudad
-            )
-            messages.success(request, f'Proveedor "{nombre}" creado exitosamente')
-            return redirect('proveedor')
-    
+
+            context = {
+                'nombre': nombre,
+                'rut': rut,
+                'telefono': telefono,
+                'correo': correo,
+                'direccion': direccion,
+                'ciudad': ciudad,
+            }
+            return render(request, 'proveedores/proveedor_crear.html', context)
+
+        # ✅ Crear el proveedor
+        Proveedor.objects.create(
+            nombre=nombre,
+            rut=rut,
+            telefono=telefono if telefono else None,
+            correo=correo,
+            direccion=direccion,
+            ciudad=ciudad
+        )
+
+        messages.success(request, f'Proveedor "{nombre}" creado exitosamente ✅')
+        return redirect('proveedor')  # redirige al listado
+
+    # Si es GET, renderiza formulario vacío
     return render(request, 'proveedores/proveedor_crear.html')
+
 
 
 def proveedor_act(request, pk):
