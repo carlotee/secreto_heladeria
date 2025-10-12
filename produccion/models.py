@@ -32,10 +32,10 @@ class Costo(models.Model):
     descripcion = models.TextField()
     valor = models.DecimalField(max_digits=10, decimal_places=2)
     fecha = models.DateField(auto_now_add=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)  # ← agregado para el borrado lógico
+    deleted_at = models.DateTimeField(null=True, blank=True)  # ← aquí sí está bien
 
     def eliminar(self):
-        """Borrado lógico"""
+        """Borrado lógico del costo"""
         self.deleted_at = timezone.now()
         self.save()
 

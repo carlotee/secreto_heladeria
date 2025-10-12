@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from proveedores.models import Proveedor
 
 def producto(request):
-    productos = Producto.objects.filter(deleted_at__isnull=True).order_by('-created_at')
+    productos = Producto.objects.all().order_by('-id')
     
     search = request.GET.get('search', '')
     if search:
@@ -35,7 +35,7 @@ def producto(request):
         'precio_max': precio_max,
         'total_productos': productos.count()
     }
-    return render(request, 'productos/producto.html', context)
+    return render(request, 'produccion/producto.html', context)
 
 
 def producto_detalle(request, pk):
@@ -145,15 +145,15 @@ def producto_act(request, pk):
 
 
 def producto_eliminar(request, pk):
-    producto = get_object_or_404(Producto, pk=pk, deleted_at__isnull=True)
+    producto = get_object_or_404(Producto, pk=pk)
     
     if request.method == 'POST':
-        producto.deleted_at = timezone.now()
-        producto.save()
-        messages.success(request, f'Producto "{producto.nombre}" eliminado exitosamente')
-        return redirect('producto')
+        nombre_producto = producto.nombre  # guardamos el nombre para mostrarlo después
+        producto.delete()  # elimina realmente de la base de datos
+        messages.success(request, f'Producto "{nombre_producto}" eliminado exitosamente.')
+        return redirect('producto')  # asegúrate que 'producto' sea el nombre de la URL del listado
     
     context = {
         'producto': producto
     }
-    return render(request, 'productos/producto_confirm_elim.html', context)
+    return render(request, 'produccion/producto_eliminar.html', context)
