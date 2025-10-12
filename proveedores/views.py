@@ -92,10 +92,12 @@ def proveedor(request):
 
 
 def proveedor_detalle(request, pk):
-    proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
-    
+    proveedor = get_object_or_404(Proveedor, pk=pk)
+    productos = proveedor.productos.all()  # 🔹 usa el related_name del modelo Producto
+
     context = {
-        'proveedor': proveedor
+        'proveedor': proveedor,
+        'productos': productos,  # 🔹 lo pasamos al template
     }
     return render(request, 'proveedores/proveedor_detalle.html', context)
 

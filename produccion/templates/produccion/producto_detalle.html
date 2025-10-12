@@ -1,11 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+<h2>Detalle del Proveedor</h2>
+<p><strong>Nombre:</strong> {{ proveedor.nombre }}</p>
+<p><strong>RUT:</strong> {{ proveedor.rut }}</p>
+<p><strong>Correo:</strong> {{ proveedor.correo }}</p>
+<p><strong>Ciudad:</strong> {{ proveedor.ciudad }}</p>
+<p><strong>Dirección:</strong> {{ proveedor.direccion }}</p>
+
+<hr>
+
+<h3>Productos asociados</h3>
+
+{% if productos %}
+  <table border="1" cellpadding="6">
+    <tr>
+      <th>Nombre</th>
+      <th>Descripción</th>
+      <th>Precio</th>
+      <th>Stock</th>
+    </tr>
+    {% for producto in productos %}
+    <tr>
+      <td>{{ producto.nombre }}</td>
+      <td>{{ producto.descripcion }}</td>
+      <td>${{ producto.precio }}</td>
+      <td>{{ producto.stock }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <p>Este proveedor no tiene productos asociados.</p>
+{% endif %}

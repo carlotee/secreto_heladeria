@@ -1,16 +1,20 @@
 from django import forms
-from .models import  Producto
+from .models import Producto
+from proveedores.models import Proveedor  # 🔹 Import necesario
 
 class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
-        fields = ['nombre', 'descripcion', 'precio', 'stock']
+        fields = ['nombre', 'descripcion', 'precio', 'stock', 'proveedor']  # 🔹 Agregamos proveedor aquí
+
         labels = {
             'nombre': 'Nombre del producto',
             'descripcion': 'Descripción',
             'precio': 'Precio ($)',
             'stock': 'Stock disponible',
+            'proveedor': 'Proveedor',  # 🔹 Nuevo label
         }
+
         widgets = {
             'nombre': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -31,5 +35,9 @@ class ProductoForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Cantidad disponible',
                 'min': 0,
+            }),
+            # 🔹 Este widget crea un desplegable con todos los proveedores existentes
+            'proveedor': forms.Select(attrs={
+                'class': 'form-control',
             }),
         }

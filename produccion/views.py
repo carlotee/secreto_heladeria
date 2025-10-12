@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.utils import timezone
 from .models import Producto
 from django.core.paginator import Paginator
+from proveedores.models import Proveedor
 
 def producto(request):
     productos = Producto.objects.filter(deleted_at__isnull=True).order_by('-created_at')
@@ -38,41 +39,75 @@ def producto(request):
 
 
 def producto_detalle(request, pk):
-    producto = get_object_or_404(Producto, pk=pk, deleted_at__isnull=True)
+    producto = get_object_or_404(Producto, pk=pk)
     
     context = {
         'producto': producto
     }
-    return render(request, 'productos/producto_detalle.html', context)
-
+    return render(request, 'produccion/producto_detalle.html', context)
 
 def producto_crear(request):
+    """Crea un producto y lo asocia a un proveedor."""
     if request.method == 'POST':
-        nombre = request.POST.get('nombre')
-        descripcion = request.POST.get('descripcion')
-        precio = request.POST.get('precio')
-        
+        nombre = request.POST.get('nombre', '').strip()
+        descripcion = request.POST.get('descripcion', '').strip()
+        precio = request.POST.get('precio', '').strip()
+        stock = request.POST.get('stock', '').strip()
+        proveedor_id = request.POST.get('proveedor', '').strip()
+
+        errores = []
+
+        # 🔹 Validaciones básicas
         if not nombre:
-            messages.error(request, 'El nombre del producto es obligatorio')
-        elif not precio:
-            messages.error(request, 'El precio del producto es obligatorio')
+            errores.append('El nombre del producto es obligatorio.')
+        if not precio:
+            errores.append('El precio del producto es obligatorio.')
         else:
             try:
                 precio = float(precio)
                 if precio < 0:
-                    messages.error(request, 'El precio no puede ser negativo')
-                else:
-                    Producto.objects.create(
-                        nombre=nombre,
-                        descripcion=descripcion,
-                        precio=precio
-                    )
-                    messages.success(request, f'Producto "{nombre}" creado exitosamente')
-                    return redirect('producto')
+                    errores.append('El precio no puede ser negativo.')
             except ValueError:
-                messages.error(request, 'El precio debe ser un número válido')
-    
-    return render(request, 'productos/producto_crear.html')
+                errores.append('El precio debe ser un número válido.')
+
+        if stock:
+            try:
+                stock = int(stock)
+                if stock < 0:
+                    errores.append('El stock no puede ser negativo.')
+            except ValueError:
+                errores.append('El stock debe ser un número entero.')
+        else:
+            stock = 0  # valor por defecto
+
+        # 🔹 Proveedor
+        proveedor = None
+        if proveedor_id:
+            try:
+                proveedor = Proveedor.objects.get(id=proveedor_id)
+            except Proveedor.DoesNotExist:
+                errores.append('El proveedor seleccionado no existe.')
+
+        # 🔹 Mostrar errores si hay
+        if errores:
+            for error in errores:
+                messages.error(request, error)
+        else:
+            # 🔹 Crear producto
+            Producto.objects.create(
+                nombre=nombre,
+                descripcion=descripcion,
+                precio=precio,
+                stock=stock,
+                proveedor=proveedor
+            )
+            messages.success(request, f'Producto "{nombre}" creado exitosamente ✅')
+            return redirect('producto')
+
+    # 🔹 Pasar lista de proveedores al template
+    proveedores = Proveedor.objects.all()
+    context = {'proveedores': proveedores}
+    return render(request, 'produccion/producto_crear.html', context)
 
 
 def producto_act(request, pk):
