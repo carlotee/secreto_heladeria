@@ -1,0 +1,112 @@
+[
+  {
+    "model": "produccion.producto",
+    "pk": 1,
+    "fields": {
+      "nombre": "Helado de Vainilla",
+      "descripcion": "Helado artesanal de vainilla con crema natural.",
+      "precio": "2500.00",
+      "stock": 20,
+      "proveedor": 1
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 2,
+    "fields": {
+      "nombre": "Helado de Chocolate",
+      "descripcion": "Helado cremoso con cacao premium.",
+      "precio": "2800.00",
+      "stock": 15,
+      "proveedor": 2
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 3,
+    "fields": {
+      "nombre": "Helado de Frutilla",
+      "descripcion": "Helado natural con trozos de frutilla fresca.",
+      "precio": "2300.00",
+      "stock": 25,
+      "proveedor": 3
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 4,
+    "fields": {
+      "nombre": "Helado de Menta",
+      "descripcion": "Refrescante helado de menta con chips de chocolate.",
+      "precio": "2600.00",
+      "stock": 18,
+      "proveedor": 4
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 5,
+    "fields": {
+      "nombre": "Helado de Manjar",
+      "descripcion": "Helado de manjar con toques de nuez y crema.",
+      "precio": "2900.00",
+      "stock": 22,
+      "proveedor": 5
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 6,
+    "fields": {
+      "nombre": "Helado de Lúcuma",
+      "descripcion": "Helado artesanal sabor lúcuma con leche condensada.",
+      "precio": "3100.00",
+      "stock": 17,
+      "proveedor": 6
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 7,
+    "fields": {
+      "nombre": "Helado de Mango",
+      "descripcion": "Helado tropical de mango fresco.",
+      "precio": "2700.00",
+      "stock": 20,
+      "proveedor": 7
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 8,
+    "fields": {
+      "nombre": "Helado de Piña",
+      "descripcion": "Helado ligero de piña natural con trozos de fruta.",
+      "precio": "2500.00",
+      "stock": 15,
+      "proveedor": 8
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 9,
+    "fields": {
+      "nombre": "Helado de Café",
+      "descripcion": "Helado de café espresso intenso y cremoso.",
+      "precio": "3200.00",
+      "stock": 14,
+      "proveedor": 9
+    }
+  },
+  {
+    "model": "produccion.producto",
+    "pk": 10,
+    "fields": {
+      "nombre": "Helado de Oreo",
+      "descripcion": "Helado cremoso con trozos de galleta Oreo.",
+      "precio": "3300.00",
+      "stock": 10,
+      "proveedor": 10
+    }
+  }
+]
