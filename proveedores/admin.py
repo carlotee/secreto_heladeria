@@ -18,7 +18,7 @@ class ProductoInline(admin.TabularInline):
 
 @admin.register(Proveedor)
 class ProveedorAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "correo", "telefono","ciudad")  
+    list_display = ("nombre","rut" ,"correo", "telefono","direccion","ciudad")  
     search_fields = ("nombre", "rut")
     ordering = ("nombre",)
     inlines = [ProductoInline]
