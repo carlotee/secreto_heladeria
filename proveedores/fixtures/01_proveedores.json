@@ -6,6 +6,7 @@
       "nombre": "Helados del Sur",
       "rut": "76.123.456-7",
       "correo": "contacto@heladosdelsur.cl",
+      "telefono": "+56 9 7654 3210",
       "ciudad": "La Serena"
     }
   },
@@ -16,6 +17,7 @@
       "nombre": "Frío Polar",
       "rut": "77.987.654-3",
       "correo": "ventas@friopolar.cl",
+      "telefono": "+56 9 8765 4321",
       "ciudad": "Coquimbo"
     }
   },
@@ -26,6 +28,7 @@
       "nombre": "Dulce Nieve",
       "rut": "78.456.123-5",
       "correo": "info@dulcenieve.cl",
+      "telefono": "+56 9 6543 2109",
       "ciudad": "Ovalle"
     }
   },
@@ -36,6 +39,7 @@
       "nombre": "Polar Chill",
       "rut": "79.654.321-9",
       "correo": "contacto@polar-chill.cl",
+      "telefono": "+56 9 9123 4567",
       "ciudad": "Santiago"
     }
   },
@@ -46,6 +50,7 @@
       "nombre": "Heladería Andina",
       "rut": "80.321.987-1",
       "correo": "ventas@andinahelados.cl",
+      "telefono": "+56 9 9987 6543",
       "ciudad": "Valparaíso"
     }
   },
@@ -56,6 +61,7 @@
       "nombre": "Ice Factory",
       "rut": "81.123.789-4",
       "correo": "ventas@icefactory.cl",
+      "telefono": "+56 9 9345 6789",
       "ciudad": "Concepción"
     }
   },
@@ -66,6 +72,7 @@
       "nombre": "Fresco del Valle",
       "rut": "82.654.987-2",
       "correo": "contacto@frescodelvalle.cl",
+      "telefono": "+56 9 9678 1234",
       "ciudad": "La Serena"
     }
   },
@@ -76,6 +83,7 @@
       "nombre": "Ice Cream Chile",
       "rut": "83.789.654-5",
       "correo": "ventas@icecreamchile.cl",
+      "telefono": "+56 9 9543 6789",
       "ciudad": "Antofagasta"
     }
   },
@@ -86,6 +94,7 @@
       "nombre": "Frozen Dreams",
       "rut": "84.987.321-6",
       "correo": "info@frozendreams.cl",
+      "telefono": "+56 9 9234 5678",
       "ciudad": "Rancagua"
     }
   },
@@ -96,6 +105,7 @@
       "nombre": "Sabores del Norte",
       "rut": "85.654.123-9",
       "correo": "contacto@saboresnorte.cl",
+      "telefono": "+56 9 9789 4321",
       "ciudad": "Iquique"
     }
   }
