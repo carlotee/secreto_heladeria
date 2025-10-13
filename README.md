@@ -28,6 +28,52 @@ cada vez que instalas una nueva libreria actualizar el archivo requirements.txt 
 pip freeze > requirements.txt
 
 
+-------------------------------------------------------d
+⚙️ 1. Admin Básico (10 pts)
+
+Modelos registrados:
+
+accounts: Usuario, Registro
+
+proveedores: Proveedor
+
+produccion: Producto, Costo
+
+centro_costos: Periodo, TipoCosto, Centro_Costos, Costo
+
+Personalización aplicada:
+
+Columnas (list_display)
+
+Búsqueda (search_fields)
+
+Filtros (list_filter)
+
+Orden (ordering)
+
+📍 Ubicación:
+
+accounts/admin.py
+
+proveedores/admin.py
+
+produccion/admin.py
+
+centro_costos/admin.py
+----------------------------------------
+🧩 2. Admin Pro (22 pts)
+
+A) Inline – Productos dentro de Proveedores
+📍 proveedores/admin.py
+Permite administrar productos directamente desde el formulario de proveedores.
+
+B) Acción personalizada – Borrado lógico de Costos
+📍 produccion/admin.py
+Acción en el admin que marca los costos con deleted_at sin eliminarlos físicamente.
+
+C) Validación – Valor de Costo > 0
+📍 produccion/forms.py
+Valida que el valor del costo sea mayor que cero antes de guardarlo.
 
 Admin
 12345

@@ -1,6 +1,7 @@
 from django import forms
 from .models import Producto
-from proveedores.models import Proveedor  # 🔹 Import necesario
+from proveedores.models import Proveedor
+from .models import Costo
 
 class ProductoForm(forms.ModelForm):
     class Meta:
@@ -41,3 +42,14 @@ class ProductoForm(forms.ModelForm):
                 'class': 'form-control',
             }),
         }
+
+class CostoForm(forms.ModelForm):
+    class Meta:
+        model = Costo
+        fields = '__all__'
+
+    def clean_valor(self):
+        valor = self.cleaned_data.get("valor")
+        if valor <= 0:
+            raise forms.ValidationError("El valor del costo debe ser mayor que 0.")
+        return valor

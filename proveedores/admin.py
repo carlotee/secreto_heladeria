@@ -24,9 +24,3 @@ class ProveedorAdmin(admin.ModelAdmin):
     inlines = [ProductoInline]
 
 
-@admin.register(Producto)
-class ProductoAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "proveedor", "precio", "stock")
-    search_fields = ("nombre",)
-    ordering = ("nombre",)
-    inlines = [CostoInline]
