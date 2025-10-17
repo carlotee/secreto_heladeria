@@ -28,7 +28,7 @@ cada vez que instalas una nueva libreria actualizar el archivo requirements.txt 
 pip freeze > requirements.txt
 
 
--------------------------------------------------------d
+-------------------------------------------------------
 ⚙️ 1. Admin Básico (10 pts)
 
 Modelos registrados:
@@ -60,7 +60,7 @@ proveedores/admin.py
 produccion/admin.py
 
 centro_costos/admin.py
-----------------------------------------
+-----------------------------------------------------------------------------------------
 🧩 2. Admin Pro (22 pts)
 
 A) Inline – Productos dentro de Proveedores
