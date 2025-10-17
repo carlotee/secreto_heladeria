@@ -144,6 +144,21 @@ def costo_eliminar(request, pk):
 @login_required
 def dashboard(request):
     centros = Centro_Costos.objects.prefetch_related('costo_set__periodo', 'tipo_costo')
+    visitas = request.session.get('visitas', 0)
+    request.session['visitas'] = visitas + 1
+
+    # Cambiar una clave
+    request.session['carrito'] = {'sku1': 2}  # asignar un objeto mutable
+    request.session.modified = True  # si modificas un objeto mutable
+
+    # Eliminar una clave
+    if 'carrito' in request.session:
+        del request.session['carrito']
+
+    # Regenerar/invalidad
+    request.session.cycle_key()  # mitiga fijación de sesión (significa que la sesión anterior ya no es válida)
+
+    request.session.flush()  # logout server-side total (la sesión anterior ya no es válida)
 
     centros_con_periodos = []
     for centro in centros:
@@ -178,4 +193,7 @@ def dashboard(request):
         'proveedores': proveedores,
     }
 
-    return render(request, 'centro_costos/dashboard.html', context)
+    messages.success(request, 'Costo agregado al carrito')
+    messages.error(request, 'Stock insuficiente')
+
+    return render(request, 'centro_costos/dashboard.html', context, {'visitas':visitas})
