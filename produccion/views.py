@@ -157,3 +157,20 @@ def producto_eliminar(request, pk):
         'producto': producto
     }
     return render(request, 'produccion/producto_eliminar.html', context)
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_POST
+
+
+@require_POST
+def producto_delete_ajax(request, pk):
+    # Verifica que la petición sea AJAX
+    if not request.headers.get("x-requested-with") == "XMLHttpRequest":
+        return HttpResponseBadRequest("Solo AJAX")
+    # Verifica permisos y autenticación con pk de zona
+    producto = get_object_or_404(Producto, pk=pk)
+    nombre = producto.nombre
+    producto.delete()
+
+    return JsonResponse({"ok": True, "message": f"Zona '{nombre}' eliminada"})
