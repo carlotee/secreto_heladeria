@@ -147,19 +147,6 @@ def dashboard(request):
     visitas = request.session.get('visitas', 0)
     request.session['visitas'] = visitas + 1
 
-    # Cambiar una clave
-    request.session['carrito'] = {'sku1': 2}  # asignar un objeto mutable
-    request.session.modified = True  # si modificas un objeto mutable
-
-    # Eliminar una clave
-    if 'carrito' in request.session:
-        del request.session['carrito']
-
-    # Regenerar/invalidad
-    request.session.cycle_key()  # mitiga fijación de sesión (significa que la sesión anterior ya no es válida)
-
-    request.session.flush()  # logout server-side total (la sesión anterior ya no es válida)
-
     centros_con_periodos = []
     for centro in centros:
         costos = centro.costo_set.all()
@@ -181,7 +168,7 @@ def dashboard(request):
         Costo.objects.filter(periodo=ultimo_periodo).aggregate(total=Sum('valor'))['total']
         if ultimo_periodo else 0
     )
-    
+
     proveedores = Proveedor.objects.all()
 
     context = {
@@ -191,9 +178,10 @@ def dashboard(request):
         'total_centros': Centro_Costos.objects.filter(deleted_at__isnull=True).count(),
         'total_tipos': TipoCosto.objects.count(),
         'proveedores': proveedores,
+        'visitas': visitas,  # ✅ agregar aquí las visitas correctamente
     }
 
     messages.success(request, 'Costo agregado al carrito')
     messages.error(request, 'Stock insuficiente')
 
-    return render(request, 'centro_costos/dashboard.html', context, {'visitas':visitas})
+    return render(request, 'centro_costos/dashboard.html', context)
