@@ -165,12 +165,10 @@ from django.views.decorators.http import require_POST
 
 @require_POST
 def producto_delete_ajax(request, pk):
-    # Verifica que la petición sea AJAX
     if not request.headers.get("x-requested-with") == "XMLHttpRequest":
         return HttpResponseBadRequest("Solo AJAX")
-    # Verifica permisos y autenticación con pk de zona
     producto = get_object_or_404(Producto, pk=pk)
     nombre = producto.nombre
     producto.delete()
 
-    return JsonResponse({"ok": True, "message": f"Zona '{nombre}' eliminada"})
+    return JsonResponse({"ok": True, "message": f"Producto '{nombre}' eliminada"})

@@ -25,28 +25,24 @@
             <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto">
                 {% if user.is_authenticated %}
-                    <!-- Ítems visibles solo si hay sesión -->
-                    <li class="nav-item"><a class="nav-link" href="">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
 
-                    {% if perms.devices.view_zone %}
-                    <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.url_name == 'zona_list' %}active{% endif %}"
-                        href="{% url 'zona_list' %}">🗺️ Zonas</a>
-                    </li>
-                    {% endif %}
-                    {% if perms.devices.view_product %}
-                        <li class="nav-item"><a class="nav-link" href="">Productos</a></li>
-                    {% endif %}
+                {% if perms.producto.view_producto %}
+                <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'producto' %}active{% endif %}" href="{% url 'producto' %}">
+                    Productos
+                </a>
+            </li>
+        {% endif %}
 
-                    <!-- Acceso rápido a admin para staff -->
-                    {% if user.is_staff %}
-                        <li class="nav-item"><a class="nav-link" href="/admin/">Admin</a></li>
-                    {% endif %}
-                {% else %}
-                <!-- Ítems visibles para usuarios no autenticados -->
-                <li class="nav-item"><a class="nav-link" href=""">Catálogo</a></li>
-                {% endif %}
-            </ul>
+        {% if user.is_staff %}
+            <li class="nav-item"><a class="nav-link" href="/admin/">Admin</a></li>
+        {% endif %}
+    {% else %}
+        <li class="nav-item"><a class="nav-link" href="#">Catálogo</a></li>
+    {% endif %}
+</ul>
+
 
             <ul class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}

@@ -17,7 +17,6 @@ class Producto(models.Model):
     stock = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        # Si el producto no tiene proveedor asignado, evitamos error con None
         if self.proveedor:
             return f"{self.nombre} ({self.proveedor.nombre})"
         return self.nombre
@@ -32,7 +31,7 @@ class Costo(models.Model):
     descripcion = models.TextField()
     valor = models.DecimalField(max_digits=10, decimal_places=2)
     fecha = models.DateField(auto_now_add=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)  # ← aquí sí está bien
+    deleted_at = models.DateTimeField(null=True, blank=True)  
 
     def eliminar(self):
         """Borrado lógico del costo"""
