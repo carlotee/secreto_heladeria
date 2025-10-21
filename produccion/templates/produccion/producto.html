@@ -94,7 +94,7 @@
         const zonaId = btn.dataset.id;
         const url = btn.dataset.url;
         const nombre =
-            row.querySelector(".p-name")?.textContent?.trim() || "la producto";
+            row.querySelector(".p-name")?.textContent?.trim() || "El producto";
 
         const confirm = await Swal.fire({
             title: `¿Eliminar ${nombre}?`,
