@@ -1,6 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Crear Producto{% endblock %}
+
+{% block content %}
 <h1>Crear Producto</h1>
 
-<form method="post">
+<form id="formProducto" method="post">
   {% csrf_token %}
 
   <p>
@@ -44,3 +50,79 @@
     {% endfor %}
   </ul>
 {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // --- CSRF helper ---
+  function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+  }
+  const csrftoken = getCookie("csrftoken");
+
+  // Interceptar envío del formulario
+  document.getElementById("formProducto").addEventListener("submit", async (e) => {
+      e.preventDefault(); // Evita envío inmediato
+
+      const form = e.target;
+      const formData = new FormData(form);
+
+      // Confirmación SweetAlert
+      const confirm = await Swal.fire({
+          title: "¿Deseas guardar este producto?",
+          text: "Revisa que todos los datos estén correctos.",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonText: "Sí, guardar",
+          cancelButtonText: "Cancelar",
+      });
+
+      if (!confirm.isConfirmed) return;
+
+      try {
+          const resp = await fetch(form.action || window.location.href, {
+              method: "POST",
+              headers: {
+                  "X-CSRFToken": csrftoken,
+                  "X-Requested-With": "XMLHttpRequest",
+              },
+              body: formData,
+          });
+
+          if (!resp.ok) throw new Error("Error al enviar el formulario");
+
+          // Si el backend devuelve JSON con estado (puedes adaptarlo)
+          const data = await resp.json().catch(() => null);
+
+          if (data && data.ok) {
+              Swal.fire({
+                  icon: "success",
+                  title: "Producto creado correctamente",
+                  timer: 2000,
+                  showConfirmButton: false,
+              }).then(() => {
+                  window.location.href = "{% url 'producto' %}";
+              });
+          } else {
+              Swal.fire({
+                  icon: "success",
+                  title: "Producto guardado correctamente",
+                  timer: 2000,
+                  showConfirmButton: false,
+              }).then(() => {
+                  window.location.href = "{% url 'producto' %}";
+              });
+          }
+      } catch (err) {
+          Swal.fire({
+              icon: "error",
+              title: "Error al guardar",
+              text: err.message,
+          });
+      }
+  });
+</script>
+{% endblock %}
