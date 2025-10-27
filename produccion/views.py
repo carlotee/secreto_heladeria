@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from proveedores.models import Proveedor
 
 def producto(request):
-    productos = Producto.objects.all().order_by('-id')
+    productos = Producto.objects.all().order_by('id')
     
     search = request.GET.get('search', '')
     if search:
@@ -24,7 +24,7 @@ def producto(request):
     if precio_max:
         productos = productos.filter(precio__lte=precio_max)
     
-    paginator = Paginator(productos, 10)  
+    paginator = Paginator(productos, 5)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
