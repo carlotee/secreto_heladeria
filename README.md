@@ -3,7 +3,7 @@ cargar semilla para cada app (proveedor y produccion)
 python manage.py loaddata proveedores/fixtures/proveedores.json
 python manage.py loaddata produccion/fixtures/productos.json
 
-----------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
 
 User_limitado
 user_limited@gmail.com
@@ -15,7 +15,7 @@ admin
 admin@gmail.com
 admin123
 
-----------------------------------------
+--------------------------------------------------------------------------------------------------------------------------
 
 para ocupar las dependecias 
 pip install -r requirements.txt
