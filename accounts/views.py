@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect
 from .forms import RegistroForm
 from django.contrib.auth import authenticate, login as auth_login
 from .forms import LoginForm
-from .models import Registro
 from django.db import connection
 import traceback
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout
+from django.contrib.auth.hashers import make_password
+from .models import Registro, Usuario
 
 def registro(request):
     try:
@@ -35,17 +36,27 @@ def registro(request):
                 
                 try:
                     print("Intentando crear registro manualmente...")
+
+                    # 👇 Guardar en accounts_registro
                     nuevo_registro = Registro(
                         usuario=form.cleaned_data['usuario'],
                         correo=form.cleaned_data['correo'],
                         contraseña=form.cleaned_data['contraseña'],
                         telefono=form.cleaned_data['telefono']
                     )
-                    print("Objeto creado:", nuevo_registro)
-                    
                     nuevo_registro.save()
-                    print("¡Guardado exitosamente!")
-                    
+                    print("¡Guardado en accounts_registro!")
+
+                    # 👇 Crear también el usuario en la tabla 'login'
+                    nuevo_usuario = Usuario.objects.create(
+                        username=form.cleaned_data['usuario'],
+                        email=form.cleaned_data['correo'],
+                        password=make_password(form.cleaned_data['contraseña']),  # Encriptar la clave
+                        is_active=True
+                    )
+                    nuevo_usuario.save()
+                    print("¡Guardado en login (Usuario)!")
+
                     return redirect('login')
                     
                 except Exception as save_error:
@@ -80,6 +91,7 @@ def registro(request):
             'form': RegistroForm(),
             'error': f'Error interno: {str(e)}'
         })
+
 
 
 def login_view(request):
