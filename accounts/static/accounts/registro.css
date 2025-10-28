@@ -100,3 +100,47 @@ button:hover {
     transform: translateY(0);
   }
 }
+
+/* Estilo general del select */
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f8faff;
+  color: #333;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+  transition: all 0.2s ease;
+  appearance: none; /* elimina el estilo por defecto del navegador */
+  background-image: linear-gradient(45deg, transparent 50%, #007bff 50%),
+                    linear-gradient(135deg, #007bff 50%, transparent 50%);
+  background-position: calc(100% - 20px) calc(1em + 2px),
+                       calc(100% - 15px) calc(1em + 2px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+/* Cuando el usuario pasa el mouse o enfoca el select */
+select:hover {
+  border-color: #007bff;
+}
+
+select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
+/* Opciones dentro del menú desplegable */
+select option {
+  padding: 10px;
+  background: white;
+  color: #333;
+}
+
+/* Cuando el select está deshabilitado */
+select:disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
+}

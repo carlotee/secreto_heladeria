@@ -12,10 +12,21 @@ class LoginForm(forms.Form):
     )
 
 
+from django import forms
+from .models import Registro
+
 class RegistroForm(forms.ModelForm):
+    ROLES = [
+        ('cliente', 'Cliente'),
+        ('proveedor', 'Proveedor'),
+        ('admin', 'Administrador'),
+    ]
+
+    rol = forms.ChoiceField(choices=ROLES, label="Rol")
+
     class Meta:
         model = Registro
-        fields = ['usuario', 'correo', 'contraseña', 'telefono']
+        fields = ['usuario', 'correo', 'contraseña', 'telefono', 'rol']
         widgets = {
             'contraseña': forms.PasswordInput(attrs={'placeholder': 'Ingresa tu contraseña'}),
             'usuario': forms.TextInput(attrs={'placeholder': 'Nombre de usuario'}),
@@ -27,4 +38,5 @@ class RegistroForm(forms.ModelForm):
             'correo': 'Correo electrónico',
             'contraseña': 'Contraseña',
             'telefono': 'Teléfono',
+            'rol': 'Rol',
         }
