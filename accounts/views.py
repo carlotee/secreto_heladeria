@@ -6,92 +6,36 @@ from django.db import connection
 import traceback
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout
-from django.contrib.auth.hashers import make_password
-from .models import Registro, Usuario
+from .models import Usuario
+from django.contrib import messages
 
 def registro(request):
-    try:
-        print("=== REGISTRO ===")
-        if request.method == 'POST':
-            print("Método POST detectado")
-            print("Datos POST:", request.POST)
-            
-            form = RegistroForm(request.POST)
-            print("Formulario creado")
-            
-            if form.is_valid():
-                print("Formulario válido")
-                print("Datos limpios:", form.cleaned_data)
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        
+        if form.is_valid():
+            try:
+                nuevo_usuario = form.save()
                 
-                try:
-                    with connection.cursor() as cursor:
-                        cursor.execute("SELECT 1")
-                        print("Conexión a BD OK")
-                except Exception as db_error:
-                    print("Error de conexión a BD:", str(db_error))
-                    return render(request, 'accounts/registro.html', {
-                        'form': form,
-                        'error': f'Error de base de datos: {str(db_error)}'
-                    })
+                print(f"✅ Usuario creado: {nuevo_usuario.username}")
+                print(f"✅ Rol asignado: {nuevo_usuario.rol}")
+                print(f"✅ Grupos: {[g.name for g in nuevo_usuario.groups.all()]}")
                 
-                try:
-                    print("Intentando crear registro manualmente...")
-
-                    # 👇 Guardar en accounts_registro
-                    nuevo_registro = Registro(
-                        usuario=form.cleaned_data['usuario'],
-                        correo=form.cleaned_data['correo'],
-                        contraseña=form.cleaned_data['contraseña'],
-                        telefono=form.cleaned_data['telefono']
-                    )
-                    nuevo_registro.save()
-                    print("¡Guardado en accounts_registro!")
-
-                    # 👇 Crear también el usuario en la tabla 'login'
-                    nuevo_usuario = Usuario.objects.create(
-                        username=form.cleaned_data['usuario'],
-                        email=form.cleaned_data['correo'],
-                        password=make_password(form.cleaned_data['contraseña']),  # Encriptar la clave
-                        is_active=True
-                    )
-                    nuevo_usuario.save()
-                    print("¡Guardado en login (Usuario)!")
-
-                    return redirect('login')
-                    
-                except Exception as save_error:
-                    print("Error al guardar:", str(save_error))
-                    print("Traceback del error:", traceback.format_exc())
-                    
-                    try:
-                        print("Intentando con form.save()...")
-                        registro = form.save()
-                        print("Form.save() exitoso:", registro)
-                        return redirect('dashboard')
-                    except Exception as form_save_error:
-                        print("Error con form.save():", str(form_save_error))
-                        return render(request, 'accounts/registro.html', {
-                            'form': form,
-                            'error': f'Error al guardar: {str(form_save_error)}'
-                        })
-            else:
-                print("Formulario no válido")
-                print("Errores del formulario:", form.errors)
+                messages.success(request, f'Usuario {nuevo_usuario.username} registrado exitosamente como {nuevo_usuario.get_rol_display()}')
+                return redirect('login')
                 
+            except Exception as e:
+                print(f"❌ Error al crear usuario: {str(e)}")
+                print(traceback.format_exc())
+                messages.error(request, f'Error al registrar usuario: {str(e)}')
         else:
-            print("Método GET - mostrando formulario vacío")
-            form = RegistroForm()
-            
-        return render(request, 'accounts/registro.html', {'form': form})
+            print("Formulario no válido")
+            print("Errores:", form.errors)
+            messages.error(request, 'Por favor corrige los errores en el formulario')
+    else:
+        form = RegistroForm()
     
-    except Exception as e:
-        print("ERROR GENERAL en registro:", str(e))
-        print("Traceback completo:", traceback.format_exc())
-        return render(request, 'accounts/registro.html', {
-            'form': RegistroForm(),
-            'error': f'Error interno: {str(e)}'
-        })
-
+    return render(request, 'accounts/registro.html', {'form': form})
 
 
 def login_view(request):
@@ -103,28 +47,28 @@ def login_view(request):
             usuario = form.cleaned_data['usuario']
             password = form.cleaned_data['password']
 
-            usuario_obj = (Registro.objects.filter(usuario=usuario).first() or
-                           Registro.objects.filter(correo=usuario).first())
-
-            if usuario_obj and usuario_obj.contraseña == password:
-                django_user, created = User.objects.get_or_create(username=usuario_obj.usuario)
-
-                if created:
-                    django_user.set_password(password)
-                    django_user.email = usuario_obj.correo
-                    django_user.save()
-
-                user = authenticate(username=django_user.username, password=password)
-                if user is not None:
-                    auth_login(request, user)
-                    print("✅ Login correcto, redirigiendo al dashboard...")
-                    return redirect('dashboard')
+            try:
+                usuario_obj = Usuario.objects.filter(username=usuario).first() or \
+                             Usuario.objects.filter(email=usuario).first()
+                
+                if usuario_obj:
+                    user = authenticate(username=usuario_obj.username, password=password)
+                    
+                    if user is not None:
+                        auth_login(request, user)
+                        print(f"✅ Login correcto para {user.username} (Rol: {user.rol})")
+                        print(f"✅ Grupos: {[g.name for g in user.groups.all()]}")
+                        return redirect('dashboard')
+                    else:
+                        print("⚠️ Contraseña incorrecta")
+                        form.add_error(None, "Usuario o contraseña incorrectos")
                 else:
-                    print("⚠️ Error al autenticar con Django")
-                    form.add_error(None, "Error al autenticar el usuario")
-            else:
-                print("⚠️ Usuario o contraseña incorrectos")
-                form.add_error(None, "Usuario o contraseña incorrectos")
+                    print("⚠️ Usuario no encontrado")
+                    form.add_error(None, "Usuario o contraseña incorrectos")
+                    
+            except Exception as e:
+                print(f"❌ Error en login: {str(e)}")
+                form.add_error(None, "Error al iniciar sesión")
     else:
         form = LoginForm()
 

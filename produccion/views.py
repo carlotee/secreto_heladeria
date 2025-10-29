@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.http import require_POST
 from django.contrib import messages
-from django.db.models import Q
-from django.utils import timezone
-from .models import Producto
 from django.core.paginator import Paginator
-from proveedores.models import Proveedor
+from django.db.models import Q
+from .models import Producto, Proveedor
+from .decorators import rol_requerido
 
+
+@login_required
 def producto(request):
     productos = Producto.objects.all().order_by('id')
     
@@ -38,6 +42,7 @@ def producto(request):
     return render(request, 'produccion/producto.html', context)
 
 
+@login_required
 def producto_detalle(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     
@@ -46,6 +51,9 @@ def producto_detalle(request, pk):
     }
     return render(request, 'produccion/producto_detalle.html', context)
 
+
+@login_required
+@rol_requerido('proveedor', 'administrador')
 def producto_crear(request):
     """Crea un producto y lo asocia a un proveedor."""
     if request.method == 'POST':
@@ -78,7 +86,7 @@ def producto_crear(request):
             except ValueError:
                 errores.append('El stock debe ser un número entero.')
         else:
-            stock = 0  # valor por defecto
+            stock = 0
 
         # 🔹 Proveedor
         proveedor = None
@@ -110,13 +118,17 @@ def producto_crear(request):
     return render(request, 'produccion/producto_crear.html', context)
 
 
+# 🔒 Solo proveedor y admin pueden editar
+@login_required
+@rol_requerido('proveedor', 'administrador')
 def producto_act(request, pk):
-    producto = get_object_or_404(Producto, pk=pk, deleted_at__isnull=True)
+    producto = get_object_or_404(Producto, pk=pk)
     
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         descripcion = request.POST.get('descripcion')
         precio = request.POST.get('precio')
+        stock = request.POST.get('stock')
         
         if not nombre:
             messages.error(request, 'El nombre del producto es obligatorio')
@@ -131,8 +143,10 @@ def producto_act(request, pk):
                     producto.nombre = nombre
                     producto.descripcion = descripcion
                     producto.precio = precio
+                    if stock:
+                        producto.stock = int(stock)
                     producto.save()
-                    messages.success(request, f'Producto "{nombre}" actualizado exitosamente')
+                    messages.success(request, f'Producto "{nombre}" actualizado exitosamente ✅')
                     return redirect('producto')
             except ValueError:
                 messages.error(request, 'El precio debe ser un número válido')
@@ -141,34 +155,38 @@ def producto_act(request, pk):
         'producto': producto,
         'is_edit': True
     }
-    return render(request, 'productos/producto_act.html', context)
+    return render(request, 'produccion/producto_act.html', context)
 
 
+# 🔒 Solo admin puede eliminar (vista tradicional)
+@login_required
+@rol_requerido('administrador')
 def producto_eliminar(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     
     if request.method == 'POST':
-        nombre_producto = producto.nombre  # guardamos el nombre para mostrarlo después
-        producto.delete()  # elimina realmente de la base de datos
+        nombre_producto = producto.nombre
+        producto.delete()
         messages.success(request, f'Producto "{nombre_producto}" eliminado exitosamente.')
-        return redirect('producto')  # asegúrate que 'producto' sea el nombre de la URL del listado
+        return redirect('producto')
     
     context = {
         'producto': producto
     }
     return render(request, 'produccion/producto_eliminar.html', context)
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, HttpResponseBadRequest
-from django.views.decorators.http import require_POST
 
-
+# 🔒 Solo admin puede eliminar (AJAX con SweetAlert2)
+@login_required
+@rol_requerido('administrador')
 @require_POST
 def producto_delete_ajax(request, pk):
+    """Elimina un producto y responde JSON para actualizar sin recargar."""
     if not request.headers.get("x-requested-with") == "XMLHttpRequest":
         return HttpResponseBadRequest("Solo AJAX")
+    
     producto = get_object_or_404(Producto, pk=pk)
     nombre = producto.nombre
     producto.delete()
 
-    return JsonResponse({"ok": True, "message": f"Producto '{nombre}' eliminada"})
+    return JsonResponse({"ok": True, "message": f"Producto '{nombre}' eliminado exitosamente"})

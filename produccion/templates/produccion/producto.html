@@ -1,76 +1,233 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ accion }} Producto{% endblock %}
+{% block title %}Gestión de Productos{% endblock %}
 {% block content %}
 
-    <div class="filters">
-        <form method="get">
-            <input type="text" name="search" placeholder="Buscar producto..." value="{{ search }}">
-            <input type="number" name="precio_min" placeholder="Precio mínimo" value="{{ precio_min }}">
-            <input type="number" name="precio_max" placeholder="Precio máximo" value="{{ precio_max }}">
-            <button type="submit">Buscar</button>
-        </form>
+<div class="container mt-4">
+    <!-- Encabezado con botón de crear -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="fas fa-box"></i> Productos
+            <span class="badge bg-secondary">{{ total_productos }}</span>
+        </h2>
+        
+        <!-- 🔒 Solo proveedor y admin pueden crear -->
+        {% if user.rol == 'proveedor' or user.rol == 'admin' %}
+        <a href="{% url 'producto_crear' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Nuevo Producto
+        </a>
+        {% endif %}
     </div>
 
-    <p>Total de productos: {{ total_productos }}</p>
+    <!-- Indicador de rol y permisos -->
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="fas fa-user-tag"></i> 
+        <strong>Rol actual:</strong> {{ user.get_rol_display }}
+        {% if user.rol == 'Cliente' %}
+        - Solo puedes <strong>ver</strong> productos 👁️
+        {% elif user.rol == 'Proveedor' %}
+        - Puedes <strong>ver, crear y editar</strong> productos ✏️
+        {% elif user.rol == 'Administrador' %}
+        - Tienes <strong>todos los permisos</strong> 🔑
+        {% endif %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Mensajes de Django -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>
+                {% if message.tags == 'error' %}
+                    <i class="fas fa-exclamation-circle"></i>
+                {% elif message.tags == 'success' %}
+                    <i class="fas fa-check-circle"></i>
+                {% elif message.tags == 'warning' %}
+                    <i class="fas fa-exclamation-triangle"></i>
+                {% endif %}
+            </strong>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Filtros de búsqueda -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-5">
+                    <input type="text" 
+                           name="search" 
+                           class="form-control" 
+                           placeholder="Buscar producto..." 
+                           value="{{ search }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="number" 
+                           name="precio_min" 
+                           class="form-control" 
+                           placeholder="Precio mínimo" 
+                           value="{{ precio_min }}"
+                           step="0.01">
+                </div>
+                <div class="col-md-3">
+                    <input type="number" 
+                           name="precio_max" 
+                           class="form-control" 
+                           placeholder="Precio máximo" 
+                           value="{{ precio_max }}"
+                           step="0.01">
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     {% if productos %}
-  <table class="table table-hover align-middle" id="tablaP">
-        <thead class="table-light">            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                    <th>Proveedor</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for p in productos %}
-                <tr id="row-{{ p.id }}">
-                    <td>{{ p.id }}</td>
-                    <td class="p-name">{{ p.nombre }}</td>
-                    <td>{{ p.descripcion }}</td>
-                    <td>${{ p.precio }}</td>
-                    <td>{{ p.stock }}</td>
-                    <td>{{ p.proveedor }}</td>
-                    <td class="actions">
-                        <a href="{% url 'producto_detalle' p.id %}">Ver</a> |
-                        <a href="{% url 'producto_act' p.id %}">Editar</a> |
-                        
-                    <button
-                        class="btn btn-danger btn-sm btn-delete"
-                        data-id="{{ p.id }}"
-                        data-url="{% url 'producto_eliminar' p.id %}"
-                    >
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- Tabla de productos -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="tablaP">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Proveedor</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in productos %}
+                        <tr id="row-{{ p.id }}">
+                            <td>{{ p.id }}</td>
+                            <td class="p-name"><strong>{{ p.nombre }}</strong></td>
+                            <td>{{ p.descripcion|truncatewords:8 }}</td>
+                            <td class="text-success"><strong>${{ p.precio }}</strong></td>
+                            <td>
+                                {% if p.stock > 0 %}
+                                <span class="badge bg-success">{{ p.stock }}</span>
+                                {% else %}
+                                <span class="badge bg-danger">Sin stock</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if p.proveedor %}
+                                {{ p.proveedor.nombre }}
+                                {% else %}
+                                <span class="text-muted">N/A</span>
+                                {% endif %}
+                            </td>
+                            <td class="actions">
+                                <!-- ✅ Todos pueden ver -->
+                                <a href="{% url 'producto_detalle' p.id %}" 
+                                   class="btn btn-info btn-sm"
+                                   title="Ver detalle">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
 
-        {% if productos.has_other_pages %}
-        <div class="pagination">
-            {% if productos.has_previous %}
-                <a href="?page={{ productos.previous_page_number }}">⬅ Anterior</a>
-            {% endif %}
+                                <!-- 🔒 Solo proveedor y admin pueden editar -->
+                                {% if user.rol == 'proveedor' or user.rol == 'admin' %}
+                                <a href="{% url 'producto_act' p.id %}" 
+                                   class="btn btn-warning btn-sm"
+                                   title="Editar">
+                                    <i class="fa-solid fa-edit"></i>
+                                </a>
+                                {% else %}
+                                <!-- Cliente ve botón deshabilitado -->
+                                <button class="btn btn-warning btn-sm" 
+                                        disabled 
+                                        title="No tienes permiso para editar">
+                                    <i class="fa-solid fa-edit"></i>
+                                </button>
+                                {% endif %}
 
-            <span>Página {{ productos.number }} de {{ productos.paginator.num_pages }}</span>
+                                <!-- 🔒 Solo admin puede eliminar -->
+                                {% if user.rol == 'admin' %}
+                                <button class="btn btn-danger btn-sm btn-delete"
+                                        data-id="{{ p.id }}"
+                                        data-url="{% url 'producto_delete_ajax' p.id %}"
+                                        title="Eliminar">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                                {% else %}
+                                <!-- Otros roles ven botón deshabilitado -->
+                                <button class="btn btn-danger btn-sm" 
+                                        disabled 
+                                        title="Solo admin puede eliminar">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-            {% if productos.has_next %}
-                <a href="?page={{ productos.next_page_number }}">Siguiente ➡</a>
+            <!-- Paginación -->
+            {% if productos.has_other_pages %}
+            <nav aria-label="Paginación de productos" class="mt-3">
+                <ul class="pagination justify-content-center">
+                    {% if productos.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ productos.previous_page_number }}&search={{ search }}&precio_min={{ precio_min }}&precio_max={{ precio_max }}">
+                            <i class="fas fa-chevron-left"></i> Anterior
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link"><i class="fas fa-chevron-left"></i> Anterior</span>
+                    </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Página {{ productos.number }} de {{ productos.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if productos.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ productos.next_page_number }}&search={{ search }}&precio_min={{ precio_min }}&precio_max={{ precio_max }}">
+                            Siguiente <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Siguiente <i class="fas fa-chevron-right"></i></span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
             {% endif %}
         </div>
-        {% endif %}
+    </div>
     {% else %}
-        <p>No hay productos registrados.</p>
+    <!-- Sin productos -->
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+            <h4 class="text-muted">No hay productos registrados</h4>
+            {% if user.rol == 'proveedor' or user.rol == 'admin' %}
+            <p class="text-muted">Puedes crear el primer producto usando el botón "Nuevo Producto"</p>
+            {% endif %}
+        </div>
+    </div>
     {% endif %}
+</div>
+
 {% endblock %}
+
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -82,22 +239,24 @@
     }
     const csrftoken = getCookie("csrftoken");
 
-    // Delegación de eventos para botones borrar
+    // 🔥 Delegación de eventos para botones borrar (solo admin puede ejecutar)
     document.addEventListener("click", async (ev) => {
         const btn = ev.target.closest(".btn-delete");
         if (!btn) return;
 
         const row = btn.closest("tr");
-        const zonaId = btn.dataset.id;
+        const productoId = btn.dataset.id;
         const url = btn.dataset.url;
-        const nombre =
-            row.querySelector(".p-name")?.textContent?.trim() || "El producto";
+        const nombre = row.querySelector(".p-name")?.textContent?.trim() || "El producto";
 
+        // Confirmación con SweetAlert2
         const confirm = await Swal.fire({
-            title: `¿Eliminar ${nombre}?`,
+            title: `¿Eliminar "${nombre}"?`,
             text: "Esta acción no se puede deshacer.",
             icon: "warning",
             showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
             confirmButtonText: "Sí, eliminar",
             cancelButtonText: "Cancelar",
         });
@@ -106,7 +265,7 @@
 
         try {
             const resp = await fetch(url, {
-                method: "POST", // usamos POST por CSRF
+                method: "POST",
                 headers: {
                     "X-CSRFToken": csrftoken,
                     "X-Requested-With": "XMLHttpRequest",
@@ -118,37 +277,58 @@
                 const txt = await resp.text();
                 throw new Error(txt || "Error HTTP");
             }
-            const data = await resp.json();
-            if (data.ok) {
-                // Quitar la fila del DOM
-                row.remove();
 
-                // Opcional: reindexar primera columna (#)
-                Array.from(
-                    document.querySelectorAll("#tablaZonas tbody tr")
-                ).forEach((tr, i) => {
-                    tr.children[0].textContent = (i + 1).toString();
-                });
+            const data = await resp.json();
+            
+            if (data.ok) {
+                // Animación de salida
+                row.style.transition = "all 0.3s ease";
+                row.style.opacity = "0";
+                row.style.transform = "translateX(-20px)";
+                
+                setTimeout(() => {
+                    row.remove();
+                    
+                    // Actualizar numeración si es necesario
+                    const tbody = document.querySelector("#tablaP tbody");
+                    const rows = tbody.querySelectorAll("tr");
+                    
+                    // Si no quedan filas, mostrar mensaje
+                    if (rows.length === 0) {
+                        location.reload();
+                    }
+                }, 300);
 
                 Swal.fire({
                     icon: "success",
-                    title: data.message,
-                    timer: 1800,
+                    title: "¡Eliminado!",
+                    text: data.message,
+                    timer: 2000,
                     showConfirmButton: false,
                 });
             } else {
                 Swal.fire({
                     icon: "error",
-                    title: data.message || "No se pudo eliminar",
+                    title: "Error",
+                    text: data.message || "No se pudo eliminar el producto",
                 });
             }
         } catch (err) {
             Swal.fire({
                 icon: "error",
                 title: "Error al eliminar",
-                text: err.message,
+                text: err.message || "Ocurrió un error inesperado",
             });
         }
     });
+
+    // Auto-cerrar alertas después de 5 segundos
+    setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert:not(.alert-info)');
+        alerts.forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
 </script>
 {% endblock %}
