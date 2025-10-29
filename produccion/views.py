@@ -7,40 +7,53 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import Producto, Proveedor
 from .decorators import rol_requerido
+from decimal import Decimal, InvalidOperation
+
 
 
 @login_required
 def producto(request):
     productos = Producto.objects.all().order_by('id')
-    
+
+    # --- Búsqueda ---
     search = request.GET.get('search', '')
     if search:
         productos = productos.filter(
-            Q(nombre__icontains=search) | 
+            Q(nombre__icontains=search) |
             Q(descripcion__icontains=search)
         )
-    
-    precio_min = request.GET.get('precio_min')
-    precio_max = request.GET.get('precio_max')
-    
-    if precio_min:
+
+    # --- Filtros de precio seguros ---
+    def parse_decimal(value):
+        if not value or value in ('None', ''):
+            return None
+        try:
+            return Decimal(str(value).replace(',', '.'))
+        except (InvalidOperation, ValueError):
+            return 'invalid'
+
+    precio_min = parse_decimal(request.GET.get('precio_min'))
+    precio_max = parse_decimal(request.GET.get('precio_max'))
+
+    if precio_min not in (None, 'invalid'):
         productos = productos.filter(precio__gte=precio_min)
-    if precio_max:
+    if precio_max not in (None, 'invalid'):
         productos = productos.filter(precio__lte=precio_max)
-    
-    paginator = Paginator(productos, 5)  
+
+    paginator = Paginator(productos, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    
+
     context = {
         'productos': page_obj,
         'search': search,
-        'precio_min': precio_min,
-        'precio_max': precio_max,
-        'total_productos': productos.count()
+        'precio_min': '' if precio_min in (None, 'invalid') else precio_min,
+        'precio_max': '' if precio_max in (None, 'invalid') else precio_max,
+        'total_productos': productos.count(),
+        'precio_min_invalido': (precio_min == 'invalid'),
+        'precio_max_invalido': (precio_max == 'invalid'),
     }
     return render(request, 'produccion/producto.html', context)
-
 
 @login_required
 def producto_detalle(request, pk):

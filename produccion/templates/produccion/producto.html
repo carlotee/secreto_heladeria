@@ -71,6 +71,9 @@
                            placeholder="Precio mínimo" 
                            value="{{ precio_min }}"
                            step="0.01">
+                    {% if precio_min_invalido %}
+                        <small class="text-danger">Valor inválido</small>
+                    {% endif %}
                 </div>
                 <div class="col-md-3">
                     <input type="number" 
@@ -79,6 +82,9 @@
                            placeholder="Precio máximo" 
                            value="{{ precio_max }}"
                            step="0.01">
+                    {% if precio_max_invalido %}
+                        <small class="text-danger">Valor inválido</small>
+                    {% endif %}
                 </div>
                 <div class="col-md-1">
                     <button type="submit" class="btn btn-primary w-100">
@@ -143,7 +149,6 @@
                                     <i class="fa-solid fa-edit"></i>
                                 </a>
                                 {% else %}
-                                <!-- Cliente ve botón deshabilitado -->
                                 <button class="btn btn-warning btn-sm" 
                                         disabled 
                                         title="No tienes permiso para editar">
@@ -155,12 +160,11 @@
                                 {% if user.rol == 'admin' %}
                                 <button class="btn btn-danger btn-sm btn-delete"
                                         data-id="{{ p.id }}"
-                                        data-url="{% url 'producto_delete_ajax' p.id %}"
+                                        data-url="{% url 'producto_eliminar' p.id %}"
                                         title="Eliminar">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                                 {% else %}
-                                <!-- Otros roles ven botón deshabilitado -->
                                 <button class="btn btn-danger btn-sm" 
                                         disabled 
                                         title="Solo admin puede eliminar">
@@ -293,7 +297,6 @@
                     const tbody = document.querySelector("#tablaP tbody");
                     const rows = tbody.querySelectorAll("tr");
                     
-                    // Si no quedan filas, mostrar mensaje
                     if (rows.length === 0) {
                         location.reload();
                     }
