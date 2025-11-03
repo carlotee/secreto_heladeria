@@ -175,7 +175,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_SAVE_EVERY_REQUEST = False
 
 # seguridad de las cookies
-SESSION_COOKIE_SECURE = True  # en producción con HTTPS
+SESSION_COOKIE_SECURE = False  # en producción con HTTPS
 
 # sólo enviar la cookie en el mismo sitio (protección CSRF) / Lax por defecto en Django
 SESSION_COOKIE_SAMESITE = 'Lax'  # o 'Strict'/'None'(+Secure)
