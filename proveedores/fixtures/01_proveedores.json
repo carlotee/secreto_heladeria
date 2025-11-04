@@ -1,0 +1,122 @@
+[
+  {
+    "model": "proveedores.proveedor",
+    "pk": 1,
+    "fields": {
+      "nombre": "Sabores del Valle",
+      "telefono": "+56 9 9123 4567",
+      "correo": "contacto@saboresvalle.cl",
+      "ciudad": "La Serena",
+      "direccion": "Av. Balmaceda 2345",
+      "descripcion": "Proveedor local de productos lácteos naturales y frutas frescas."
+    }
+  },
+  {
+    "model": "proveedores.proveedor",
+    "pk": 2,
+    "fields": {
+      "nombre": "ChocoArt",
+      "telefono": "+56 9 9988 7766",
+      "correo": "ventas@chocoart.cl",
+      "ciudad": "Santiago",
+      "direccion": "Calle San Diego 1020",
+      "descripcion": "Especialistas en cacao premium y derivados para repostería."
+    }
+  },
+  {
+    "model": "proveedores.proveedor",
+    "pk": 3,
+    "fields": {
+      "nombre": "Frutisur",
+      "telefono": "+56 9 9345 6789",
+      "correo": "contacto@frutisur.cl",
+      "ciudad": "Rancagua",
+      "direccion": "Camino San Martín 450",
+      "descripcion": "Distribuidor de frutas frescas y congeladas de alta calidad."
+    }
+  },
+  {
+    "model": "proveedores.proveedor",
+    "pk": 4,
+    "fields": {
+      "nombre": "MintFresh",
+      "telefono": "+56 9 9234 1122",
+      "correo": "info@mintfresh.cl",
+      "ciudad": "Coquimbo",
+      "direccion": "Av. Costanera 1870",
+      "descripcion": "Proveedor de esencias y extractos naturales para heladería."
+    }
+  },
+  {
+    "model": "proveedores.proveedor",
+    "pk": 5,
+    "fields": {
+      "nombre": "Delicias del Manjar",
+      "telefono": "+56 9 9987 5543",
+      "correo": "ventas@deliciasmanjar.cl",
+      "ciudad": "Valdivia",
+      "direccion": "Los Robles 325",
+      "descripcion": "Productores artesanales de manjar, leche condensada y nueces."
+    }
+  },
+  {
+    "model": "proveedores.proveedor",
+    "pk": 6,
+    "fields": {
+      "nombre": "LucuCream",
+      "telefono": "+56 9 9123 4432",
+      "correo": "contacto@lucucream.cl",
+      "ciudad": "Curicó",
+      "direccion": "Ruta 5 Sur, Km 182",
+      "descripcion": "Proveedor especializado en pulpas y saborizantes de lúcuma."
+    }
+  },
+  {
+    "model": "proveedores.proveedor",
+    "pk": 7,
+    "fields": {
+      "nombre": "Mango Chile",
+      "telefono": "+56 9 9555 2134",
+      "correo": "ventas@mangochile.cl",
+      "ciudad": "Arica",
+      "direccion": "Av. 21 de Mayo 900",
+      "descripcion": "Distribuidor de mango fresco y congelado para industrias alimenticias."
+    }
+  },
+  {
+    "model": "proveedores.proveedor",
+    "pk": 8,
+    "fields": {
+      "nombre": "Piña Tropical",
+      "telefono": "+56 9 9334 8999",
+      "correo": "contacto@pinatropical.cl",
+      "ciudad": "La Serena",
+      "direccion": "Pasaje Las Palmas 410",
+      "descripcion": "Proveedor de piñas frescas y jugos naturales."
+    }
+  },
+  {
+    "model": "proveedores.proveedor",
+    "pk": 9,
+    "fields": {
+      "nombre": "Café Andino",
+      "telefono": "+56 9 9554 6677",
+      "correo": "ventas@cafeandino.cl",
+      "ciudad": "Temuco",
+      "direccion": "Av. Alemania 2321",
+      "descripcion": "Importadores de café espresso y granos seleccionados del sur de Chile."
+    }
+  },
+  {
+    "model": "proveedores.proveedor",
+    "pk": 10,
+    "fields": {
+      "nombre": "DulceGalleta",
+      "telefono": "+56 9 9776 8899",
+      "correo": "info@dulcegalleta.cl",
+      "ciudad": "Santiago",
+      "direccion": "Av. Grecia 3400",
+      "descripcion": "Proveedor de galletas y toppings dulces para postres y helados."
+    }
+  }
+]
