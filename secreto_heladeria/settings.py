@@ -32,8 +32,8 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-
+#ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS","35.175.65.93,localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = ['35.175.65.93', 'localhost', '127.0.0.1']
 
 # Application definition
 
