@@ -195,15 +195,12 @@ def proveedor_act(request, pk):
         
         if not nombre:
             errores.append('El nombre es obligatorio')
-        
         if not rut:
             errores.append('El RUT es obligatorio')
         elif not validar_rut(rut):
             errores.append('El RUT ingresado no es válido')
-        
         if telefono and not validar_telefono(telefono):
             errores.append('El formato del teléfono no es válido')
-        
         if not correo:
             errores.append('El correo es obligatorio')
         else:
@@ -211,32 +208,47 @@ def proveedor_act(request, pk):
                 validate_email(correo)
             except ValidationError:
                 errores.append('El formato del correo no es válido')
-        
         if not direccion:
             errores.append('La dirección es obligatoria')
-        
         if not ciudad:
             errores.append('La ciudad es obligatoria')
         
         if errores:
             for error in errores:
                 messages.error(request, error)
-        else:
-            proveedor.nombre = nombre
-            proveedor.rut = rut
-            proveedor.telefono = telefono if telefono else None
-            proveedor.correo = correo
-            proveedor.direccion = direccion
-            proveedor.ciudad = ciudad
-            proveedor.save()
-            messages.success(request, f'Proveedor "{nombre}" actualizado exitosamente')
-            return redirect('proveedor')
+            
+            # ✅ Render con los valores ingresados
+            context = {
+                'proveedor': {
+                    'nombre': nombre,
+                    'rut': rut,
+                    'telefono': telefono,
+                    'correo': correo,
+                    'direccion': direccion,
+                    'ciudad': ciudad,
+                },
+                'is_edit': True
+            }
+            return render(request, 'proveedores/proveedor_act.html', context)
+        
+        # Guardar cambios si no hay errores
+        proveedor.nombre = nombre
+        proveedor.rut = rut
+        proveedor.telefono = telefono if telefono else None
+        proveedor.correo = correo
+        proveedor.direccion = direccion
+        proveedor.ciudad = ciudad
+        proveedor.save()
+        messages.success(request, f'Proveedor "{nombre}" actualizado exitosamente')
+        return redirect('proveedor')
     
+    # GET: mostrar formulario con datos actuales
     context = {
         'proveedor': proveedor,
         'is_edit': True
     }
     return render(request, 'proveedores/proveedor_act.html', context)
+
 
 @login_required
 @rol_requerido_proveedor('administrador')
