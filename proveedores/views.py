@@ -10,11 +10,7 @@ from .forms import ProveedorForm
 import re
 from produccion.models import Producto
 from produccion.forms import ProductoForm
-<<<<<<< HEAD
 from common.decorators_prov import rol_requerido_proveedor as rol_requerido
-=======
-from decorators import rol_requerido
->>>>>>> 85163ade99c5a0c2d02d8a258c249501bc91a5e3
 from django.contrib.auth.decorators import login_required
 
 def validar_rut(rut):
