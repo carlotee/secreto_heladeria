@@ -10,6 +10,8 @@ from .forms import ProveedorForm
 import re
 from produccion.models import Producto
 from produccion.forms import ProductoForm
+from produccion.decorators import rol_requerido
+from django.contrib.auth.decorators import login_required
 
 def validar_rut(rut):
     rut_limpio = rut.replace(".", "").replace("-", "")
@@ -111,6 +113,8 @@ def validar_telefono(telefono):
 
 
 # --- CREAR PROVEEDOR ---
+@login_required
+@rol_requerido('proveedor', 'administrador')
 def proveedor_crear(request):
     """Crea un nuevo proveedor según el modelo actual."""
     if request.method == 'POST':
@@ -177,8 +181,8 @@ def proveedor_crear(request):
     # Si es GET, renderiza formulario vacío
     return render(request, 'proveedores/proveedor_crear.html')
 
-
-
+@login_required
+@rol_requerido('proveedor', 'administrador')
 def proveedor_act(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
     
@@ -237,7 +241,8 @@ def proveedor_act(request, pk):
     }
     return render(request, 'proveedores/proveedor_act.html', context)
 
-
+@login_required
+@rol_requerido('administrador')
 def proveedor_eliminar(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
     
@@ -252,7 +257,8 @@ def proveedor_eliminar(request, pk):
     }
     return render(request, 'proveedores/proveedor_confirm_elim.html', context)
 
-
+@login_required
+@rol_requerido('administrador')
 def proveedor_restore(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk)
     
