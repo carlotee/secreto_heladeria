@@ -333,5 +333,30 @@ def proveedor_dashboard(request, proveedor_id):
 
 from django.http import HttpResponse
 from openpyxl import Workbook
-from .models import Proveedor
+from .models import Producto
 
+def exportar_productos_excel(request):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Productos"
+
+    columnas = ["ID", "Nombre", "Descripción", "Precio", "Stock", "Proveedor"]
+    ws.append(columnas)
+
+    productos = Producto.objects.select_related("proveedor").all()
+    for p in productos:
+        ws.append([
+            p.id,
+            p.nombre,
+            p.descripcion,
+            float(p.precio),
+            p.stock,
+            p.proveedor.nombre if p.proveedor else "Sin proveedor"
+        ])
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="productos.xlsx"'
+    wb.save(response)
+    return response
