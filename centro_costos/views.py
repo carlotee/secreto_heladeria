@@ -5,7 +5,7 @@ from django.db.models import Q, Sum
 from .models import Periodo, TipoCosto, Centro_Costos, Costo
 from .forms import PeriodoForm, TipoCostoForm, CentroCostosForm, CostoForm, ConfirmarEliminarCostoForm
 from proveedores.models import Proveedor
-from .decorators import rol_requerido
+from common.decorators_cost import rol_requerido_costos as rol_requerido
 from django.contrib.auth.decorators import login_required
 
 @login_required
