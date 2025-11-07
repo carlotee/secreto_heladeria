@@ -10,7 +10,7 @@ from .forms import ProveedorForm
 import re
 from produccion.models import Producto
 from produccion.forms import ProductoForm
-from .decorators import rol_requerido
+from decorators import rol_requerido
 from django.contrib.auth.decorators import login_required
 
 def validar_rut(rut):
@@ -335,27 +335,3 @@ from django.http import HttpResponse
 from openpyxl import Workbook
 from .models import Proveedor
 
-def exportar_proveedores_excel(request):
-    # Crear un libro y una hoja
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Proveedores"
-
-    # Encabezados
-    columnas = ["ID", "RUT", "Nombre", "Teléfono", "Correo", "Ciudad", "Dirección"]
-    ws.append(columnas)
-
-    # Datos
-    proveedores = Proveedor.objects.all().values_list(
-        "id", "rut", "nombre", "telefono", "correo", "ciudad", "direccion"
-    )
-    for proveedor in proveedores:
-        ws.append(proveedor)
-
-    # Preparar respuesta HTTP
-    response = HttpResponse(
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-    response["Content-Disposition"] = 'attachment; filename="proveedores.xlsx"'
-    wb.save(response)
-    return response
