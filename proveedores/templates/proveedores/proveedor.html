@@ -5,6 +5,8 @@
   <button type="submit">Buscar</button>
 </form>
 <a href="{% url 'dashboard' %}">Volver</a> 
+<a href="{% url 'exportar_proveedores_excel' %}" class="btn btn-success">📥 Exportar a Excel</a>
+<a href="{% url 'proveedor_crear' %}">➕ Nuevo proveedor</a>
 
 <p>Total: {{ total_proveedores }}</p>
 
@@ -32,8 +34,7 @@
   <tr><td colspan="5">No hay proveedores registrados.</td></tr>
   {% endfor %}
 </table>
-<a href="{% url 'exportar_proveedores_excel' %}" class="btn btn-success">📥 Exportar a Excel</a>
-<a href="{% url 'proveedor_crear' %}">➕ Nuevo proveedor</a>
+
 
 {% if proveedores.has_other_pages %}
   <div>
