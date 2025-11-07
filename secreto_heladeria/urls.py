@@ -50,6 +50,6 @@ urlpatterns = [
     path('<int:pk>/eliminar/', proveedores_views.proveedor_eliminar, name='proveedor_eliminar'),
     path('logout/', accounts_views.logout_view, name='logout'),
     path('proveedor/<int:proveedor_id>/dashboard/', proveedores_views.proveedor_dashboard, name='proveedor_dashboard'),
-    path("exportar_excel/", proveedores_views.exportar_productos_excel, name="exportar_productos_excel"),
+    path("exportar_excel/", produccion_views.exportar_productos_excel, name="exportar_productos_excel"),
 
 ]
