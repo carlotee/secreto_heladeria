@@ -6,8 +6,9 @@ from .models import Periodo, TipoCosto, Centro_Costos, Costo
 from .forms import PeriodoForm, TipoCostoForm, CentroCostosForm, CostoForm, ConfirmarEliminarCostoForm
 from proveedores.models import Proveedor
 from produccion.decorators import rol_requerido
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def periodo(request):
     periodos = Periodo.objects.all().order_by('-año', '-mes')
     return render(request, 'centro_costos/periodo.html', {'periodos': periodos})
@@ -27,6 +28,7 @@ def periodo_crear(request):
 
     return render(request, 'centro_costos/periodo_crear.html', {'form': form})
 
+@login_required
 @rol_requerido('administrador')
 def periodo_act(request, pk):
     periodo = get_object_or_404(Periodo, pk=pk)
@@ -42,6 +44,7 @@ def periodo_act(request, pk):
 
     return render(request, 'centro_costos/periodo_act.html', {'form': form, 'periodo': periodo})
 
+@login_required
 @rol_requerido('administrador')
 def periodo_eliminar(request, pk):
     periodo = get_object_or_404(Periodo, pk=pk)
@@ -98,6 +101,7 @@ def costo(request):
     }
     return render(request, 'centro_costos/costo.html', context)
 
+@login_required
 @rol_requerido('administrador')
 def costo_crear(request):
     if request.method == 'POST':
@@ -113,6 +117,7 @@ def costo_crear(request):
 
     return render(request, 'centro_costos/costo_crear.html', {'form': form})
 
+@login_required
 @rol_requerido('administrador')
 def costo_act(request, pk):
     costo = get_object_or_404(Costo, pk=pk)
@@ -130,6 +135,7 @@ def costo_act(request, pk):
 
     return render(request, 'centro_costos/costo_act.html', {'form': form, 'costo': costo})
 
+@login_required
 @rol_requerido('administrador')
 def costo_eliminar(request, pk):
     costo = get_object_or_404(Costo, pk=pk)
@@ -141,7 +147,7 @@ def costo_eliminar(request, pk):
 
     return render(request, 'centro_costos/costo_eliminar.html', {'costo': costo})
 
-
+@login_required
 @login_required
 def dashboard(request):
     centros = Centro_Costos.objects.prefetch_related('costo_set__periodo', 'tipo_costo')
