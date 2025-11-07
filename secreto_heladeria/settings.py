@@ -32,8 +32,8 @@ DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
-
+#ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS","35.175.65.93,localhost,127.0.0.1").split(",")
+ALLOWED_HOSTS = ['35.175.65.93', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -86,17 +86,27 @@ WSGI_APPLICATION = 'secreto_heladeria.wsgi.application'
 ENGINE = os.getenv("DB_ENGINE", "sqlite")
 
 if ENGINE == "mysql":
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST"),
-            "PORT": os.getenv("DB_PORT"),
-            "OPTIONS": {"charset": "utf8mb4"},
-        }
-    }
+    #DATABASES = {
+     #   "default": {
+      #      "ENGINE": "django.db.backends.mysql",
+       #     "NAME": os.getenv("DB_NAME"),
+        #    "USER": os.getenv("DB_USER"),
+         #   "PASSWORD": os.getenv("DB_PASSWORD"),
+          #  "HOST": os.getenv("DB_HOST"),
+           # "PORT": os.getenv("DB_PORT"),
+           # "OPTIONS": {"charset": "utf8mb4"},
+        #}
+    #}
+	DATABASES = {
+  	'default': {
+       		'ENGINE': 'django.db.backends.mysql',
+      		 	'NAME': 'secreto_heladeria',
+       		'USER': 'root',
+       		'PASSWORD': '',
+       		'HOST': 'localhost',
+       		'PORT': '3306',
+    	}	
+	}
 else:  
     DATABASES = {
         "default": {
