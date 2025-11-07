@@ -1,13 +1,23 @@
 <h1>Editar Proveedor</h1>
 
+{% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
 <form method="post" action="{% url 'proveedor_act' pk=proveedor.pk %}">
   {% csrf_token %}
-  <p><label>Nombre:</label> <input type="text" name="nombre" value="{{ proveedor.nombre }}" required></p>
-  <p><label>RUT:</label> <input type="text" name="rut" value="{{ proveedor.rut }}" required></p>
-  <p><label>Teléfono:</label> <input type="text" name="telefono" value="{{ proveedor.telefono|default:'' }}"></p>
-  <p><label>Correo:</label> <input type="email" name="correo" value="{{ proveedor.correo }}" required></p>
-  <p><label>Dirección:</label> <input type="text" name="direccion" value="{{ proveedor.direccion }}" required></p>
-  <p><label>Ciudad:</label> <input type="text" name="ciudad" value="{{ proveedor.ciudad }}" required></p>
+  <p><label>Nombre:</label> <input type="text" name="nombre" value="{{ form_data.nombre|default:proveedor.nombre }}" required></p>
+  <p><label>RUT:</label> <input type="text" name="rut" value="{{ form_data.rut|default:proveedor.rut }}" required></p>
+  <p><label>Teléfono:</label> <input type="text" name="telefono" value="{{ form_data.telefono|default:proveedor.telefono|default:'' }}"></p>
+  <p><label>Correo:</label> <input type="email" name="correo" value="{{ form_data.correo|default:proveedor.correo }}" required></p>
+  <p><label>Dirección:</label> <input type="text" name="direccion" value="{{ form_data.direccion|default:proveedor.direccion }}" required></p>
+  <p><label>Ciudad:</label> <input type="text" name="ciudad" value="{{ form_data.ciudad|default:proveedor.ciudad }}" required></p>
 
   <button type="submit">Actualizar</button>
   <a href="{% url 'proveedor' %}">Volver</a>

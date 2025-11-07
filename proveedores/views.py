@@ -179,13 +179,19 @@ def proveedor_crear(request):
 def proveedor_act(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
     
+    print(f"Método: {request.method}")  # Debug
+    
     if request.method == 'POST':
+        print("Entró al POST")  # Debug
+        
         nombre = request.POST.get('nombre', '').strip()
         rut = request.POST.get('rut', '').strip()
         telefono = request.POST.get('telefono', '').strip()
         correo = request.POST.get('correo', '').strip()
         direccion = request.POST.get('direccion', '').strip()
         ciudad = request.POST.get('ciudad', '').strip()
+        
+        print(f"Datos recibidos - Nombre: {nombre}, RUT: {rut}")  # Debug
         
         errores = []
         
@@ -209,13 +215,16 @@ def proveedor_act(request, pk):
         if not ciudad:
             errores.append('La ciudad es obligatoria')
         
+        print(f"Errores: {errores}")  # Debug
+        
         if errores:
             for error in errores:
                 messages.error(request, error)
             
+            # ✅ Mantener el objeto proveedor para el pk y pasar los datos del formulario
             context = {
-                'proveedor': proveedor,  
-                'form_data': {  
+                'proveedor': proveedor,  # Objeto original con pk
+                'form_data': {  # Datos ingresados para repoblar el formulario
                     'nombre': nombre,
                     'rut': rut,
                     'telefono': telefono,
@@ -227,6 +236,8 @@ def proveedor_act(request, pk):
             }
             return render(request, 'proveedores/proveedor_act.html', context)
         
+        # Guardar cambios si no hay errores
+        print("Guardando cambios...")  # Debug
         proveedor.nombre = nombre
         proveedor.rut = rut
         proveedor.telefono = telefono if telefono else None
@@ -234,9 +245,12 @@ def proveedor_act(request, pk):
         proveedor.direccion = direccion
         proveedor.ciudad = ciudad
         proveedor.save()
+        print("Cambios guardados exitosamente")  # Debug
         messages.success(request, f'Proveedor "{nombre}" actualizado exitosamente')
         return redirect('proveedor')
     
+    # GET: mostrar formulario con datos actuales
+    print("Entró al GET")  # Debug
     context = {
         'proveedor': proveedor,
         'is_edit': True
