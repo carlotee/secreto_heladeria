@@ -266,7 +266,7 @@ def proveedor_restore(request, pk):
             messages.success(request, f'Proveedor "{proveedor.nombre}" restaurado exitosamente')
         else:
             messages.warning(request, 'El proveedor no estaba eliminado')
-        return redirect('proveedor')
+        return redirect('proveedores')
     
     context = {
         'proveedor': proveedor
