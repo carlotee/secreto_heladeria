@@ -136,18 +136,16 @@ def proveedor_crear(request):
         elif Proveedor.objects.filter(rut=rut).exists():
             errores.append('Ya existe un proveedor con ese RUT.')
 
-        # ✅ Validar teléfono (solo si se ingresó)
+       
         if telefono and not validar_telefono(telefono):
             errores.append('El formato del teléfono no es válido (usa +569XXXXXXXX).')
 
-        # ✅ Validar correo (solo si se ingresó)
         if correo:
             try:
                 validate_email(correo)
             except ValidationError:
                 errores.append('El formato del correo no es válido.')
 
-        # ✅ Mostrar errores si existen
         if errores:
             for error in errores:
                 messages.error(request, error)
@@ -162,7 +160,6 @@ def proveedor_crear(request):
             }
             return render(request, 'proveedores/proveedor_crear.html', context)
 
-        # ✅ Crear el proveedor
         Proveedor.objects.create(
             nombre=nombre,
             rut=rut,
@@ -173,9 +170,8 @@ def proveedor_crear(request):
         )
 
         messages.success(request, f'Proveedor "{nombre}" creado exitosamente ✅')
-        return redirect('proveedor')  # redirige al listado
+        return redirect('proveedor')  
 
-    # Si es GET, renderiza formulario vacío
     return render(request, 'proveedores/proveedor_crear.html')
 
 @login_required
@@ -217,9 +213,9 @@ def proveedor_act(request, pk):
             for error in errores:
                 messages.error(request, error)
             
-            # ✅ Render con los valores ingresados
             context = {
-                'proveedor': {
+                'proveedor': proveedor,  
+                'form_data': {  
                     'nombre': nombre,
                     'rut': rut,
                     'telefono': telefono,
@@ -231,7 +227,6 @@ def proveedor_act(request, pk):
             }
             return render(request, 'proveedores/proveedor_act.html', context)
         
-        # Guardar cambios si no hay errores
         proveedor.nombre = nombre
         proveedor.rut = rut
         proveedor.telefono = telefono if telefono else None
@@ -242,7 +237,6 @@ def proveedor_act(request, pk):
         messages.success(request, f'Proveedor "{nombre}" actualizado exitosamente')
         return redirect('proveedor')
     
-    # GET: mostrar formulario con datos actuales
     context = {
         'proveedor': proveedor,
         'is_edit': True

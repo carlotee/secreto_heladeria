@@ -1,10 +1,10 @@
 <h1>Editar Proveedor</h1>
 
-<form method="post">
+<form method="post" action="{% url 'proveedor_act' pk=proveedor.pk %}">
   {% csrf_token %}
   <p><label>Nombre:</label> <input type="text" name="nombre" value="{{ proveedor.nombre }}" required></p>
   <p><label>RUT:</label> <input type="text" name="rut" value="{{ proveedor.rut }}" required></p>
-  <p><label>Teléfono:</label> <input type="text" name="telefono" value="{{ proveedor.telefono }}"></p>
+  <p><label>Teléfono:</label> <input type="text" name="telefono" value="{{ proveedor.telefono|default:'' }}"></p>
   <p><label>Correo:</label> <input type="email" name="correo" value="{{ proveedor.correo }}" required></p>
   <p><label>Dirección:</label> <input type="text" name="direccion" value="{{ proveedor.direccion }}" required></p>
   <p><label>Ciudad:</label> <input type="text" name="ciudad" value="{{ proveedor.ciudad }}" required></p>
