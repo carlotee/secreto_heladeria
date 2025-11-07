@@ -1,9 +1,13 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'proveedores/proveedor.css' %}">
+
 <h1>Listado de Proveedores</h1>
 
 <form method="get">
   <input type="text" name="search" placeholder="Buscar proveedor..." value="{{ search }}">
   <button type="submit">Buscar</button>
 </form>
+
 <a href="{% url 'dashboard' %}">Volver</a> 
 <a href="{% url 'exportar_proveedores_excel' %}" class="btn btn-success">📥 Exportar a Excel</a>
 <a href="{% url 'proveedor_crear' %}">➕ Nuevo proveedor</a>
@@ -34,7 +38,6 @@
   <tr><td colspan="5">No hay proveedores registrados.</td></tr>
   {% endfor %}
 </table>
-
 
 {% if proveedores.has_other_pages %}
   <div>
