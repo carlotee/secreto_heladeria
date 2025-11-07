@@ -3,6 +3,7 @@
     "model": "proveedores.proveedor",
     "pk": 1,
     "fields": {
+      "rut": "76.123.456-1",
       "nombre": "Sabores del Valle",
       "telefono": "+56 9 9123 4567",
       "correo": "contacto@saboresvalle.cl",
@@ -14,6 +15,7 @@
     "model": "proveedores.proveedor",
     "pk": 2,
     "fields": {
+      "rut": "77.987.654-2",
       "nombre": "ChocoArt",
       "telefono": "+56 9 9988 7766",
       "correo": "ventas@chocoart.cl",
@@ -25,6 +27,7 @@
     "model": "proveedores.proveedor",
     "pk": 3,
     "fields": {
+      "rut": "78.456.789-3",
       "nombre": "Frutisur",
       "telefono": "+56 9 9345 6789",
       "correo": "contacto@frutisur.cl",
@@ -36,6 +39,7 @@
     "model": "proveedores.proveedor",
     "pk": 4,
     "fields": {
+      "rut": "79.321.654-4",
       "nombre": "MintFresh",
       "telefono": "+56 9 9234 1122",
       "correo": "info@mintfresh.cl",
@@ -47,6 +51,7 @@
     "model": "proveedores.proveedor",
     "pk": 5,
     "fields": {
+      "rut": "80.654.321-5",
       "nombre": "Delicias del Manjar",
       "telefono": "+56 9 9987 5543",
       "correo": "ventas@deliciasmanjar.cl",
@@ -58,6 +63,7 @@
     "model": "proveedores.proveedor",
     "pk": 6,
     "fields": {
+      "rut": "81.111.222-6",
       "nombre": "LucuCream",
       "telefono": "+56 9 9123 4432",
       "correo": "contacto@lucucream.cl",
@@ -69,6 +75,7 @@
     "model": "proveedores.proveedor",
     "pk": 7,
     "fields": {
+      "rut": "82.333.444-7",
       "nombre": "Mango Chile",
       "telefono": "+56 9 9555 2134",
       "correo": "ventas@mangochile.cl",
@@ -80,6 +87,7 @@
     "model": "proveedores.proveedor",
     "pk": 8,
     "fields": {
+      "rut": "83.555.666-8",
       "nombre": "Piña Tropical",
       "telefono": "+56 9 9334 8999",
       "correo": "contacto@pinatropical.cl",
@@ -91,6 +99,7 @@
     "model": "proveedores.proveedor",
     "pk": 9,
     "fields": {
+      "rut": "84.777.888-9",
       "nombre": "Café Andino",
       "telefono": "+56 9 9554 6677",
       "correo": "ventas@cafeandino.cl",
@@ -102,6 +111,7 @@
     "model": "proveedores.proveedor",
     "pk": 10,
     "fields": {
+      "rut": "85.999.000-0",
       "nombre": "DulceGalleta",
       "telefono": "+56 9 9776 8899",
       "correo": "info@dulcegalleta.cl",
