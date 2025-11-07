@@ -43,7 +43,7 @@ urlpatterns = [
     path('<int:pk>/editar/', produccion_views.producto_act, name='producto_act'),
     path('<int:pk>/eliminar/', produccion_views.producto_delete_ajax, name='producto_eliminar'),
     path('productos/<int:pk>/eliminar/', produccion_views.producto_delete_ajax, name='producto_eliminar'),
-    path('proveedores', proveedores_views.proveedor, name='proveedor'),
+    path('proveedores/', proveedores_views.proveedor, name='proveedor'),
     path('proveedor/crear/', proveedores_views.proveedor_crear, name='proveedor_crear'),
     path('<int:pk>/', proveedores_views.proveedor_detalle, name='proveedor_detalle'),
     path('<int:pk>/editar/', proveedores_views.proveedor_act, name='proveedor_act'),
@@ -51,5 +51,6 @@ urlpatterns = [
     path('logout/', accounts_views.logout_view, name='logout'),
     path('proveedor/<int:proveedor_id>/dashboard/', proveedores_views.proveedor_dashboard, name='proveedor_dashboard'),
     path("exportar_excel/", produccion_views.exportar_productos_excel, name="exportar_productos_excel"),
-    path('exportar_proveedores/', proveedores_views.exportar_proveedores_excel, name='exportar_proveedores'),
+    path('exportar_proveedores/', proveedores_views.exportar_proveedores_excel, name='exportar_proveedores_excel'),
+
 ]
