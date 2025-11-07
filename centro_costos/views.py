@@ -5,7 +5,7 @@ from django.db.models import Q, Sum
 from .models import Periodo, TipoCosto, Centro_Costos, Costo
 from .forms import PeriodoForm, TipoCostoForm, CentroCostosForm, CostoForm, ConfirmarEliminarCostoForm
 from proveedores.models import Proveedor
-from produccion.decorators import rol_requerido
+from .decorators import rol_requerido
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -13,6 +13,7 @@ def periodo(request):
     periodos = Periodo.objects.all().order_by('-año', '-mes')
     return render(request, 'centro_costos/periodo.html', {'periodos': periodos})
 
+@login_required
 @rol_requerido('administrador')
 def periodo_crear(request):
     if request.method == 'POST':
