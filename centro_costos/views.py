@@ -5,13 +5,14 @@ from django.db.models import Q, Sum
 from .models import Periodo, TipoCosto, Centro_Costos, Costo
 from .forms import PeriodoForm, TipoCostoForm, CentroCostosForm, CostoForm, ConfirmarEliminarCostoForm
 from proveedores.models import Proveedor
+from produccion.decorators import rol_requerido
 
 
 def periodo(request):
     periodos = Periodo.objects.all().order_by('-año', '-mes')
     return render(request, 'centro_costos/periodo.html', {'periodos': periodos})
 
-
+@rol_requerido('administrador')
 def periodo_crear(request):
     if request.method == 'POST':
         form = PeriodoForm(request.POST)
@@ -26,7 +27,7 @@ def periodo_crear(request):
 
     return render(request, 'centro_costos/periodo_crear.html', {'form': form})
 
-
+@rol_requerido('administrador')
 def periodo_act(request, pk):
     periodo = get_object_or_404(Periodo, pk=pk)
 
@@ -41,7 +42,7 @@ def periodo_act(request, pk):
 
     return render(request, 'centro_costos/periodo_act.html', {'form': form, 'periodo': periodo})
 
-
+@rol_requerido('administrador')
 def periodo_eliminar(request, pk):
     periodo = get_object_or_404(Periodo, pk=pk)
 
@@ -97,7 +98,7 @@ def costo(request):
     }
     return render(request, 'centro_costos/costo.html', context)
 
-
+@rol_requerido('administrador')
 def costo_crear(request):
     if request.method == 'POST':
         form = CostoForm(request.POST)
@@ -112,7 +113,7 @@ def costo_crear(request):
 
     return render(request, 'centro_costos/costo_crear.html', {'form': form})
 
-
+@rol_requerido('administrador')
 def costo_act(request, pk):
     costo = get_object_or_404(Costo, pk=pk)
 
@@ -129,7 +130,7 @@ def costo_act(request, pk):
 
     return render(request, 'centro_costos/costo_act.html', {'form': form, 'costo': costo})
 
-
+@rol_requerido('administrador')
 def costo_eliminar(request, pk):
     costo = get_object_or_404(Costo, pk=pk)
 
