@@ -6,14 +6,14 @@ from .models import Periodo, TipoCosto, Centro_Costos, Costo
 from .forms import PeriodoForm, TipoCostoForm, CentroCostosForm, CostoForm, ConfirmarEliminarCostoForm
 from proveedores.models import Proveedor
 from common.decorators_cost import rol_requerido_costos as rol_requerido
+from common.decorators_pe import rol_requerido_pe
 
-@login_required
 def periodo(request):
     periodos = Periodo.objects.all().order_by('-año', '-mes')
     return render(request, 'centro_costos/periodo.html', {'periodos': periodos})
 
 @login_required
-@rol_requerido('administrador')
+@rol_requerido_pe('administrador')
 def periodo_crear(request):
     if request.method == 'POST':
         form = PeriodoForm(request.POST)
@@ -29,7 +29,7 @@ def periodo_crear(request):
     return render(request, 'centro_costos/periodo_crear.html', {'form': form})
 
 @login_required
-@rol_requerido('administrador')
+@rol_requerido_pe('administrador')
 def periodo_act(request, pk):
     periodo = get_object_or_404(Periodo, pk=pk)
 
@@ -45,7 +45,7 @@ def periodo_act(request, pk):
     return render(request, 'centro_costos/periodo_act.html', {'form': form, 'periodo': periodo})
 
 @login_required
-@rol_requerido('administrador')
+@rol_requerido_pe('administrador')
 def periodo_eliminar(request, pk):
     periodo = get_object_or_404(Periodo, pk=pk)
 
