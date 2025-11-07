@@ -10,7 +10,7 @@ from .forms import ProveedorForm
 import re
 from produccion.models import Producto
 from produccion.forms import ProductoForm
-from common.decorators_prov import rol_requerido_proveedor as rol_requerido
+from common.decorators_prov import rol_requerido_proveedor 
 from django.contrib.auth.decorators import login_required
 
 def validar_rut(rut):
@@ -95,11 +95,11 @@ def proveedor(request):
 
 def proveedor_detalle(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk)
-    productos = proveedor.productos.all()  # 🔹 usa el related_name del modelo Producto
+    productos = proveedor.productos.all()  
 
     context = {
         'proveedor': proveedor,
-        'productos': productos,  # 🔹 lo pasamos al template
+        'productos': productos, 
     }
     return render(request, 'proveedores/proveedor_detalle.html', context)
 
@@ -112,9 +112,8 @@ def validar_telefono(telefono):
     return bool(re.match(r'^(\+?56)?(\s?9\d{8})$', telefono))
 
 
-# --- CREAR PROVEEDOR ---
 @login_required
-@rol_requerido('proveedor', 'administrador')
+@rol_requerido_proveedor('proveedor', 'administrador')
 def proveedor_crear(request):
     """Crea un nuevo proveedor según el modelo actual."""
     if request.method == 'POST':
@@ -127,11 +126,9 @@ def proveedor_crear(request):
 
         errores = []
 
-        # ✅ Validar nombre (obligatorio)
         if not nombre:
             errores.append('El nombre es obligatorio.')
 
-        # ✅ Validar RUT (obligatorio y único)
         if not rut:
             errores.append('El RUT es obligatorio.')
         elif not validar_rut(rut):
@@ -182,7 +179,7 @@ def proveedor_crear(request):
     return render(request, 'proveedores/proveedor_crear.html')
 
 @login_required
-@rol_requerido('proveedor', 'administrador')
+@rol_requerido_proveedor('proveedor', 'administrador')
 def proveedor_act(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
     
@@ -242,7 +239,7 @@ def proveedor_act(request, pk):
     return render(request, 'proveedores/proveedor_act.html', context)
 
 @login_required
-@rol_requerido('administrador')
+@rol_requerido_proveedor('administrador')
 def proveedor_eliminar(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
     
@@ -258,7 +255,7 @@ def proveedor_eliminar(request, pk):
     return render(request, 'proveedores/proveedor_confirm_elim.html', context)
 
 @login_required
-@rol_requerido('administrador')
+@rol_requerido_proveedor('administrador')
 def proveedor_restore(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk)
     
@@ -276,7 +273,7 @@ def proveedor_restore(request, pk):
     }
     return render(request, 'proveedores/proveedor_confirm_restore.html', context)
 
-
+@rol_requerido_proveedor('administrador')
 def proveedor_deleted_list(request):
     proveedores = Proveedor.objects.filter(deleted_at__isnull=False).order_by('-deleted_at')
     
@@ -294,7 +291,7 @@ def proveedor_deleted_list(request):
     }
     return render(request, 'proveedores/proveedor_deleted_list.html', context)
 
-
+@rol_requerido_proveedor('administrador')
 def proveedor_permanent_delete(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk)
     
