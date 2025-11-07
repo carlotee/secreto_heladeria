@@ -331,3 +331,38 @@ def proveedor_dashboard(request, proveedor_id):
     }
     return render(request, 'proveedores/prov_dashboard.html', context)
 
+from django.http import HttpResponse
+from openpyxl import Workbook
+from .models import Proveedor  # Asegúrate que este import sea correcto
+
+def exportar_proveedores_excel(request):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Proveedores"
+
+    # Encabezados de las columnas
+    columnas = ["ID", "Nombre", "RUT", "Teléfono", "Correo", "Dirección", "Descripción"]
+    ws.append(columnas)
+
+    # Obtener todos los proveedores
+    proveedores = Proveedor.objects.all()
+
+    # Agregar las filas al Excel
+    for p in proveedores:
+        ws.append([
+            p.id,
+            p.nombre,
+            p.rut if hasattr(p, "rut") else "",
+            p.telefono if hasattr(p, "telefono") else "",
+            p.correo if hasattr(p, "correo") else "",
+            p.direccion if hasattr(p, "direccion") else "",
+            p.descripcion if hasattr(p, "descripcion") else "",
+        ])
+
+    # Preparar la respuesta HTTP con el archivo Excel
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="proveedores.xlsx"'
+    wb.save(response)
+    return response
