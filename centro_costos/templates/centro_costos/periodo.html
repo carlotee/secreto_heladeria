@@ -4,6 +4,7 @@
   <h1>Periodos</h1>
 
   <a href="{% url 'periodo_crear' %}">Crear nuevo periodo</a>
+  <a href="{% url 'exportar_periodos' %}" class="btn btn-success">📊 Exportar a Excel</a>
 
   {% if periodos %}
   <table border="1">

@@ -227,3 +227,31 @@ def exportar_costos_excel(request):
 
     wb.save(response)
     return response
+
+def exportar_periodos_excel(request):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Periodos"
+
+    # Encabezados de las columnas
+    columnas = ["ID", "Año", "Mes"]
+    ws.append(columnas)
+
+    # Obtener todos los periodos
+    periodos = Periodo.objects.all()
+
+    for p in periodos:
+        ws.append([
+            p.id,
+            p.anio if hasattr(p, "anio") else getattr(p, "ano", ""),  # cubre ambos casos
+            p.mes
+        ])
+
+    # Preparar la respuesta HTTP
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="periodos.xlsx"'
+
+    wb.save(response)
+    return response

@@ -29,6 +29,7 @@ urlpatterns = [
     path('login/', accounts_views.login_view, name='login'),
     path('periodos/', centro_costos_views.periodo, name='periodo'),
     path('periodos/crear/', centro_costos_views.periodo_crear, name='periodo_crear'),
+    path('exportar_periodos/', centro_costos_views.exportar_periodos_excel, name='exportar_periodos'),
     path('periodos/<int:pk>/editar/', centro_costos_views.periodo_act, name='periodo_act'),
     path('periodos/<int:pk>/eliminar/', centro_costos_views.periodo_eliminar, name='periodo_eliminar'),
     path('tipos-costo/', centro_costos_views.tipo_costo, name='tipo_costo'),
