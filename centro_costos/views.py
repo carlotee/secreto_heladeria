@@ -233,7 +233,7 @@ def exportar_periodos_excel(request):
     ws = wb.active
     ws.title = "Periodos"
 
-    # Encabezados de las columnas
+    # Encabezados
     columnas = ["ID", "Año", "Mes"]
     ws.append(columnas)
 
@@ -243,7 +243,7 @@ def exportar_periodos_excel(request):
     for p in periodos:
         ws.append([
             p.id,
-            p.anio if hasattr(p, "anio") else getattr(p, "ano", ""),  # cubre ambos casos
+            getattr(p, "año", getattr(p, "anio", getattr(p, "ano", ""))),
             p.mes
         ])
 
