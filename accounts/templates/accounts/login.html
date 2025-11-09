@@ -12,7 +12,7 @@
 <body>
     <div class="login-container">
         <h2>Iniciar Sesión</h2>
-        <form method="post" id="login-form">
+        <form method="post" id="login-form" action="{% url 'dashboard' %}">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn-login">Ingresar</button>
@@ -23,13 +23,18 @@
     <script>
     $(document).ready(function() {
         $(".btn-login").on("click", function(event) {
-            event.preventDefault(); // evita que se envíe el formulario altiro
+            event.preventDefault(); // evita envío inmediato
+
             Swal.fire({
-                title: "¡Inicio de sesión!",
-                text: "Haz hecho clic en el botón Ingresar.",
+                title: "¡Inicio de sesión exitoso!",
+                text: "Bienvenido nuevamente 😊",
                 icon: "success",
                 confirmButtonColor: "#3085d6",
-                confirmButtonText: "Aceptar"
+                confirmButtonText: "Continuar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{% url 'dashboard' %}";
+                }
             });
         });
     });
