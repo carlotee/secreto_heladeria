@@ -71,6 +71,7 @@
 <!-- SweetAlert para mensajes Django -->
 {% if messages %}
 <script>
+/* django-template */
 document.addEventListener("DOMContentLoaded", function() {
     {% for message in messages %}
         Swal.fire({
@@ -83,8 +84,11 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     {% endfor %}
 });
+/* end-django-template */
 </script>
 {% endif %}
+
+
 
 {% block extra_js %}{% endblock %}
 </body>
