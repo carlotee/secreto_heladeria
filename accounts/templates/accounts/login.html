@@ -26,14 +26,15 @@
             event.preventDefault(); // detener envío momentáneamente
 
             Swal.fire({
-                title: "Iniciando sesión...",
-                text: "Por favor espera un momento",
-                icon: "info",
-                showConfirmButton: false,
-                timer: 1000 // 1 segundo
-            }).then(() => {
-                // ahora sí enviamos el formulario real
-                event.target.submit();
+                title: "Good job!",
+                text: "You clicked the button!",
+                icon: "success",
+                confirmButtonText: "Continuar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // ahora sí enviamos el formulario real para que Django valide
+                    event.target.submit();
+                }
             });
         });
     });
