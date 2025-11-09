@@ -216,7 +216,7 @@ def exportar_costos_excel(request):
             float(c.valor),
             c.tipo_costo.nombre if c.tipo_costo else "Sin tipo",
             c.centro_costo.nombre if c.centro_costo else "Sin centro",
-            c.periodo.nombre if c.periodo else "Sin período"
+            f"{c.periodo.anio} - {c.periodo.mes}" if c.periodo else "Sin período"
         ])
 
     # Preparar la respuesta HTTP
@@ -225,6 +225,5 @@ def exportar_costos_excel(request):
     )
     response["Content-Disposition"] = 'attachment; filename="costos.xlsx"'
 
-    # Guardar el libro en la respuesta
     wb.save(response)
     return response
