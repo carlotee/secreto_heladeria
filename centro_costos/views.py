@@ -216,7 +216,7 @@ def exportar_costos_excel(request):
             float(c.valor),
             c.tipo_costo.nombre if c.tipo_costo else "Sin tipo",
             c.centro_costo.nombre if c.centro_costo else "Sin centro",
-            f"{c.periodo.anio} - {c.periodo.mes}" if c.periodo else "Sin período"
+            str(c.periodo) if c.periodo else "Sin período"
         ])
 
     # Preparar la respuesta HTTP
