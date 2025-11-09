@@ -39,7 +39,6 @@ def registro(request):
 
 
 def login_view(request):
-
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -55,32 +54,26 @@ def login_view(request):
                     
                     if user is not None:
                         auth_login(request, user)
-                        print(f"✅ Login correcto para {user.username} (Rol: {user.rol})")
                         messages.success(request, f'¡Bienvenido de vuelta, {user.username}!') 
                         return redirect('dashboard')
                     else:
-                        print("⚠️ Contraseña incorrecta")
-                        # CAMBIO IMPORTANTE: Usamos messages.error
+                        # Usamos messages.error para que base.html lo capture
                         messages.error(request, "Usuario o contraseña incorrectos")
                 else:
-                    print("⚠️ Usuario no encontrado")
-                    # CAMBIO IMPORTANTE: Usamos messages.error
                     messages.error(request, "Usuario o contraseña incorrectos")
                     
             except Exception as e:
-                print(f"❌ Error en login: {str(e)}")
                 messages.error(request, "Error inesperado al iniciar sesión")
     else:
         form = LoginForm()
 
-    # CAMBIO IMPORTANTE: Añadimos 'hide_navbar' al contexto
+    # 👇 ¡ESTA ES LA PARTE IMPORTANTE! 👇
+    # Aquí le decimos a la plantilla que oculte la barra de navegación.
     contexto = {
         'form': form,
-        'hide_navbar': True  # <-- ¡AQUÍ ESTÁ LA MAGIA!
+        'hide_navbar': True  # <-- ESTA LÍNEA OCULTA EL NAV
     }
     return render(request, 'accounts/login.html', contexto)
-
-# ... (tu vista logout_view, que ya está correcta) ...
 
 
 def logout_view(request):
