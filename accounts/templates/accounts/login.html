@@ -12,7 +12,7 @@
 <body>
     <div class="login-container">
         <h2>Iniciar Sesión</h2>
-        <form method="post" id="login-form" action="{% url 'dashboard' %}">
+        <form method="post" id="login-form" action="">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn-login">Ingresar</button>
@@ -22,19 +22,18 @@
 
     <script>
     $(document).ready(function() {
-        $(".btn-login").on("click", function(event) {
-            event.preventDefault(); // evita envío inmediato
+        $("#login-form").on("submit", function(event) {
+            event.preventDefault(); // detener envío momentáneamente
 
             Swal.fire({
-                title: "¡Inicio de sesión exitoso!",
-                text: "Bienvenido nuevamente 😊",
-                icon: "success",
-                confirmButtonColor: "#3085d6",
-                confirmButtonText: "Continuar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = "{% url 'dashboard' %}";
-                }
+                title: "Iniciando sesión...",
+                text: "Por favor espera un momento",
+                icon: "info",
+                showConfirmButton: false,
+                timer: 1000 // 1 segundo
+            }).then(() => {
+                // ahora sí enviamos el formulario real
+                event.target.submit();
             });
         });
     });
