@@ -6,17 +6,33 @@
     <title>Iniciar Sesión</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'accounts/login.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="login-container">
         <h2>Iniciar Sesión</h2>
-        <form method="post">
+        <form method="post" id="login-form">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Ingresar</button>
+            <button type="submit" class="btn-login">Ingresar</button>
         </form>
         <a href="{% url 'registro' %}" class="btn-volver">Registrarse</a>
     </div>
+
+    <script>
+    $(document).ready(function() {
+        $(".btn-login").on("click", function(event) {
+            event.preventDefault(); // evita que se envíe el formulario altiro
+            Swal.fire({
+                title: "¡Inicio de sesión!",
+                text: "Haz hecho clic en el botón Ingresar.",
+                icon: "success",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Aceptar"
+            });
+        });
+    });
+    </script>
 </body>
 </html>
