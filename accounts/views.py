@@ -39,6 +39,8 @@ def registro(request):
 
 
 def login_view(request):
+    User = get_user_model()
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -47,33 +49,30 @@ def login_view(request):
 
             try:
                 usuario_obj = Usuario.objects.filter(username=usuario).first() or \
-                                    Usuario.objects.filter(email=usuario).first()
+                             Usuario.objects.filter(email=usuario).first()
                 
                 if usuario_obj:
                     user = authenticate(username=usuario_obj.username, password=password)
                     
                     if user is not None:
                         auth_login(request, user)
-                        messages.success(request, f'¡Bienvenido de vuelta, {user.username}!') 
+                        print(f"✅ Login correcto para {user.username} (Rol: {user.rol})")
+                        print(f"✅ Grupos: {[g.name for g in user.groups.all()]}")
                         return redirect('dashboard')
                     else:
-                        # Usamos messages.error para que base.html lo capture
-                        messages.error(request, "Usuario o contraseña incorrectos")
+                        print("⚠️ Contraseña incorrecta")
+                        form.add_error(None, "Usuario o contraseña incorrectos")
                 else:
-                    messages.error(request, "Usuario o contraseña incorrectos")
+                    print("⚠️ Usuario no encontrado")
+                    form.add_error(None, "Usuario o contraseña incorrectos")
                     
             except Exception as e:
-                messages.error(request, "Error inesperado al iniciar sesión")
+                print(f"❌ Error en login: {str(e)}")
+                form.add_error(None, "Error al iniciar sesión")
     else:
         form = LoginForm()
 
-    # 👇 ¡ESTA ES LA PARTE IMPORTANTE! 👇
-    # Aquí le decimos a la plantilla que oculte la barra de navegación.
-    contexto = {
-        'form': form,
-        'hide_navbar': True  # <-- ESTA LÍNEA OCULTA EL NAV
-    }
-    return render(request, 'accounts/login.html', contexto)
+    return render(request, 'accounts/login.html', {'form': form})
 
 
 def logout_view(request):
