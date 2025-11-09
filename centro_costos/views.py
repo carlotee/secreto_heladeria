@@ -7,6 +7,8 @@ from .forms import PeriodoForm, TipoCostoForm, CentroCostosForm, CostoForm, Conf
 from proveedores.models import Proveedor
 from common.decorators_cost import rol_requerido_costos as rol_requerido
 from common.decorators_pe import rol_requerido_pe
+from openpyxl import Workbook
+from django.http import HttpResponse
 
 def periodo(request):
     periodos = Periodo.objects.all().order_by('-año', '-mes')
@@ -192,3 +194,37 @@ def dashboard(request):
     messages.error(request, 'Stock insuficiente')
 
     return render(request, 'centro_costos/dashboard.html', context)
+
+
+
+def exportar_costos_excel(request):
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Costos"
+
+    # Encabezados de las columnas
+    columnas = ["ID", "Descripción", "Valor", "Tipo de Costo", "Centro de Costo", "Período"]
+    ws.append(columnas)
+
+    # Obtener todos los costos con sus relaciones
+    costos = Costo.objects.select_related("tipo_costo", "centro_costo", "periodo").all()
+
+    for c in costos:
+        ws.append([
+            c.id,
+            c.descripcion,
+            float(c.valor),
+            c.tipo_costo.nombre if c.tipo_costo else "Sin tipo",
+            c.centro_costo.nombre if c.centro_costo else "Sin centro",
+            c.periodo.nombre if c.periodo else "Sin período"
+        ])
+
+    # Preparar la respuesta HTTP
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = 'attachment; filename="costos.xlsx"'
+
+    # Guardar el libro en la respuesta
+    wb.save(response)
+    return response

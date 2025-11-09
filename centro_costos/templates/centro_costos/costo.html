@@ -4,6 +4,8 @@
   <h1>Costos</h1>
 
   <a href="{% url 'costo_crear' %}">Crear nuevo costo</a>
+  <a href="{% url 'exportar_costos' %}" class="btn btn-success">📊 Exportar a Excel</a>
+
 
   {% if costos %}
   <table border="1">

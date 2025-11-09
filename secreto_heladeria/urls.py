@@ -34,6 +34,7 @@ urlpatterns = [
     path('tipos-costo/', centro_costos_views.tipo_costo, name='tipo_costo'),
     path('centros-costos/', centro_costos_views.centro_costos, name='centro_costos'),
     path('costos/', centro_costos_views.costo, name='costo'),
+    path('exportar_costos/', centro_costos_views.exportar_costos_excel, name='exportar_costos'),
     path('costos/crear/', centro_costos_views.costo_crear, name='costo_crear'),
     path('costos/<int:pk>/editar/', centro_costos_views.costo_act, name='costo_act'),
     path('costos/<int:pk>/eliminar/', centro_costos_views.costo_eliminar, name='costo_eliminar'),
