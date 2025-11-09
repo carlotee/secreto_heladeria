@@ -4,16 +4,65 @@
 <head>
   <meta charset="UTF-8">
   <title>Eliminar Período</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <h1>Eliminar Período</h1>
 
   <p>¿Estás seguro de que quieres eliminar el período <strong>{{ periodo.nombre }}</strong>?</p>
 
-  <form method="post" action="{% url 'periodo_eliminar' periodo.id %}">
+  <form id="form-eliminar" method="post" action="{% url 'periodo_eliminar' periodo.id %}">
     {% csrf_token %}
-    <button type="submit">Sí, eliminar</button>
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
   </form>
 
-  <a href="{% url 'periodo' %}">Cancelar</a>
-  {% endblock %}
+  <a href="{% url 'periodo' %}" class="btn btn-secondary">Cancelar</a>
+</body>
+{% endblock %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("form-eliminar");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); // Evita que se envíe inmediatamente
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success m-2",
+        cancelButton: "btn btn-danger m-2"
+      },
+      buttonsStyling: false
+    });
+
+    swalWithBootstrapButtons.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esta acción!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        swalWithBootstrapButtons.fire({
+          title: "Eliminado",
+          text: "El período fue eliminado exitosamente.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        setTimeout(() => form.submit(), 1500); // Envía el formulario después del mensaje
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        swalWithBootstrapButtons.fire({
+          title: "Cancelado",
+          text: "El período sigue intacto.",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    });
+  });
+});
+</script>
