@@ -1,22 +1,23 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Iniciar Sesión</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% block title %}Iniciar Sesión - Secreto Heladería{% endblock %}
+
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'accounts/login.css' %}">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
     <div class="login-container">
         <h2>Iniciar Sesión</h2>
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Ingresar</button>
+            <button type="submit" class="btn btn-primary w-100">Ingresar</button>
         </form>
         <a href="{% url 'registro' %}" class="btn-volver">Registrarse</a>
     </div>
-</body>
-</html>
+{% endblock %}
+
+{% block extra_js %}
+    {% endblock %}
