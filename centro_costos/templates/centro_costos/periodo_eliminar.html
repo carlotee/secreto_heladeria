@@ -25,41 +25,33 @@ document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("form-eliminar");
 
   form.addEventListener("submit", function(e) {
-    e.preventDefault(); // Evita que se envíe inmediatamente
+    e.preventDefault();
 
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: "btn btn-success m-2",
-        cancelButton: "btn btn-danger m-2"
-      },
-      buttonsStyling: false
-    });
-
-    swalWithBootstrapButtons.fire({
+    Swal.fire({
       title: "¿Estás seguro?",
       text: "¡No podrás revertir esta acción!",
       icon: "warning",
       showCancelButton: true,
+      confirmButtonColor: "#28a745", // verde
+      cancelButtonColor: "#d33",     // rojo
       confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
-      reverseButtons: true
+      cancelButtonText: "No, cancelar"
     }).then((result) => {
       if (result.isConfirmed) {
-        swalWithBootstrapButtons.fire({
-          title: "Eliminado",
-          text: "El período fue eliminado exitosamente.",
+        Swal.fire({
+          title: "¡Eliminado!",
+          text: "El período ha sido eliminado correctamente.",
           icon: "success",
-          showConfirmButton: false,
-          timer: 1500
+          confirmButtonColor: "#28a745"
+        }).then(() => {
+          form.submit();
         });
-        setTimeout(() => form.submit(), 1500); // Envía el formulario después del mensaje
       } else if (result.dismiss === Swal.DismissReason.cancel) {
-        swalWithBootstrapButtons.fire({
+        Swal.fire({
           title: "Cancelado",
-          text: "El período sigue intacto.",
+          text: "El período no fue eliminado.",
           icon: "error",
-          showConfirmButton: false,
-          timer: 1500
+          confirmButtonColor: "#d33"
         });
       }
     });
