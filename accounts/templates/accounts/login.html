@@ -23,19 +23,21 @@
     <script>
     $(document).ready(function() {
         $("#login-form").on("submit", function(event) {
-            event.preventDefault(); // detener envío momentáneamente
+            event.preventDefault(); // detiene envío momentáneamente
 
             Swal.fire({
                 title: "Good job!",
                 text: "You clicked the button!",
                 icon: "success",
-                confirmButtonText: "Continuar"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // ahora sí enviamos el formulario real para que Django valide
-                    event.target.submit();
-                }
+                showConfirmButton: false, // ❌ sin botón
+                timer: 1500, // ⏱️ duración 1.5 segundos
+                timerProgressBar: true // barra de tiempo opcional
             });
+
+            // cuando termine el tiempo, envía el formulario real
+            setTimeout(() => {
+                event.target.submit();
+            }, 1500);
         });
     });
     </script>
