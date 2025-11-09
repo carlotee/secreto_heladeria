@@ -6,19 +6,17 @@
   <title>Eliminar Período</title>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
-  <h1>Eliminar Período</h1>
 
-  <p>¿Estás seguro de que quieres eliminar el período <strong>{{ periodo.nombre }}</strong>?</p>
+<h1>Eliminar Período</h1>
 
-  <form id="form-eliminar" method="post" action="{% url 'periodo_eliminar' periodo.id %}">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
-  </form>
+<p>¿Estás seguro de que quieres eliminar el período <strong>{{ periodo.nombre }}</strong>?</p>
 
-  <a href="{% url 'periodo' %}" class="btn btn-secondary">Cancelar</a>
-</body>
-{% endblock %}
+<form id="form-eliminar" method="post" action="{% url 'periodo_eliminar' periodo.id %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+</form>
+
+<a href="{% url 'periodo' %}" class="btn btn-secondary">Cancelar</a>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -44,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
           icon: "success",
           confirmButtonColor: "#28a745"
         }).then(() => {
-          form.submit();
+          form.submit(); // Envía después del OK
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
@@ -58,3 +56,4 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
+{% endblock %}
