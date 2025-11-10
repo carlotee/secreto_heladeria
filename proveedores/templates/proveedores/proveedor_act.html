@@ -40,15 +40,15 @@ document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("form-actualizar-proveedor");
 
   form.addEventListener("submit", function(e) {
-    e.preventDefault(); // evita el envío inmediato
+    e.preventDefault(); // Evita el envío inmediato
 
     Swal.fire({
       title: "¿Deseas actualizar este proveedor?",
       text: "Verifica que todos los datos sean correctos antes de continuar.",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#ffc107", // amarillo
-      cancelButtonColor: "#6c757d", // gris
+      confirmButtonColor: "#ffc107",
+      cancelButtonColor: "#6c757d",
       confirmButtonText: "Sí, actualizar",
       cancelButtonText: "Cancelar",
       reverseButtons: true
@@ -60,11 +60,13 @@ document.addEventListener("DOMContentLoaded", function() {
           icon: "success",
           confirmButtonColor: "#28a745",
           showConfirmButton: false,
-          timer: 1500
+          timer: 1200
         });
+
+        // ✅ Enviar el formulario después del mensaje de éxito
         setTimeout(() => {
-          window.location.href = "{% url 'proveedor' %}";
-        }, 1500);
+          form.submit();
+        }, 1200);
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: "Cancelado",
