@@ -176,11 +176,10 @@ def proveedor_crear(request):
             errores.append('La ciudad no puede exceder los 30 caracteres.')
 
         if errores:
-            # 🔥 SOLUCIÓN: Limpiar mensajes anteriores antes de mostrar errores
-            storage = messages.get_messages(request)
-            storage.used = True
+            # Limpiar mensajes anteriores
+            list(messages.get_messages(request))
             
-            # Ahora mostrar los errores actuales
+            # Mostrar errores actuales
             for error in errores:
                 messages.error(request, error)
 
