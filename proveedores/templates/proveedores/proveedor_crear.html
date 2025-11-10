@@ -35,11 +35,10 @@
     <a href="{% url 'proveedor' %}" class="btn btn-secondary">Volver</a>
   </form>
 
-  <!-- MOSTRAR ERRORES SI EXISTEN -->
-  {% if errores %}
-    <ul style="color: red; margin-top: 20px;">
-      {% for error in errores %}
-        <li>{{ error }}</li>
+  {% if messages %}
+    <ul style="color: red;">
+      {% for message in messages %}
+        <li>{{ message }}</li>
       {% endfor %}
     </ul>
   {% endif %}
@@ -48,24 +47,6 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("form-crear-proveedor");
-  
-  // SI HAY ERRORES, MOSTRAR ALERTA
-  const errores = {{ errores|default:"[]"|safe }};
-  if (errores.length > 0) {
-    let listaErrores = '<ul style="text-align: left;">';
-    errores.forEach(error => {
-      listaErrores += '<li>' + error + '</li>';
-    });
-    listaErrores += '</ul>';
-    
-    Swal.fire({
-      title: "¡Error!",
-      html: listaErrores,
-      icon: "error",
-      confirmButtonColor: "#dc3545",
-      confirmButtonText: "Entendido"
-    });
-  }
 
   form.addEventListener("submit", function(e) {
     e.preventDefault(); 
@@ -81,7 +62,15 @@ document.addEventListener("DOMContentLoaded", function() {
       cancelButtonText: "Cancelar"
     }).then((result) => {
       if (result.isConfirmed) {
-        form.submit();
+        Swal.fire({
+          title: "¡Guardado!",
+          text: "El proveedor se ha creado correctamente.",
+          icon: "success",
+          confirmButtonColor: "#007bff",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        setTimeout(() => form.submit(), 1500);
       }
     });
   });
