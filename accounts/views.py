@@ -37,7 +37,6 @@ def registro(request):
     
     return render(request, 'accounts/registro.html', {'form': form})
 
-
 def login_view(request):
     User = get_user_model()
 
@@ -58,6 +57,9 @@ def login_view(request):
                         auth_login(request, user)
                         print(f"✅ Login correcto para {user.username} (Rol: {user.rol})")
                         print(f"✅ Grupos: {[g.name for g in user.groups.all()]}")
+                        
+                        # ✅ Agregar mensaje de éxito
+                        messages.success(request, 'login_exitoso')
                         return redirect('dashboard')
                     else:
                         print("⚠️ Contraseña incorrecta")

@@ -22,6 +22,7 @@
 
     {% if form.errors %}
     <script>
+    // ❌ Alerta automática si hay errores al cargar la página
     Swal.fire({
         title: "Error al iniciar sesión",
         html: `{% for field, errors in form.errors.items %}
@@ -32,18 +33,6 @@
         confirmButtonText: "Entendido"
     });
     </script>
-    {% else %}
-        {% if request.method == 'POST' %}
-        <script>
-        Swal.fire({
-            title: "Inicio de Sesión Exitoso",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true
-        });
-        </script>
-        {% endif %}
     {% endif %}
 </body>
 </html>
