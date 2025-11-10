@@ -35,37 +35,42 @@
     <a href="{% url 'proveedor' %}" class="btn btn-secondary">Volver</a>
   </form>
 
-  {% if messages %}
-    <ul style="color: red;">
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-</body>
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("form-crear-proveedor");
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const form = document.getElementById("form-crear-proveedor");
+    // Confirmación antes de enviar
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
 
-  form.addEventListener("submit", function(e) {
-    e.preventDefault(); 
-
-    Swal.fire({
-      title: "¿Deseas guardar este proveedor?",
-      text: "Verifica que todos los datos sean correctos antes de guardar.",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#007bff",
-      cancelButtonColor: "#6c757d",
-      confirmButtonText: "Sí, guardar",
-      cancelButtonText: "Cancelar"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        form.submit();
-      }
+      Swal.fire({
+        title: "¿Deseas guardar este proveedor?",
+        text: "Verifica que todos los datos sean correctos antes de guardar.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#007bff",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Sí, guardar",
+        cancelButtonText: "Cancelar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.submit();
+        }
+      });
     });
+
+    // Mostrar mensajes Django con SweetAlert
+    {% if messages %}
+      {% for message in messages %}
+        Swal.fire({
+          title: "{% if message.tags == 'success' %}¡Éxito!{% else %}Datos incorrectos{% endif %}",
+          html: "{{ message|escapejs }}",
+          icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
+          confirmButtonText: "Aceptar"
+        });
+      {% endfor %}
+    {% endif %}
   });
-});
-</script>
+  </script>
+</body>
 {% endblock %}
