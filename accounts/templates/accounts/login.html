@@ -21,24 +21,38 @@
     </div>
 
     <script>
+    // ✅ Alerta al iniciar sesión exitosamente
     $(document).ready(function() {
         $("#login-form").on("submit", function(event) {
-            event.preventDefault(); // detiene envío momentáneamente
+            event.preventDefault();
 
             Swal.fire({
                 title: "Inicio de Sesión Exitoso",
                 icon: "success",
-                showConfirmButton: false, // ❌ sin botón
-                timer: 1500, // ⏱️ duración 1.5 segundos
-                timerProgressBar: true // barra de tiempo opcional
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true
             });
 
-            // cuando termine el tiempo, envía el formulario real
             setTimeout(() => {
                 event.target.submit();
             }, 1500);
         });
     });
     </script>
+
+    {% if form.errors %}
+    <script>
+    Swal.fire({
+        title: "Error al iniciar sesión",
+        html: `{% for field, errors in form.errors.items %}
+                  <b>{{ field|title }}:</b> {{ errors.as_text|linebreaksbr }}<br>
+               {% endfor %}`,
+        icon: "error",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "Entendido"
+    });
+    </script>
+    {% endif %}
 </body>
 </html>
