@@ -151,6 +151,7 @@ def proveedor_crear(request):
             if not telefono.startswith('+'):
                 errores.append('El teléfono debe comenzar con el símbolo +')
             else:
+                import re
                 digitos_telefono = re.sub(r'\D', '', telefono)
                 if len(digitos_telefono) > 11:
                     errores.append('El teléfono no puede tener más de 11 dígitos.')
@@ -171,7 +172,7 @@ def proveedor_crear(request):
 
         if errores:
             for error in errores:
-                messages.error(request, error)
+                messages.error(request, error)  
 
             context = {
                 'nombre': nombre,
