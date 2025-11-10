@@ -34,31 +34,38 @@
     <button type="submit" class="btn btn-primary">Guardar</button>
     <a href="{% url 'proveedor' %}" class="btn btn-secondary">Volver</a>
   </form>
+
+  <!-- MOSTRAR ERRORES SI EXISTEN -->
+  {% if errores %}
+    <ul style="color: red; margin-top: 20px;">
+      {% for error in errores %}
+        <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 </body>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("form-crear-proveedor");
   
-  // SI HAY ERRORES, MOSTRAR ALERTA DE ERROR
-  {% if errores %}
+  // SI HAY ERRORES, MOSTRAR ALERTA
+  const errores = {{ errores|default:"[]"|safe }};
+  if (errores.length > 0) {
+    let listaErrores = '<ul style="text-align: left;">';
+    errores.forEach(error => {
+      listaErrores += '<li>' + error + '</li>';
+    });
+    listaErrores += '</ul>';
+    
     Swal.fire({
       title: "¡Error!",
-      html: `
-        <div style="text-align: left;">
-          <p>Se encontraron los siguientes errores:</p>
-          <ul style="text-align: left;">
-            {% for error in errores %}
-              <li>{{ error }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      `,
+      html: listaErrores,
       icon: "error",
       confirmButtonColor: "#dc3545",
       confirmButtonText: "Entendido"
     });
-  {% endif %}
+  }
 
   form.addEventListener("submit", function(e) {
     e.preventDefault(); 
