@@ -55,7 +55,6 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-  // --- CSRF helper ---
   function getCookie(name) {
       const value = `; ${document.cookie}`;
       const parts = value.split(`; ${name}=`);
@@ -63,14 +62,12 @@
   }
   const csrftoken = getCookie("csrftoken");
 
-  // Interceptar envío del formulario
   document.getElementById("formProducto").addEventListener("submit", async (e) => {
-      e.preventDefault(); // Evita envío inmediato
+      e.preventDefault();
 
       const form = e.target;
       const formData = new FormData(form);
 
-      // Confirmación SweetAlert
       const confirm = await Swal.fire({
           title: "¿Deseas guardar este producto?",
           text: "Revisa que todos los datos estén correctos.",
@@ -94,7 +91,6 @@
 
           if (!resp.ok) throw new Error("Error al enviar el formulario");
 
-          // Si el backend devuelve JSON con estado (puedes adaptarlo)
           const data = await resp.json().catch(() => null);
 
           if (data && data.ok) {

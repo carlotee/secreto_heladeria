@@ -187,7 +187,7 @@ def dashboard(request):
         'total_centros': Centro_Costos.objects.filter(deleted_at__isnull=True).count(),
         'total_tipos': TipoCosto.objects.count(),
         'proveedores': proveedores,
-        'visitas': visitas,  # ✅ agregar aquí las visitas correctamente
+        'visitas': visitas,  
     }
 
     messages.success(request, 'Costo agregado al carrito')
@@ -202,11 +202,9 @@ def exportar_costos_excel(request):
     ws = wb.active
     ws.title = "Costos"
 
-    # Encabezados de las columnas
     columnas = ["ID", "Descripción", "Valor", "Tipo de Costo", "Centro de Costo", "Período"]
     ws.append(columnas)
 
-    # Obtener todos los costos con sus relaciones
     costos = Costo.objects.select_related("tipo_costo", "centro_costo", "periodo").all()
 
     for c in costos:
@@ -219,7 +217,6 @@ def exportar_costos_excel(request):
             str(c.periodo) if c.periodo else "Sin período"
         ])
 
-    # Preparar la respuesta HTTP
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
@@ -233,11 +230,9 @@ def exportar_periodos_excel(request):
     ws = wb.active
     ws.title = "Periodos"
 
-    # Encabezados
     columnas = ["ID", "Año", "Mes"]
     ws.append(columnas)
 
-    # Obtener todos los periodos
     periodos = Periodo.objects.all()
 
     for p in periodos:
@@ -247,7 +242,6 @@ def exportar_periodos_excel(request):
             p.mes
         ])
 
-    # Preparar la respuesta HTTP
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )

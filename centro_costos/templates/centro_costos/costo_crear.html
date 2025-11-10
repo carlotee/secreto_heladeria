@@ -24,15 +24,15 @@ document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("form-crear");
 
   form.addEventListener("submit", function(e) {
-    e.preventDefault(); // evita envío inmediato
+    e.preventDefault(); 
 
     Swal.fire({
       title: "¿Deseas guardar este costo?",
       text: "Revisa que todos los datos sean correctos antes de continuar.",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#007bff", // azul
-      cancelButtonColor: "#6c757d", // gris
+      confirmButtonColor: "#007bff", 
+      cancelButtonColor: "#6c757d", 
       confirmButtonText: "Sí, guardar",
       cancelButtonText: "Cancelar"
     }).then((result) => {

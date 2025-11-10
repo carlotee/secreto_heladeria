@@ -178,10 +178,10 @@ def proveedor_crear(request):
 def proveedor_act(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
     
-    print(f"Método: {request.method}")  # Debug
+    print(f"Método: {request.method}")  
     
     if request.method == 'POST':
-        print("Entró al POST")  # Debug
+        print("Entró al POST")  
         
         nombre = request.POST.get('nombre', '').strip()
         rut = request.POST.get('rut', '').strip()
@@ -190,7 +190,7 @@ def proveedor_act(request, pk):
         direccion = request.POST.get('direccion', '').strip()
         ciudad = request.POST.get('ciudad', '').strip()
         
-        print(f"Datos recibidos - Nombre: {nombre}, RUT: {rut}")  # Debug
+        print(f"Datos recibidos - Nombre: {nombre}, RUT: {rut}") 
         
         errores = []
         
@@ -214,7 +214,7 @@ def proveedor_act(request, pk):
         if not ciudad:
             errores.append('La ciudad es obligatoria')
         
-        print(f"Errores: {errores}")  # Debug
+        print(f"Errores: {errores}") 
         
         if errores:
             for error in errores:
@@ -234,8 +234,7 @@ def proveedor_act(request, pk):
             }
             return render(request, 'proveedores/proveedor_act.html', context)
         
-        # Guardar cambios si no hay errores
-        print("Guardando cambios...")  # Debug
+        print("Guardando cambios...")  
         proveedor.nombre = nombre
         proveedor.rut = rut
         proveedor.telefono = telefono if telefono else None
@@ -243,14 +242,13 @@ def proveedor_act(request, pk):
         proveedor.direccion = direccion
         proveedor.ciudad = ciudad
         proveedor.save()
-        print("Cambios guardados exitosamente")  # Debug
+        print("Cambios guardados exitosamente") 
 
-        # ✅ Mensaje que activará el SweetAlert de éxito
         messages.success(request, f'Proveedor "{nombre}" actualizado exitosamente.')
 
         return redirect('proveedor')
     
-    print("Entró al GET")  # Debug
+    print("Entró al GET")  
     context = {
         'proveedor': proveedor,
         'is_edit': True
@@ -350,21 +348,18 @@ def proveedor_dashboard(request, proveedor_id):
 
 from django.http import HttpResponse
 from openpyxl import Workbook
-from .models import Proveedor  # Asegúrate que este import sea correcto
+from .models import Proveedor 
 
 def exportar_proveedores_excel(request):
     wb = Workbook()
     ws = wb.active
     ws.title = "Proveedores"
 
-    # Encabezados de las columnas
     columnas = ["ID", "Nombre", "RUT", "Teléfono", "Correo", "Dirección", "Descripción"]
     ws.append(columnas)
 
-    # Obtener todos los proveedores
     proveedores = Proveedor.objects.all()
 
-    # Agregar las filas al Excel
     for p in proveedores:
         ws.append([
             p.id,
@@ -376,7 +371,6 @@ def exportar_proveedores_excel(request):
             p.descripcion if hasattr(p, "descripcion") else "",
         ])
 
-    # Preparar la respuesta HTTP con el archivo Excel
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )

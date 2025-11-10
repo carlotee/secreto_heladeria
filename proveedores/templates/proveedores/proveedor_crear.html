@@ -49,15 +49,15 @@ document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("form-crear-proveedor");
 
   form.addEventListener("submit", function(e) {
-    e.preventDefault(); // evita que se envíe inmediatamente
+    e.preventDefault(); 
 
     Swal.fire({
       title: "¿Deseas guardar este proveedor?",
       text: "Verifica que todos los datos sean correctos antes de guardar.",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#007bff", // azul
-      cancelButtonColor: "#6c757d", // gris
+      confirmButtonColor: "#007bff",
+      cancelButtonColor: "#6c757d",
       confirmButtonText: "Sí, guardar",
       cancelButtonText: "Cancelar"
     }).then((result) => {

@@ -20,7 +20,7 @@ class Centro_Costos(models.Model):
     tipo_costo = models.ForeignKey(
         'TipoCosto',
         on_delete=models.PROTECT,
-        default=1  # 👈 Esto evita que Django intente guardar un 0
+        default=1 
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

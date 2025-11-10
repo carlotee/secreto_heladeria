@@ -14,7 +14,7 @@ def eliminar_costos(modeladmin, request, queryset):
 
 @admin.register(Costo)
 class CostoAdmin(admin.ModelAdmin):
-    form = CostoForm  # 👈 conecta la validación del form
+    form = CostoForm  
     list_display = ("descripcion", "valor", "producto", "fecha", "deleted_at")
     search_fields = ("descripcion",)
     ordering = ("fecha",)

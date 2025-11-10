@@ -5,7 +5,6 @@
 {% block content %}
 
 <div class="container mt-4">
-    <!-- Encabezado con botón de crear -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>
             <i class="fas fa-box"></i> Productos
@@ -13,7 +12,6 @@
             <span class="badge bg-secondary">{{ total_productos }}</span>
         </h2>
         
-        <!-- 🔒 Solo proveedor y admin pueden crear -->
         {% if user.rol == 'proveedor' or user.rol == 'admin' %}
         <a href="{% url 'producto_crear' %}" class="btn btn-success">
             <i class="fas fa-plus"></i> Nuevo Producto
@@ -21,7 +19,6 @@
         {% endif %}
     </div>
 
-    <!-- Indicador de rol y permisos -->
     <div class="alert alert-info alert-dismissible fade show" role="alert">
         <i class="fas fa-user-tag"></i> 
         <strong>Rol actual:</strong> {{ user.get_rol_display }}
@@ -35,7 +32,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 
-    <!-- Mensajes de Django -->
     {% if messages %}
         {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -54,7 +50,6 @@
         {% endfor %}
     {% endif %}
 
-    <!-- Filtros de búsqueda -->
     <div class="card mb-4">
         <div class="card-body">
             <form method="get" class="row g-3">
@@ -97,7 +92,6 @@
     </div>
 
     {% if productos %}
-    <!-- Tabla de productos -->
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
@@ -135,14 +129,12 @@
                                 {% endif %}
                             </td>
                             <td class="actions">
-                                <!-- ✅ Todos pueden ver -->
                                 <a href="{% url 'producto_detalle' p.id %}" 
                                    class="btn btn-info btn-sm"
                                    title="Ver detalle">
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
 
-                                <!-- 🔒 Solo proveedor y admin pueden editar -->
                                 {% if user.rol == 'proveedor' or user.rol == 'admin' %}
                                 <a href="{% url 'producto_act' p.id %}" 
                                    class="btn btn-warning btn-sm"
@@ -157,7 +149,6 @@
                                 </button>
                                 {% endif %}
 
-                                <!-- 🔒 Solo admin puede eliminar -->
                                 {% if user.rol == 'admin' %}
                                 <button class="btn btn-danger btn-sm btn-delete"
                                         data-id="{{ p.id }}"
@@ -179,7 +170,6 @@
                 </table>
             </div>
 
-            <!-- Paginación -->
             {% if productos.has_other_pages %}
             <nav aria-label="Paginación de productos" class="mt-3">
                 <ul class="pagination justify-content-center">
@@ -218,7 +208,6 @@
         </div>
     </div>
     {% else %}
-    <!-- Sin productos -->
     <div class="card">
         <div class="card-body text-center py-5">
             <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
@@ -236,7 +225,6 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    // --- CSRF helper (lee la cookie csrftoken) ---
     function getCookie(name) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
@@ -244,7 +232,6 @@
     }
     const csrftoken = getCookie("csrftoken");
 
-    // 🔥 Delegación de eventos para botones borrar (solo admin puede ejecutar)
     document.addEventListener("click", async (ev) => {
         const btn = ev.target.closest(".btn-delete");
         if (!btn) return;
@@ -254,7 +241,6 @@
         const url = btn.dataset.url;
         const nombre = row.querySelector(".p-name")?.textContent?.trim() || "El producto";
 
-        // Confirmación con SweetAlert2
         const confirm = await Swal.fire({
             title: `¿Eliminar "${nombre}"?`,
             text: "Esta acción no se puede deshacer.",
@@ -286,7 +272,6 @@
             const data = await resp.json();
             
             if (data.ok) {
-                // Animación de salida
                 row.style.transition = "all 0.3s ease";
                 row.style.opacity = "0";
                 row.style.transform = "translateX(-20px)";
@@ -294,7 +279,6 @@
                 setTimeout(() => {
                     row.remove();
                     
-                    // Actualizar numeración si es necesario
                     const tbody = document.querySelector("#tablaP tbody");
                     const rows = tbody.querySelectorAll("tr");
                     
@@ -326,7 +310,6 @@
         }
     });
 
-    // Auto-cerrar alertas después de 5 segundos
     setTimeout(() => {
         const alerts = document.querySelectorAll('.alert:not(.alert-info)');
         alerts.forEach(alert => {

@@ -24,18 +24,17 @@ document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("form-actualizar");
 
   form.addEventListener("submit", function(e) {
-    e.preventDefault(); // Evita el envío inmediato
+    e.preventDefault(); 
 
-    // Mostrar alerta tipo "Drag me!"
     Swal.fire({
       title: "¡Actualizado correctamente!",
       text: "El período ha sido modificado con éxito.",
       icon: "success",
       draggable: true,
-      confirmButtonColor: "#28a745", // verde éxito
+      confirmButtonColor: "#28a745",
       confirmButtonText: "OK"
     }).then(() => {
-      form.submit(); // Envía el formulario después de la alerta
+      form.submit(); 
     });
   });
 });

@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function() {
       text: "¡No podrás revertir esta acción!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#28a745", // verde
-      cancelButtonColor: "#d33",     // rojo
+      confirmButtonColor: "#28a745",
+      cancelButtonColor: "#d33",     
       confirmButtonText: "Sí, eliminar",
       cancelButtonText: "No, cancelar"
     }).then((result) => {
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
           icon: "success",
           confirmButtonColor: "#28a745"
         }).then(() => {
-          form.submit(); // Envía después del OK
+          form.submit(); 
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({

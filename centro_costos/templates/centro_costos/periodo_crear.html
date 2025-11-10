@@ -24,15 +24,15 @@ document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("form-crear");
 
   form.addEventListener("submit", function(e) {
-    e.preventDefault(); // Evita envío inmediato
+    e.preventDefault(); 
 
     Swal.fire({
       title: "¿Deseas guardar este período?",
       text: "Revisa que todos los datos estén correctos.",
       icon: "question",
       showCancelButton: true,
-      confirmButtonColor: "#6f42c1", // morado
-      cancelButtonColor: "#6c757d", // gris
+      confirmButtonColor: "#6f42c1", 
+      cancelButtonColor: "#6c757d", 
       confirmButtonText: "Sí, guardar",
       cancelButtonText: "Cancelar"
     }).then((result) => {
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
           showConfirmButton: false,
           timer: 1500
         });
-        setTimeout(() => form.submit(), 1500); // envía tras el mensaje
+        setTimeout(() => form.submit(), 1500);
       }
     });
   });

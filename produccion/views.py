@@ -15,7 +15,6 @@ from decimal import Decimal, InvalidOperation
 def producto(request):
     productos = Producto.objects.all().order_by('id')
 
-    # --- Búsqueda ---
     search = request.GET.get('search', '')
     if search:
         productos = productos.filter(
@@ -23,7 +22,6 @@ def producto(request):
             Q(descripcion__icontains=search)
         )
 
-    # --- Filtros de precio seguros ---
     def parse_decimal(value):
         if not value or value in ('None', ''):
             return None
@@ -78,7 +76,6 @@ def producto_crear(request):
 
         errores = []
 
-        # 🔹 Validaciones básicas
         if not nombre:
             errores.append('El nombre del producto es obligatorio.')
         if not precio:
@@ -101,7 +98,6 @@ def producto_crear(request):
         else:
             stock = 0
 
-        # 🔹 Proveedor
         proveedor = None
         if proveedor_id:
             try:
@@ -109,12 +105,10 @@ def producto_crear(request):
             except Proveedor.DoesNotExist:
                 errores.append('El proveedor seleccionado no existe.')
 
-        # 🔹 Mostrar errores si hay
         if errores:
             for error in errores:
                 messages.error(request, error)
         else:
-            # 🔹 Crear producto
             Producto.objects.create(
                 nombre=nombre,
                 descripcion=descripcion,
@@ -125,13 +119,11 @@ def producto_crear(request):
             messages.success(request, f'Producto "{nombre}" creado exitosamente ✅')
             return redirect('producto')
 
-    # 🔹 Pasar lista de proveedores al template
     proveedores = Proveedor.objects.all()
     context = {'proveedores': proveedores}
     return render(request, 'produccion/producto_crear.html', context)
 
 
-# 🔒 Solo proveedor y admin pueden editar
 @login_required
 @rol_requerido('proveedor', 'administrador')
 def producto_act(request, pk):
@@ -171,7 +163,6 @@ def producto_act(request, pk):
     return render(request, 'produccion/producto_act.html', context)
 
 
-# 🔒 Solo admin puede eliminar (vista tradicional)
 @login_required
 @rol_requerido('administrador')
 def producto_eliminar(request, pk):
@@ -189,7 +180,6 @@ def producto_eliminar(request, pk):
     return render(request, 'produccion/producto_eliminar.html', context)
 
 
-# 🔒 Solo admin puede eliminar (AJAX con SweetAlert2)
 @login_required
 @rol_requerido('administrador')
 @require_POST

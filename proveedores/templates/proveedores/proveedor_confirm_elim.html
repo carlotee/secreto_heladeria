@@ -24,15 +24,15 @@ document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("form-eliminar-proveedor");
 
   form.addEventListener("submit", function(e) {
-    e.preventDefault(); // evita envío inmediato
+    e.preventDefault();
 
     Swal.fire({
       title: "¿Estás seguro?",
       text: "¡No podrás revertir esta acción!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33", // rojo
-      cancelButtonColor: "#6c757d", // gris
+      confirmButtonColor: "#d33", 
+      cancelButtonColor: "#6c757d", 
       confirmButtonText: "Sí, eliminar",
       cancelButtonText: "Cancelar",
       reverseButtons: true

@@ -6,14 +6,14 @@ from .models import Costo
 class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
-        fields = ['nombre', 'descripcion', 'precio', 'stock', 'proveedor']  # 🔹 Agregamos proveedor aquí
+        fields = ['nombre', 'descripcion', 'precio', 'stock', 'proveedor']
 
         labels = {
             'nombre': 'Nombre del producto',
             'descripcion': 'Descripción',
             'precio': 'Precio ($)',
             'stock': 'Stock disponible',
-            'proveedor': 'Proveedor',  # 🔹 Nuevo label
+            'proveedor': 'Proveedor', 
         }
 
         widgets = {
@@ -37,7 +37,6 @@ class ProductoForm(forms.ModelForm):
                 'placeholder': 'Cantidad disponible',
                 'min': 0,
             }),
-            # 🔹 Este widget crea un desplegable con todos los proveedores existentes
             'proveedor': forms.Select(attrs={
                 'class': 'form-control',
             }),

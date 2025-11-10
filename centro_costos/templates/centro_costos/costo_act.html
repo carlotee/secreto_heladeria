@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("form-actualizar");
 
   form.addEventListener("submit", function(e) {
-    e.preventDefault(); // evita envío inmediato
+    e.preventDefault(); 
 
     Swal.fire({
       title: "¡Actualizado correctamente!",
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
       confirmButtonColor: "#28a745",
       confirmButtonText: "OK"
     }).then(() => {
-      form.submit(); // envía después de cerrar la alerta
+      form.submit(); 
     });
   });
 });
