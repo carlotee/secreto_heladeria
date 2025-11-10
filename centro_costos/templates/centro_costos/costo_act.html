@@ -4,15 +4,39 @@
 <head>
   <meta charset="UTF-8">
   <title>Editar Costo</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
   <h1>Editar Costo</h1>
 
-  <form method="post" action="{% url 'costo_act' costo.id %}">
+  <form id="form-actualizar" method="post" action="{% url 'costo_act' costo.id %}">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Actualizar</button>
+    <button type="submit" class="btn btn-warning">Actualizar</button>
   </form>
 
-  <a href="{% url 'costo' %}">Cancelar</a>  
-  {% endblock %}
+  <a href="{% url 'costo' %}" class="btn btn-secondary">Cancelar</a>
+</body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("form-actualizar");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); // evita envío inmediato
+
+    Swal.fire({
+      title: "¡Actualizado correctamente!",
+      text: "El costo ha sido modificado con éxito.",
+      icon: "success",
+      draggable: true,
+      confirmButtonColor: "#28a745",
+      confirmButtonText: "OK"
+    }).then(() => {
+      form.submit(); // envía después de cerrar la alerta
+    });
+  });
+});
+</script>
+{% endblock %}

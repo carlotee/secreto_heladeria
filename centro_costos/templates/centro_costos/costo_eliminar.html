@@ -4,16 +4,62 @@
 <head>
   <meta charset="UTF-8">
   <title>Eliminar Costo</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
   <h1>Eliminar Costo</h1>
 
   <p>¿Estás seguro de que quieres eliminar este Costo <strong>{{ costo.descripcion }}</strong>?</p>
 
-  <form method="post" action="{% url 'costo_eliminar' costo.id %}">
+  <form id="form-eliminar" method="post" action="{% url 'costo_eliminar' costo.id %}">
     {% csrf_token %}
-    <button type="submit">Sí, eliminar</button>
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
   </form>
 
-  <a href="{% url 'costo' %}">Cancelar</a>
-  {% endblock %}
+  <a href="{% url 'costo' %}" class="btn btn-secondary">Cancelar</a>
+</body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("form-eliminar");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); // detiene envío inmediato
+
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esta acción!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33", // rojo
+      cancelButtonColor: "#6c757d", // gris
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "¡Eliminado!",
+          text: "El costo ha sido eliminado correctamente.",
+          icon: "success",
+          confirmButtonColor: "#28a745",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        setTimeout(() => form.submit(), 1500);
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: "Cancelado",
+          text: "El costo no fue eliminado.",
+          icon: "error",
+          confirmButtonColor: "#d33",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    });
+  });
+});
+</script>
+{% endblock %}
