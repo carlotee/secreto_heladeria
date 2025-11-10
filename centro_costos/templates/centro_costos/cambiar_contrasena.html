@@ -27,54 +27,80 @@
 </div>
 
 <script>
-document.getElementById('passwordForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const form = this;
-    const formData = new FormData(form);
-
-    Swal.fire({
-        title: '¿Cambiar contraseña?',
-        text: "Tu contraseña será actualizada",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, cambiar',
-        cancelButtonText: 'Cancelar'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch(window.location.href, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        title: 'Éxito',
-                        text: 'Tu contraseña ha sido cambiada correctamente.',
-                        icon: 'success',
-                        confirmButtonText: 'Ir al Dashboard'
-                    }).then(() => {
-                        window.location.href = data.redirect_url;
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Verifica los datos ingresados.',
-                        icon: 'error'
-                    });
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                Swal.fire('Error', 'Ocurrió un problema al enviar la solicitud.', 'error');
-            });
+            }
         }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    document.getElementById('passwordForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: '¿Cambiar contraseña?',
+            text: "Tu contraseña será actualizada",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, cambiar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const formData = new FormData(this);
+
+                fetch(window.location.href, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Error en la respuesta del servidor');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Tu contraseña ha sido cambiada correctamente.',
+                            icon: 'success',
+                            confirmButtonText: 'Ir al Dashboard'
+                        }).then(() => {
+                            window.location.href = data.redirect_url;
+                        });
+                    } else {
+                        let errorText = '';
+                        for (const field in data.errors) {
+                            data.errors[field].forEach(err => {
+                                errorText += `${field}: ${err.message}\n`;
+                            });
+                        }
+                        Swal.fire({
+                            title: 'Error',
+                            text: errorText,
+                            icon: 'error'
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    Swal.fire('Error', 'Ocurrió un problema al enviar la solicitud.', 'error');
+                });
+            }
+        });
     });
-});
 </script>
 {% endblock %}

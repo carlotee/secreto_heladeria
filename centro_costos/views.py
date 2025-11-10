@@ -36,22 +36,24 @@ def cambiar_contrasena(request):
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user) 
-            messages.success(request, 'Contraseña cambiada exitosamente')
+            update_session_auth_hash(request, user)  
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': True, 'redirect_url': '/dashboard/'})
 
+            messages.success(request, 'Contraseña cambiada exitosamente')
             return redirect('dashboard')
         else:
-            errors = form.errors.as_json()
+            errors = form.errors.get_json_data()
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'errors': errors})
-            for error in form.errors.values():
-                messages.error(request, error)
+
+            for field_errors in form.errors.values():
+                for error in field_errors:
+                    messages.error(request, error)
     else:
         form = PasswordChangeForm(request.user)
-    
+
     return render(request, 'centro_costos/cambiar_contrasena.html', {'form': form})
 
 
