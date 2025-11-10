@@ -20,19 +20,38 @@
         <a href="{% url 'registro' %}" class="btn-volver">Registrarse</a>
     </div>
 
-    {% if messages %}
     <script>
+    // ✅ Alerta al iniciar sesión exitosamente
     $(document).ready(function() {
-        {% for message in messages %}
-        Swal.fire({
-            title: "{{ message.tags|capfirst }}",
-            text: "{{ message|escapejs }}",
-            icon: "{{ 'success' if message.tags == 'success' else 'error' }}",
-            timer: {{ 1500 if message.tags == 'success' else 'null' }},
-            showConfirmButton: {{ 'false' if message.tags == 'success' else 'true' }},
-            timerProgressBar: true,
+        $("#login-form").on("submit", function(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: "Inicio de Sesión Exitoso",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true
+            });
+
+            setTimeout(() => {
+                event.target.submit();
+            }, 1500);
         });
-        {% endfor %}
+    });
+    </script>
+
+    {% if form.errors %}
+    <script>
+    // ❌ Alerta automática si hay errores al cargar la página
+    Swal.fire({
+        title: "Error al iniciar sesión",
+        html: `{% for field, errors in form.errors.items %}
+                  <b>{{ field|title }}:</b> {{ errors.as_text|linebreaksbr }}<br>
+               {% endfor %}`,
+        icon: "error",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "Entendido"
     });
     </script>
     {% endif %}

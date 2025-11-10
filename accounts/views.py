@@ -36,11 +36,7 @@ def registro(request):
         form = RegistroForm()
     
     return render(request, 'accounts/registro.html', {'form': form})
-from django.contrib import messages, auth
-from django.contrib.auth import get_user_model, authenticate, login as auth_login
-from django.shortcuts import render, redirect
-from .forms import LoginForm
-from .models import Usuario
+
 
 def login_view(request):
     User = get_user_model()
@@ -52,33 +48,31 @@ def login_view(request):
             password = form.cleaned_data['password']
 
             try:
-                usuario_obj = (
-                    Usuario.objects.filter(username=usuario).first()
-                    or Usuario.objects.filter(email=usuario).first()
-                )
-
+                usuario_obj = Usuario.objects.filter(username=usuario).first() or \
+                             Usuario.objects.filter(email=usuario).first()
+                
                 if usuario_obj:
                     user = authenticate(username=usuario_obj.username, password=password)
+                    
                     if user is not None:
                         auth_login(request, user)
                         print(f"✅ Login correcto para {user.username} (Rol: {user.rol})")
-                        messages.success(request, f"Bienvenido, {user.username} 👋")
+                        print(f"✅ Grupos: {[g.name for g in user.groups.all()]}")
                         return redirect('dashboard')
                     else:
                         print("⚠️ Contraseña incorrecta")
-                        messages.error(request, "Usuario o contraseña incorrectos")
+                        form.add_error(None, "Usuario o contraseña incorrectos")
                 else:
                     print("⚠️ Usuario no encontrado")
-                    messages.error(request, "Usuario o contraseña incorrectos")
-
+                    form.add_error(None, "Usuario o contraseña incorrectos")
+                    
             except Exception as e:
                 print(f"❌ Error en login: {str(e)}")
-                messages.error(request, "Error interno al iniciar sesión")
+                form.add_error(None, "Error al iniciar sesión")
     else:
         form = LoginForm()
 
     return render(request, 'accounts/login.html', {'form': form})
-
 
 
 def logout_view(request):
