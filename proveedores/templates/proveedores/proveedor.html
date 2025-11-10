@@ -1,5 +1,7 @@
 {% extends 'centro_costos/base.html' %}
 {% load static %}
+
+{% block content %}
 <link rel="stylesheet" href="{% static 'proveedores/proveedor.css' %}">
 
 <h1>Listado de Proveedores</h1>
@@ -51,3 +53,4 @@
     {% endif %}
   </div>
 {% endif %}
+{% endblock %}
