@@ -117,6 +117,9 @@ def validar_telefono(telefono):
 def proveedor_crear(request):
     """Crea un nuevo proveedor según el modelo actual."""
     if request.method == 'POST':
+        # 🔥 LIMPIAR MENSAJES AL INICIO DEL POST
+        list(messages.get_messages(request))
+        
         nombre = request.POST.get('nombre', '').strip()
         rut = request.POST.get('rut', '').strip()
         telefono = request.POST.get('telefono', '').strip()
@@ -176,9 +179,6 @@ def proveedor_crear(request):
             errores.append('La ciudad no puede exceder los 30 caracteres.')
 
         if errores:
-            # Limpiar mensajes anteriores
-            list(messages.get_messages(request))
-            
             # Mostrar errores actuales
             for error in errores:
                 messages.error(request, error)
