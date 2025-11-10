@@ -1,4 +1,4 @@
-{% extends 'centro_costos/base.html' %}
+{{% extends 'centro_costos/base.html' %}
 
 {% block content %}
 <head>
@@ -35,18 +35,42 @@
     <a href="{% url 'proveedor' %}" class="btn btn-secondary">Volver</a>
   </form>
 
-  {% if messages %}
-    <ul style="color: red;">
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
+  <!-- 🔥 MOSTRAR ERRORES SI EXISTEN -->
+  {% if errores %}
+    <div style="color: red; margin-top: 20px;">
+      <strong>Errores encontrados:</strong>
+      <ul>
+        {% for error in errores %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
   {% endif %}
 </body>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("form-crear-proveedor");
+  
+  // 🔥 SI HAY ERRORES, MOSTRAR ALERTA DE ERROR Y NO PEDIR CONFIRMACIÓN
+  {% if errores %}
+    Swal.fire({
+      title: "¡Error!",
+      html: `
+        <div style="text-align: left;">
+          <p>Se encontraron los siguientes errores:</p>
+          <ul style="text-align: left;">
+            {% for error in errores %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      `,
+      icon: "error",
+      confirmButtonColor: "#dc3545",
+      confirmButtonText: "Entendido"
+    });
+  {% endif %}
 
   form.addEventListener("submit", function(e) {
     e.preventDefault(); 
@@ -62,15 +86,8 @@ document.addEventListener("DOMContentLoaded", function() {
       cancelButtonText: "Cancelar"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "¡Guardado!",
-          text: "El proveedor se ha creado correctamente.",
-          icon: "success",
-          confirmButtonColor: "#007bff",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        setTimeout(() => form.submit(), 1500);
+        // ✅ NO MOSTRAR "GUARDADO" AQUÍ, DEJAR QUE EL SERVIDOR VALIDE
+        form.submit();
       }
     });
   });
