@@ -20,30 +20,8 @@
         <a href="{% url 'registro' %}" class="btn-volver">Registrarse</a>
     </div>
 
-    <script>
-    // ✅ Alerta al iniciar sesión exitosamente
-    $(document).ready(function() {
-        $("#login-form").on("submit", function(event) {
-            event.preventDefault();
-
-            Swal.fire({
-                title: "Inicio de Sesión Exitoso",
-                icon: "success",
-                showConfirmButton: false,
-                timer: 1500,
-                timerProgressBar: true
-            });
-
-            setTimeout(() => {
-                event.target.submit();
-            }, 1500);
-        });
-    });
-    </script>
-
     {% if form.errors %}
     <script>
-    // ❌ Alerta automática si hay errores al cargar la página
     Swal.fire({
         title: "Error al iniciar sesión",
         html: `{% for field, errors in form.errors.items %}
@@ -54,6 +32,18 @@
         confirmButtonText: "Entendido"
     });
     </script>
+    {% else %}
+        {% if request.method == 'POST' %}
+        <script>
+        Swal.fire({
+            title: "Inicio de Sesión Exitoso",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true
+        });
+        </script>
+        {% endif %}
     {% endif %}
 </body>
 </html>
