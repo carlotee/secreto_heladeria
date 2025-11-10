@@ -41,7 +41,7 @@ def cambiar_contrasena(request):
             update_session_auth_hash(request, user)  
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'success': True, 'redirect_url': '/dashboard/'})
+                return JsonResponse({'success': True, 'redirect_url': ''})
 
             messages.success(request, 'Contraseña cambiada exitosamente')
             return redirect('dashboard')
