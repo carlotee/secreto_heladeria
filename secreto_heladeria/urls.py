@@ -23,8 +23,8 @@ from proveedores import views as proveedores_views
 
 urlpatterns = [
     path('', centro_costos_views.dashboard, name='dashboard'),
-    path('perfil/editar/', views.perfil_editar, name='perfil_editar'),
-    path('perfil/cambiar-contrasena/', views.cambiar_contrasena, name='cambiar_contrasena'),
+    path('perfil/editar/', centro_costos_views.perfil_editar, name='perfil_editar'),
+    path('perfil/cambiar-contrasena/', centro_costos_views.cambiar_contrasena, name='cambiar_contrasena'),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/registro/', accounts_views.registro, name='registro'),
