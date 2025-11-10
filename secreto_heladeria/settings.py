@@ -190,3 +190,4 @@ SESSION_COOKIE_SECURE = False  # en producción con HTTPS
 # sólo enviar la cookie en el mismo sitio (protección CSRF) / Lax por defecto en Django
 SESSION_COOKIE_SAMESITE = 'Lax'  # o 'Strict'/'None'(+Secure)
 
+CSRF_TRUSTED_ORIGINS = ['http://35.175.65.93']
