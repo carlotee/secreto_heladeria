@@ -21,8 +21,12 @@ def registro(request):
                 print(f"✅ Rol asignado: {nuevo_usuario.rol}")
                 print(f"✅ Grupos: {[g.name for g in nuevo_usuario.groups.all()]}")
                 
-                messages.success(request, f'Usuario {nuevo_usuario.username} registrado exitosamente como {nuevo_usuario.get_rol_display()}')
-                return redirect('login')
+                messages.success(request, 'registro_exitoso')
+                
+                return render(request, 'accounts/registro.html', {
+                    'form': RegistroForm(),
+                    'usuario_registrado': nuevo_usuario.username
+                })
                 
             except Exception as e:
                 print(f"❌ Error al crear usuario: {str(e)}")
@@ -31,12 +35,10 @@ def registro(request):
         else:
             print("Formulario no válido")
             print("Errores:", form.errors)
-            messages.error(request, 'Por favor corrige los errores en el formulario')
     else:
         form = RegistroForm()
     
     return render(request, 'accounts/registro.html', {'form': form})
-
 def login_view(request):
     User = get_user_model()
 

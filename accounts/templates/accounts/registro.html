@@ -5,17 +5,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
-        <link rel="stylesheet" href="{% static 'accounts/registro.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/registro.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="form-container">
         <h2>Registro</h2>
-        <form method="post">
+        <form method="post" id="registro-form">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Registrarse</button>
         </form>
         <a href="{% url 'login' %}" class="btn-volver">Volver a inicio de sesión</a>
     </div>
+
+    {% if form.errors %}
+    <script>
+    Swal.fire({
+        title: "Error en el registro",
+        html: `{% for field, errors in form.errors.items %}
+                  <b>{{ field|title }}:</b> {{ errors.as_text|linebreaksbr }}<br>
+               {% endfor %}`,
+        icon: "error",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "Entendido"
+    });
+    </script>
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'registro_exitoso' in message.message %}
+            <script>
+                Swal.fire({
+                    title: "¡Registro Exitoso!",
+                    text: "Tu cuenta ha sido creada. Redirigiendo al login...",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                }).then(() => {
+                    window.location.href = "{% url 'login' %}";
+                });
+            </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
