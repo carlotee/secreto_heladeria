@@ -10,74 +10,15 @@
   </div>
 {% endif %}
 
-<form id="form-actualizar-proveedor" method="post" action="{% url 'proveedor_act' pk=proveedor.pk %}">
+<form method="post" action="{% url 'proveedor_act' pk=proveedor.pk %}">
   {% csrf_token %}
-  <p><label>Nombre:</label>
-    <input type="text" name="nombre" value="{{ form_data.nombre|default:proveedor.nombre }}" required></p>
+  <p><label>Nombre:</label> <input type="text" name="nombre" value="{{ form_data.nombre|default:proveedor.nombre }}" required></p>
+  <p><label>RUT:</label> <input type="text" name="rut" value="{{ form_data.rut|default:proveedor.rut }}" required></p>
+  <p><label>Teléfono:</label> <input type="text" name="telefono" value="{{ form_data.telefono|default:proveedor.telefono|default:'' }}"></p>
+  <p><label>Correo:</label> <input type="email" name="correo" value="{{ form_data.correo|default:proveedor.correo }}" required></p>
+  <p><label>Dirección:</label> <input type="text" name="direccion" value="{{ form_data.direccion|default:proveedor.direccion }}" required></p>
+  <p><label>Ciudad:</label> <input type="text" name="ciudad" value="{{ form_data.ciudad|default:proveedor.ciudad }}" required></p>
 
-  <p><label>RUT:</label>
-    <input type="text" name="rut" value="{{ form_data.rut|default:proveedor.rut }}" required></p>
-
-  <p><label>Teléfono:</label>
-    <input type="text" name="telefono" value="{{ form_data.telefono|default:proveedor.telefono|default:'' }}"></p>
-
-  <p><label>Correo:</label>
-    <input type="email" name="correo" value="{{ form_data.correo|default:proveedor.correo }}" required></p>
-
-  <p><label>Dirección:</label>
-    <input type="text" name="direccion" value="{{ form_data.direccion|default:proveedor.direccion }}" required></p>
-
-  <p><label>Ciudad:</label>
-    <input type="text" name="ciudad" value="{{ form_data.ciudad|default:proveedor.ciudad }}" required></p>
-
-  <button type="submit" class="btn btn-warning">Actualizar</button>
-  <a href="{% url 'proveedor' %}" class="btn btn-secondary">Volver</a>
+  <button type="submit">Actualizar</button>
+  <a href="{% url 'proveedor' %}">Volver</a>
 </form>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const form = document.getElementById("form-actualizar-proveedor");
-
-  form.addEventListener("submit", function(e) {
-    e.preventDefault(); // Evita el envío inmediato
-
-    Swal.fire({
-      title: "¿Deseas actualizar este proveedor?",
-      text: "Verifica que todos los datos sean correctos antes de continuar.",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#ffc107",
-      cancelButtonColor: "#6c757d",
-      confirmButtonText: "Sí, actualizar",
-      cancelButtonText: "Cancelar",
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "¡Actualizado!",
-          text: "El proveedor ha sido modificado correctamente.",
-          icon: "success",
-          confirmButtonColor: "#28a745",
-          showConfirmButton: false,
-          timer: 1200
-        });
-
-        // ✅ Enviar el formulario después del mensaje de éxito
-        setTimeout(() => {
-          form.submit();
-        }, 1200);
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: "Cancelado",
-          text: "No se realizaron cambios.",
-          icon: "error",
-          confirmButtonColor: "#d33",
-          showConfirmButton: false,
-          timer: 1500
-        });
-      }
-    });
-  });
-});
-</script>
