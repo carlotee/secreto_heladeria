@@ -174,7 +174,6 @@ def proveedor_crear(request):
 
     return render(request, 'proveedores/proveedor_crear.html')
 
-@login_required
 @rol_requerido_proveedor('proveedor', 'administrador')
 def proveedor_act(request, pk):
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
@@ -221,10 +220,9 @@ def proveedor_act(request, pk):
             for error in errores:
                 messages.error(request, error)
             
-            # ✅ Mantener el objeto proveedor para el pk y pasar los datos del formulario
             context = {
-                'proveedor': proveedor,  # Objeto original con pk
-                'form_data': {  # Datos ingresados para repoblar el formulario
+                'proveedor': proveedor,
+                'form_data': {
                     'nombre': nombre,
                     'rut': rut,
                     'telefono': telefono,
@@ -246,10 +244,12 @@ def proveedor_act(request, pk):
         proveedor.ciudad = ciudad
         proveedor.save()
         print("Cambios guardados exitosamente")  # Debug
-        messages.success(request, f'Proveedor "{nombre}" actualizado exitosamente')
+
+        # ✅ Mensaje que activará el SweetAlert de éxito
+        messages.success(request, f'Proveedor "{nombre}" actualizado exitosamente.')
+
         return redirect('proveedor')
     
-    # GET: mostrar formulario con datos actuales
     print("Entró al GET")  # Debug
     context = {
         'proveedor': proveedor,
