@@ -159,7 +159,6 @@
       document.getElementById('userDropdown').classList.toggle('show');
     }
 
-    // Cerrar el dropdown si se hace clic fuera de él
     window.onclick = function(event) {
       if (!event.target.matches('.user-button') && !event.target.closest('.user-button')) {
         var dropdowns = document.getElementsByClassName('dropdown-menu');

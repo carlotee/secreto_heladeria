@@ -9,7 +9,8 @@ from common.decorators_cost import rol_requerido_costos as rol_requerido
 from common.decorators_pe import rol_requerido_pe
 from openpyxl import Workbook
 from django.http import HttpResponse
-
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 
 @login_required
 def perfil_editar(request):
