@@ -13,6 +13,7 @@ from produccion.forms import ProductoForm
 from common.decorators_prov import rol_requerido_proveedor 
 from django.contrib.auth.decorators import login_required
 
+
 def validar_rut(rut):
     rut_limpio = rut.replace(".", "").replace("-", "")
     
@@ -111,7 +112,6 @@ def validar_telefono(telefono):
     """Valida formato chileno: +569XXXXXXXX o 9XXXXXXXX"""
     return bool(re.match(r'^(\+?56)?(\s?9\d{8})$', telefono))
 
-
 @login_required
 @rol_requerido_proveedor('proveedor', 'administrador')
 def proveedor_crear(request):
@@ -128,23 +128,46 @@ def proveedor_crear(request):
 
         if not nombre:
             errores.append('El nombre es obligatorio.')
+        elif len(nombre) > 50:
+            errores.append('El nombre no puede exceder los 50 caracteres.')
 
         if not rut:
             errores.append('El RUT es obligatorio.')
-        elif not validar_rut(rut):
-            errores.append('El formato del RUT no es válido (usa 12.345.678-9).')
-        elif Proveedor.objects.filter(rut=rut).exists():
-            errores.append('Ya existe un proveedor con ese RUT.')
+        else:
+            import re
+            patron_rut = r'^\d{1,2}\.\d{3}\.\d{3}-[\dkK]$'
+            if not re.match(patron_rut, rut):
+                errores.append('El formato del RUT no es válido (usa 12.345.678-9).')
+            else:
+                digitos_rut = re.sub(r'[.\-kK]', '', rut)
+                if len(digitos_rut) != 9:
+                    errores.append('El RUT debe tener exactamente 9 dígitos.')
+                elif not validar_rut(rut):
+                    errores.append('El RUT ingresado no es válido.')
+                elif Proveedor.objects.filter(rut=rut).exists():
+                    errores.append('Ya existe un proveedor con ese RUT.')
 
-       
-        if telefono and not validar_telefono(telefono):
-            errores.append('El formato del teléfono no es válido (usa +569XXXXXXXX).')
+        if telefono:
+            if not telefono.startswith('+'):
+                errores.append('El teléfono debe comenzar con el símbolo +')
+            else:
+                digitos_telefono = re.sub(r'\D', '', telefono)
+                if len(digitos_telefono) > 11:
+                    errores.append('El teléfono no puede tener más de 11 dígitos.')
+                elif not validar_telefono(telefono):
+                    errores.append('El formato del teléfono no es válido (usa +569XXXXXXXX).')
 
         if correo:
-            try:
-                validate_email(correo)
-            except ValidationError:
-                errores.append('El formato del correo no es válido.')
+            if '@' not in correo:
+                errores.append('El correo debe contener el símbolo @')
+            else:
+                try:
+                    validate_email(correo)
+                except ValidationError:
+                    errores.append('El formato del correo no es válido.')
+
+        if ciudad and len(ciudad) > 30:
+            errores.append('La ciudad no puede exceder los 30 caracteres.')
 
         if errores:
             for error in errores:
