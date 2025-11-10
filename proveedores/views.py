@@ -126,11 +126,13 @@ def proveedor_crear(request):
 
         errores = []
 
+        # Validación del nombre
         if not nombre:
             errores.append('El nombre es obligatorio.')
         elif len(nombre) > 50:
             errores.append('El nombre no puede exceder los 50 caracteres.')
 
+        # Validación del RUT
         if not rut:
             errores.append('El RUT es obligatorio.')
         else:
@@ -147,6 +149,7 @@ def proveedor_crear(request):
                 elif Proveedor.objects.filter(rut=rut).exists():
                     errores.append('Ya existe un proveedor con ese RUT.')
 
+        # Validación del teléfono
         if telefono:
             if not telefono.startswith('+'):
                 errores.append('El teléfono debe comenzar con el símbolo +')
@@ -158,6 +161,7 @@ def proveedor_crear(request):
                 elif not validar_telefono(telefono):
                     errores.append('El formato del teléfono no es válido (usa +569XXXXXXXX).')
 
+        # Validación del correo
         if correo:
             if '@' not in correo:
                 errores.append('El correo debe contener el símbolo @')
@@ -167,12 +171,18 @@ def proveedor_crear(request):
                 except ValidationError:
                     errores.append('El formato del correo no es válido.')
 
+        # Validación de la ciudad
         if ciudad and len(ciudad) > 30:
             errores.append('La ciudad no puede exceder los 30 caracteres.')
 
         if errores:
+            # 🔥 SOLUCIÓN: Limpiar mensajes anteriores antes de mostrar errores
+            storage = messages.get_messages(request)
+            storage.used = True
+            
+            # Ahora mostrar los errores actuales
             for error in errores:
-                messages.error(request, error)  
+                messages.error(request, error)
 
             context = {
                 'nombre': nombre,
