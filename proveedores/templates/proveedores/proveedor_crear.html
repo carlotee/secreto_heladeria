@@ -62,12 +62,24 @@
     // Mostrar mensajes Django con SweetAlert
     {% if messages %}
       {% for message in messages %}
-        Swal.fire({
-          title: "{% if message.tags == 'success' %}¡Éxito!{% else %}Datos incorrectos{% endif %}",
-          html: "{{ message|escapejs }}",
-          icon: "{% if message.tags == 'success' %}success{% else %}error{% endif %}",
-          confirmButtonText: "Aceptar"
-        });
+        {% if message.tags == 'success' %}
+          Swal.fire({
+            title: "¡Registro exitoso!",
+            html: "{{ message|escapejs }}",
+            icon: "success",
+            confirmButtonText: "Aceptar"
+          }).then(() => {
+            // Redirigir después del éxito
+            window.location.href = "{% url 'proveedor' %}";
+          });
+        {% else %}
+          Swal.fire({
+            title: "Datos incorrectos",
+            html: "{{ message|escapejs }}",
+            icon: "error",
+            confirmButtonText: "Aceptar"
+          });
+        {% endif %}
       {% endfor %}
     {% endif %}
   });
