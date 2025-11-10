@@ -160,11 +160,6 @@
                             Bienvenido, {{ user.first_name|default:user.username }}
                         </span>
                     </li>
-                    <li class="nav-item d-flex align-items-center">
-                        <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}/static/img/default-avatar.png{% endif %}" 
-                             alt="Avatar" 
-                             style="width:32px; height:32px; border-radius:50%; object-fit:cover; margin-right:8px;">
-                        <span class="me-2">{{ user.username }}</span>
                     <li class="nav-item">
                         <a class="btn btn-danger" href="{% url 'logout' %}">
                             <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
