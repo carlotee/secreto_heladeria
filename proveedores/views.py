@@ -161,6 +161,7 @@ def proveedor_crear(request):
         if ciudad and len(ciudad) > 30:
             errores.append('La ciudad no puede exceder los 30 caracteres.')
 
+        # Si hay errores → mostrar en la misma página
         if errores:
             for error in errores:
                 messages.error(request, error)
@@ -175,6 +176,7 @@ def proveedor_crear(request):
             }
             return render(request, 'proveedores/proveedor_crear.html', context)
 
+        # Crear proveedor si todo es válido
         Proveedor.objects.create(
             nombre=nombre,
             rut=rut,
@@ -184,8 +186,19 @@ def proveedor_crear(request):
             ciudad=ciudad
         )
 
+        # Mostrar mensaje de éxito (sin redirect aún)
         messages.success(request, f'Proveedor "{nombre}" creado exitosamente ✅')
-        return redirect('proveedor')  
+
+        # Limpiar el formulario (dejarlo vacío)
+        context = {
+            'nombre': '',
+            'rut': '',
+            'telefono': '',
+            'correo': '',
+            'direccion': '',
+            'ciudad': '',
+        }
+        return render(request, 'proveedores/proveedor_crear.html', context)
 
     return render(request, 'proveedores/proveedor_crear.html')
 
