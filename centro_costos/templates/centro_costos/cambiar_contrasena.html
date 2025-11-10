@@ -5,7 +5,7 @@
 
 <div class="container">
     <h2>Cambiar Contraseña</h2>
-    <form method="POST" id="passwordForm" action="">
+    <form method="POST" id="passwordForm">
         {% csrf_token %}
         <div class="form-group">
             <label for="{{ form.old_password.id_for_label }}">Contraseña Actual:</label>
@@ -30,6 +30,7 @@
 document.getElementById('passwordForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const form = this;
+    const formData = new FormData(form);
 
     Swal.fire({
         title: '¿Cambiar contraseña?',
@@ -42,27 +43,38 @@ document.getElementById('passwordForm').addEventListener('submit', function(e) {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            const formData = new FormData(form);
-
-            fetch(form.action || window.location.href, {
+            fetch(window.location.href, {
                 method: 'POST',
                 body: formData,
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
-            }).then(response => {
-                if (response.redirected) {
-                    window.location.href = response.url;
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: 'Tu contraseña ha sido cambiada correctamente.',
+                        icon: 'success',
+                        confirmButtonText: 'Ir al Dashboard'
+                    }).then(() => {
+                        window.location.href = data.redirect_url;
+                    });
                 } else {
-                    window.location.reload();
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Verifica los datos ingresados.',
+                        icon: 'error'
+                    });
                 }
-            }).catch(err => {
-                console.error('Error al enviar el formulario:', err);
-                Swal.fire('Error', 'Hubo un problema al cambiar la contraseña.', 'error');
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire('Error', 'Ocurrió un problema al enviar la solicitud.', 'error');
             });
         }
     });
 });
 </script>
 {% endblock %}
-

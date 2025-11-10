@@ -40,10 +40,13 @@ def cambiar_contrasena(request):
             messages.success(request, 'Contraseña cambiada exitosamente')
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'redirect_url': '/dashboard/'})
+                return JsonResponse({'success': True, 'redirect_url': '/dashboard/'})
 
             return redirect('dashboard')
         else:
+            errors = form.errors.as_json()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'errors': errors})
             for error in form.errors.values():
                 messages.error(request, error)
     else:
