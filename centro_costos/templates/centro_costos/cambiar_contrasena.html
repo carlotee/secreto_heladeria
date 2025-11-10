@@ -5,7 +5,7 @@
 
 <div class="container">
     <h2>Cambiar Contraseña</h2>
-    <form method="POST" id="passwordForm">
+    <form method="POST" id="passwordForm" action="">
         {% csrf_token %}
         <div class="form-group">
             <label for="{{ form.old_password.id_for_label }}">Contraseña Actual:</label>
@@ -27,41 +27,42 @@
 </div>
 
 <script>
-    document.getElementById('passwordForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const form = this;
-    
-        Swal.fire({
-            title: '¿Cambiar contraseña?',
-            text: "Tu contraseña será actualizada",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, cambiar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const formData = new FormData(form);
-    
-                fetch(form.action || window.location.href, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                }).then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                    } else {
-                        window.location.reload();
-                    }
-                }).catch(err => {
-                    console.error('Error al enviar el formulario:', err);
-                    Swal.fire('Error', 'Hubo un problema al cambiar la contraseña.', 'error');
-                });
-            }
-        });
+document.getElementById('passwordForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = this;
+
+    Swal.fire({
+        title: '¿Cambiar contraseña?',
+        text: "Tu contraseña será actualizada",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, cambiar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const formData = new FormData(form);
+
+            fetch(form.action || window.location.href, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    window.location.reload();
+                }
+            }).catch(err => {
+                console.error('Error al enviar el formulario:', err);
+                Swal.fire('Error', 'Hubo un problema al cambiar la contraseña.', 'error');
+            });
+        }
     });
-    </script>
+});
+</script>
 {% endblock %}
+
