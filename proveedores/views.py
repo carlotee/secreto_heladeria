@@ -135,31 +135,17 @@ def proveedor_crear(request):
         # Validación del RUT
         if not rut:
             errores.append('El RUT es obligatorio.')
-        else:
-            import re
-            patron_rut = r'^\d{1,2}\.\d{3}\.\d{3}-[\dkK]$'
-            if not re.match(patron_rut, rut):
-                errores.append('El formato del RUT no es válido (usa 12.345.678-9).')
-            else:
-                digitos_rut = re.sub(r'[.\-kK]', '', rut)
-                if len(digitos_rut) != 9:
-                    errores.append('El RUT debe tener exactamente 9 dígitos.')
-                elif not validar_rut(rut):
-                    errores.append('El RUT ingresado no es válido.')
-                elif Proveedor.objects.filter(rut=rut).exists():
-                    errores.append('Ya existe un proveedor con ese RUT.')
+        elif not validar_rut(rut):
+            errores.append('El formato del RUT no es válido (usa 12.345.678-9).')
+        elif Proveedor.objects.filter(rut=rut).exists():
+            errores.append('Ya existe un proveedor con ese RUT.')
 
         # Validación del teléfono
         if telefono:
             if not telefono.startswith('+'):
                 errores.append('El teléfono debe comenzar con el símbolo +')
-            else:
-                import re
-                digitos_telefono = re.sub(r'\D', '', telefono)
-                if len(digitos_telefono) > 11:
-                    errores.append('El teléfono no puede tener más de 11 dígitos.')
-                elif not validar_telefono(telefono):
-                    errores.append('El formato del teléfono no es válido (usa +569XXXXXXXX).')
+            elif not validar_telefono(telefono):
+                errores.append('El formato del teléfono no es válido (usa +569XXXXXXXX).')
 
         # Validación del correo
         if correo:
@@ -175,8 +161,10 @@ def proveedor_crear(request):
         if ciudad and len(ciudad) > 30:
             errores.append('La ciudad no puede exceder los 30 caracteres.')
 
-        # 🔥 SI HAY ERRORES: NO CREAR NADA Y RETORNAR CON ERRORES
         if errores:
+            for error in errores:
+                messages.error(request, error)
+
             context = {
                 'nombre': nombre,
                 'rut': rut,
@@ -184,11 +172,9 @@ def proveedor_crear(request):
                 'correo': correo,
                 'direccion': direccion,
                 'ciudad': ciudad,
-                'errores': errores,  # 👈 Pasar errores al template
             }
             return render(request, 'proveedores/proveedor_crear.html', context)
 
-        # ✅ SOLO SI NO HAY ERRORES: CREAR Y DAR MENSAJE DE ÉXITO
         Proveedor.objects.create(
             nombre=nombre,
             rut=rut,
