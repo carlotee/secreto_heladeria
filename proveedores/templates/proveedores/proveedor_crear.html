@@ -62,15 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
       cancelButtonText: "Cancelar"
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "¡Guardado!",
-          text: "El proveedor se ha creado correctamente.",
-          icon: "success",
-          confirmButtonColor: "#007bff",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        setTimeout(() => form.submit(), 1500);
+        form.submit();
       }
     });
   });

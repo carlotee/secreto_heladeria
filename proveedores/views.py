@@ -135,31 +135,17 @@ def proveedor_crear(request):
         # Validación del RUT
         if not rut:
             errores.append('El RUT es obligatorio.')
-        else:
-            import re
-            patron_rut = r'^\d{1,2}\.\d{3}\.\d{3}-[\dkK]$'
-            if not re.match(patron_rut, rut):
-                errores.append('El formato del RUT no es válido (usa 12.345.678-9).')
-            else:
-                digitos_rut = re.sub(r'[.\-kK]', '', rut)
-                if len(digitos_rut) != 9:
-                    errores.append('El RUT debe tener exactamente 9 dígitos.')
-                elif not validar_rut(rut):
-                    errores.append('El RUT ingresado no es válido.')
-                elif Proveedor.objects.filter(rut=rut).exists():
-                    errores.append('Ya existe un proveedor con ese RUT.')
+        elif not validar_rut(rut):
+            errores.append('El formato del RUT no es válido (usa 12.345.678-9).')
+        elif Proveedor.objects.filter(rut=rut).exists():
+            errores.append('Ya existe un proveedor con ese RUT.')
 
         # Validación del teléfono
         if telefono:
             if not telefono.startswith('+'):
                 errores.append('El teléfono debe comenzar con el símbolo +')
-            else:
-                import re
-                digitos_telefono = re.sub(r'\D', '', telefono)
-                if len(digitos_telefono) > 11:
-                    errores.append('El teléfono no puede tener más de 11 dígitos.')
-                elif not validar_telefono(telefono):
-                    errores.append('El formato del teléfono no es válido (usa +569XXXXXXXX).')
+            elif not validar_telefono(telefono):
+                errores.append('El formato del teléfono no es válido (usa +569XXXXXXXX).')
 
         # Validación del correo
         if correo:
@@ -175,8 +161,10 @@ def proveedor_crear(request):
         if ciudad and len(ciudad) > 30:
             errores.append('La ciudad no puede exceder los 30 caracteres.')
 
-        # 🔥 SI HAY ERRORES: NO CREAR NADA Y RETORNAR CON ERRORES
         if errores:
+            for error in errores:
+                messages.error(request, error)
+
             context = {
                 'nombre': nombre,
                 'rut': rut,
@@ -184,11 +172,9 @@ def proveedor_crear(request):
                 'correo': correo,
                 'direccion': direccion,
                 'ciudad': ciudad,
-                'errores': errores,  # 👈 Pasar errores al template
             }
             return render(request, 'proveedores/proveedor_crear.html', context)
 
-        # ✅ SOLO SI NO HAY ERRORES: CREAR Y DAR MENSAJE DE ÉXITO
         Proveedor.objects.create(
             nombre=nombre,
             rut=rut,
@@ -202,6 +188,88 @@ def proveedor_crear(request):
         return redirect('proveedor')  
 
     return render(request, 'proveedores/proveedor_crear.html')
+
+@rol_requerido_proveedor('proveedor', 'administrador')
+def proveedor_act(request, pk):
+    proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
+    
+    print(f"Método: {request.method}")  
+    
+    if request.method == 'POST':
+        print("Entró al POST")  
+        
+        nombre = request.POST.get('nombre', '').strip()
+        rut = request.POST.get('rut', '').strip()
+        telefono = request.POST.get('telefono', '').strip()
+        correo = request.POST.get('correo', '').strip()
+        direccion = request.POST.get('direccion', '').strip()
+        ciudad = request.POST.get('ciudad', '').strip()
+        
+        print(f"Datos recibidos - Nombre: {nombre}, RUT: {rut}") 
+        
+        errores = []
+        
+        if not nombre:
+            errores.append('El nombre es obligatorio')
+        if not rut:
+            errores.append('El RUT es obligatorio')
+        elif not validar_rut(rut):
+            errores.append('El RUT ingresado no es válido')
+        if telefono and not validar_telefono(telefono):
+            errores.append('El formato del teléfono no es válido')
+        if not correo:
+            errores.append('El correo es obligatorio')
+        else:
+            try:
+                validate_email(correo)
+            except ValidationError:
+                errores.append('El formato del correo no es válido')
+        if not direccion:
+            errores.append('La dirección es obligatoria')
+        if not ciudad:
+            errores.append('La ciudad es obligatoria')
+        
+        print(f"Errores: {errores}") 
+        
+        if errores:
+            for error in errores:
+                messages.error(request, error)
+            
+            context = {
+                'proveedor': proveedor,
+                'form_data': {
+                    'nombre': nombre,
+                    'rut': rut,
+                    'telefono': telefono,
+                    'correo': correo,
+                    'direccion': direccion,
+                    'ciudad': ciudad,
+                },
+                'is_edit': True
+            }
+            return render(request, 'proveedores/proveedor_act.html', context)
+        
+        print("Guardando cambios...")  
+        proveedor.nombre = nombre
+        proveedor.rut = rut
+        proveedor.telefono = telefono if telefono else None
+        proveedor.correo = correo
+        proveedor.direccion = direccion
+        proveedor.ciudad = ciudad
+        proveedor.save()
+        print("Cambios guardados exitosamente") 
+
+        messages.success(request, f'Proveedor "{nombre}" actualizado exitosamente.')
+
+        return redirect('proveedor')
+    
+    print("Entró al GET")  
+    context = {
+        'proveedor': proveedor,
+        'is_edit': True
+    }
+    return render(request, 'proveedores/proveedor_act.html', context)
+
 
 @login_required
 @rol_requerido_proveedor('administrador')
