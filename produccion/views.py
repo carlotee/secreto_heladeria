@@ -123,7 +123,6 @@ def producto_crear(request):
     context = {'proveedores': proveedores}
     return render(request, 'produccion/producto_crear.html', context)
 
-
 @login_required
 @rol_requerido('proveedor', 'administrador')
 def producto_act(request, pk):
@@ -142,19 +141,22 @@ def producto_act(request, pk):
         else:
             try:
                 precio = float(precio)
+                stock_val = int(stock) if stock else 0
+                
                 if precio < 0:
                     messages.error(request, 'El precio no puede ser negativo')
+                elif stock_val < 0:
+                    messages.error(request, 'El stock no puede ser negativo')
                 else:
                     producto.nombre = nombre
                     producto.descripcion = descripcion
                     producto.precio = precio
-                    if stock:
-                        producto.stock = int(stock)
+                    producto.stock = stock_val
                     producto.save()
-                    messages.success(request, f'Producto "{nombre}" actualizado exitosamente ✅')
+                    messages.success(request, f'Producto "{nombre}" actualizado exitosamente')
                     return redirect('producto')
             except ValueError:
-                messages.error(request, 'El precio debe ser un número válido')
+                messages.error(request, 'Por favor, ingresa valores numéricos válidos')
     
     context = {
         'producto': producto,
