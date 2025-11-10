@@ -37,7 +37,6 @@ def registro(request):
     
     return render(request, 'accounts/registro.html', {'form': form})
 
-
 def login_view(request):
     User = get_user_model()
 
@@ -49,7 +48,7 @@ def login_view(request):
 
             try:
                 usuario_obj = Usuario.objects.filter(username=usuario).first() or \
-                             Usuario.objects.filter(email=usuario).first()
+                              Usuario.objects.filter(email=usuario).first()
                 
                 if usuario_obj:
                     user = authenticate(username=usuario_obj.username, password=password)
@@ -58,17 +57,21 @@ def login_view(request):
                         auth_login(request, user)
                         print(f"✅ Login correcto para {user.username} (Rol: {user.rol})")
                         print(f"✅ Grupos: {[g.name for g in user.groups.all()]}")
+                        messages.success(request, "Inicio de sesión exitoso.")
                         return redirect('dashboard')
                     else:
                         print("⚠️ Contraseña incorrecta")
                         form.add_error(None, "Usuario o contraseña incorrectos")
+                        messages.error(request, "Usuario o contraseña incorrectos.")
                 else:
                     print("⚠️ Usuario no encontrado")
                     form.add_error(None, "Usuario o contraseña incorrectos")
+                    messages.error(request, "Usuario o contraseña incorrectos.")
                     
             except Exception as e:
                 print(f"❌ Error en login: {str(e)}")
                 form.add_error(None, "Error al iniciar sesión")
+                messages.error(request, "Error al iniciar sesión.")
     else:
         form = LoginForm()
 
