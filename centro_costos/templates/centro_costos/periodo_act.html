@@ -4,15 +4,40 @@
 <head>
   <meta charset="UTF-8">
   <title>Editar Período</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
   <h1>Editar Período</h1>
 
-  <form method="post" action="{% url 'periodo_act' periodo.id %}">
+  <form id="form-actualizar" method="post" action="{% url 'periodo_act' periodo.id %}">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Actualizar</button>
+    <button type="submit" class="btn btn-warning">Actualizar</button>
   </form>
 
-  <a href="{% url 'periodo' %}">Cancelar</a>
-  {% endblock %}
+  <a href="{% url 'periodo' %}" class="btn btn-secondary">Cancelar</a>
+</body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("form-actualizar");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); // Evita el envío inmediato
+
+    // Mostrar alerta tipo "Drag me!"
+    Swal.fire({
+      title: "¡Actualizado correctamente!",
+      text: "El período ha sido modificado con éxito.",
+      icon: "success",
+      draggable: true,
+      confirmButtonColor: "#28a745", // verde éxito
+      confirmButtonText: "OK"
+    }).then(() => {
+      form.submit(); // Envía el formulario después de la alerta
+    });
+  });
+});
+</script>
+{% endblock %}
