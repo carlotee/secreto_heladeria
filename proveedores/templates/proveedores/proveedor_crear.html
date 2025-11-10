@@ -1,34 +1,79 @@
-<h1>Crear Proveedor</h1>
+{% extends 'centro_costos/base.html' %}
 
-<form method="post">
-  {% csrf_token %}
+{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Proveedor</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
 
-  <p><label>Nombre:</label>
-     <input type="text" name="nombre" value="{{ nombre }}" required></p>
+<body>
+  <h1>Crear Proveedor</h1>
 
-  <p><label>RUT:</label>
-     <input type="text" name="rut" value="{{ rut }}" required></p>
+  <form id="form-crear-proveedor" method="post">
+    {% csrf_token %}
 
-  <p><label>Teléfono:</label>
-     <input type="text" name="telefono" value="{{ telefono }}"></p>
+    <p><label>Nombre:</label>
+      <input type="text" name="nombre" value="{{ nombre }}" required></p>
 
-  <p><label>Correo:</label>
-     <input type="email" name="correo" value="{{ correo }}"></p>
+    <p><label>RUT:</label>
+      <input type="text" name="rut" value="{{ rut }}" required></p>
 
-  <p><label>Dirección:</label>
-     <input type="text" name="direccion" value="{{ direccion }}"></p>
+    <p><label>Teléfono:</label>
+      <input type="text" name="telefono" value="{{ telefono }}"></p>
 
-  <p><label>Ciudad:</label>
-     <input type="text" name="ciudad" value="{{ ciudad }}"></p>
+    <p><label>Correo:</label>
+      <input type="email" name="correo" value="{{ correo }}"></p>
 
-  <button type="submit">Guardar</button>
-  <a href="{% url 'proveedor' %}">Volver</a>
-</form>
+    <p><label>Dirección:</label>
+      <input type="text" name="direccion" value="{{ direccion }}"></p>
 
-{% if messages %}
-  <ul style="color: red;">
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-  </ul>
-{% endif %}
+    <p><label>Ciudad:</label>
+      <input type="text" name="ciudad" value="{{ ciudad }}"></p>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{% url 'proveedor' %}" class="btn btn-secondary">Volver</a>
+  </form>
+
+  {% if messages %}
+    <ul style="color: red;">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("form-crear-proveedor");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); // evita que se envíe inmediatamente
+
+    Swal.fire({
+      title: "¿Deseas guardar este proveedor?",
+      text: "Verifica que todos los datos sean correctos antes de guardar.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#007bff", // azul
+      cancelButtonColor: "#6c757d", // gris
+      confirmButtonText: "Sí, guardar",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "¡Guardado!",
+          text: "El proveedor se ha creado correctamente.",
+          icon: "success",
+          confirmButtonColor: "#007bff",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        setTimeout(() => form.submit(), 1500);
+      }
+    });
+  });
+});
+</script>
+{% endblock %}

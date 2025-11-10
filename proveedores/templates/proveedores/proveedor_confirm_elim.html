@@ -1,8 +1,64 @@
-<h1>Eliminar Proveedor</h1>
-<p>¿Estás seguro que deseas eliminar a <strong>{{ proveedor.nombre }}</strong>?</p>
+{% extends 'centro_costos/base.html' %}
 
-<form method="post">
-  {% csrf_token %}
-  <button type="submit">Sí, eliminar</button>
-  <a href="{% url 'proveedor' %}">Cancelar</a>
-</form>
+{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <title>Eliminar Proveedor</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <h1>Eliminar Proveedor</h1>
+
+  <p>¿Estás seguro que deseas eliminar a <strong>{{ proveedor.nombre }}</strong>?</p>
+
+  <form id="form-eliminar-proveedor" method="post" action="">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+    <a href="{% url 'proveedor' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("form-eliminar-proveedor");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); // evita envío inmediato
+
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esta acción!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33", // rojo
+      cancelButtonColor: "#6c757d", // gris
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "¡Eliminado!",
+          text: "El proveedor ha sido eliminado correctamente.",
+          icon: "success",
+          confirmButtonColor: "#28a745",
+          showConfirmButton: false,
+          timer: 1500
+        });
+        setTimeout(() => form.submit(), 1500);
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: "Cancelado",
+          text: "El proveedor no fue eliminado.",
+          icon: "error",
+          confirmButtonColor: "#d33",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    });
+  });
+});
+</script>
+{% endblock %}
