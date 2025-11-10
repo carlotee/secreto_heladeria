@@ -1,0 +1,49 @@
+{% extends 'centro_costos/base.html' %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="container">
+    <h2>Editar Perfil</h2>
+    <form method="POST" id="perfilForm">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="first_name">Nombre:</label>
+            <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="last_name">Apellido:</label>
+            <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" class="form-control" required>
+        </div>
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('perfilForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        Swal.fire({
+            title: '¿Confirmar cambios?',
+            text: "¿Deseas actualizar tu información de perfil?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, actualizar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}

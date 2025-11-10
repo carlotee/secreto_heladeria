@@ -10,6 +10,42 @@ from common.decorators_pe import rol_requerido_pe
 from openpyxl import Workbook
 from django.http import HttpResponse
 
+
+@login_required
+def perfil_editar(request):
+    if request.method == 'POST':
+        user = request.user
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.save()
+        
+        messages.success(request, 'Perfil actualizado exitosamente')
+        return redirect('dashboard')
+    
+    return render(request, 'centro_costos/perfil_editar.html')
+
+@login_required
+def cambiar_contrasena(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  
+            messages.success(request, 'Contraseña cambiada exitosamente')
+            return redirect('dashboard')
+        else:
+            for error in form.errors.values():
+                messages.error(request, error)
+    else:
+        form = PasswordChangeForm(request.user)
+    
+    return render(request, 'centro_costos/cambiar_contrasena.html', {'form': form})
+
 def periodo(request):
     periodos = Periodo.objects.all().order_by('-año', '-mes')
     return render(request, 'centro_costos/periodo.html', {'periodos': periodos})

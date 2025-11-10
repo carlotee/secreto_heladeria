@@ -1,0 +1,49 @@
+{% extends 'centro_costos/base.html' %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="container">
+    <h2>Cambiar Contraseña</h2>
+    <form method="POST" id="passwordForm">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.old_password.id_for_label }}">Contraseña Actual:</label>
+            {{ form.old_password }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.new_password1.id_for_label }}">Nueva Contraseña:</label>
+            {{ form.new_password1 }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.new_password2.id_for_label }}">Confirmar Nueva Contraseña:</label>
+            {{ form.new_password2 }}
+        </div>
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('passwordForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        Swal.fire({
+            title: '¿Cambiar contraseña?',
+            text: "Tu contraseña será actualizada",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, cambiar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}
