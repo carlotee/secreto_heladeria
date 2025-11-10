@@ -139,7 +139,6 @@ def proveedor_crear(request):
             if not validar_rut(rut):
                 errores.append('El formato del RUT no es válido (usa 12.345.678-9).')
             else:
-                # Contar solo los dígitos (sin puntos ni guión)
                 digitos_rut = re.sub(r'[.\-kK]', '', rut)
                 if len(digitos_rut) != 9:
                     errores.append('El RUT debe tener exactamente 9 dígitos.')
@@ -151,7 +150,6 @@ def proveedor_crear(request):
             if not telefono.startswith('+'):
                 errores.append('El teléfono debe comenzar con el símbolo +')
             else:
-                # Contar solo los dígitos (sin el símbolo +)
                 digitos_telefono = re.sub(r'\D', '', telefono)
                 if len(digitos_telefono) > 11:
                     errores.append('El teléfono no puede tener más de 11 dígitos.')
