@@ -11,6 +11,8 @@ from openpyxl import Workbook
 from django.http import HttpResponse
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
+from django.http import JsonResponse
+
 
 @login_required
 def perfil_editar(request):
