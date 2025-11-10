@@ -29,7 +29,8 @@
 <script>
     document.getElementById('passwordForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        
+        const form = this;
+    
         Swal.fire({
             title: '¿Cambiar contraseña?',
             text: "Tu contraseña será actualizada",
@@ -41,9 +42,26 @@
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                this.submit();
+                const formData = new FormData(form);
+    
+                fetch(form.action || window.location.href, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                }).then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        window.location.reload();
+                    }
+                }).catch(err => {
+                    console.error('Error al enviar el formulario:', err);
+                    Swal.fire('Error', 'Hubo un problema al cambiar la contraseña.', 'error');
+                });
             }
         });
     });
-</script>
+    </script>
 {% endblock %}
