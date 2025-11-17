@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'centro_costos',
     'produccion',
     'proveedores',
+    'rest_framework',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -86,27 +88,28 @@ WSGI_APPLICATION = 'secreto_heladeria.wsgi.application'
 ENGINE = os.getenv("DB_ENGINE", "sqlite")
 
 if ENGINE == "mysql":
-    #DATABASES = {
-     #   "default": {
-      #      "ENGINE": "django.db.backends.mysql",
-       #     "NAME": os.getenv("DB_NAME"),
-        #    "USER": os.getenv("DB_USER"),
-         #   "PASSWORD": os.getenv("DB_PASSWORD"),
-          #  "HOST": os.getenv("DB_HOST"),
-           # "PORT": os.getenv("DB_PORT"),
-           # "OPTIONS": {"charset": "utf8mb4"},
-        #}
-    #}
-	DATABASES = {
-  	'default': {
-       		'ENGINE': 'django.db.backends.mysql',
-      		 	'NAME': 'secreto_heladeria',
-       		'USER': 'root',
-       		'PASSWORD': '',
-       		'HOST': 'localhost',
-       		'PORT': '3306',
-    	}	
-	}
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
+            "OPTIONS": {"charset": "utf8mb4"},
+        }
+    }
+    #si se prueba localmente no encuentra la base de datos colocando su propias credenciales
+	#DATABASES = {
+  	#'default': {
+       		#'ENGINE': 'django.db.backends.mysql',
+      		# 	'NAME': 'secreto_heladeria',
+       		#'USER': 'root',
+       		#'PASSWORD': '',
+       		#'HOST': 'localhost',
+       		#'PORT': '3306',
+    	#}	
+#	}
 else:  
     DATABASES = {
         "default": {

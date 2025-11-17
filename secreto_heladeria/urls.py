@@ -56,5 +56,6 @@ urlpatterns = [
     path('proveedor/<int:proveedor_id>/dashboard/', proveedores_views.proveedor_dashboard, name='proveedor_dashboard'),
     path("exportar_excel/", produccion_views.exportar_productos_excel, name="exportar_productos_excel"),
     path('exportar_proveedores/', proveedores_views.exportar_proveedores_excel, name='exportar_proveedores_excel'),
+    path('api/', include('api.urls')),
 
 ]
