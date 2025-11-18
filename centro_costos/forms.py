@@ -50,25 +50,27 @@ class CentroCostosForm(forms.ModelForm):
 
 
 class CostoForm(forms.ModelForm):
-    """Formulario para crear o actualizar un costo"""
     class Meta:
         model = Costo
-        fields = ['descripcion', 'valor', 'tipo_costo', 'centro_costo', 'periodo']
+        fields = ['descripcion', 'tipo_costo']
         widgets = {
-            'descripcion': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 3,
-                'placeholder': 'Descripción del costo'
-            }),
-            'valor': forms.NumberInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Valor del costo',
-                'min': 0
-            }),
-            'tipo_costo': forms.Select(attrs={'class': 'form-control'}),
-            'centro_costo': forms.Select(attrs={'class': 'form-control'}),
-            'periodo': forms.Select(attrs={'class': 'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'tipo_costo': forms.Select(attrs={'class': 'form-select'}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        descripcion = cleaned_data.get('descripcion')
+        tipo_costo = cleaned_data.get('tipo_costo')
+
+        if descripcion and tipo_costo:
+            qs = Costo.objects.filter(descripcion=descripcion, tipo_costo=tipo_costo)
+            if self.instance and self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise forms.ValidationError("Este costo ya existe para el tipo de costo seleccionado.")
+
+        return cleaned_data
 
 
 
