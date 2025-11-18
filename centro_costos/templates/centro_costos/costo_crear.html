@@ -21,34 +21,62 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  const form = document.getElementById("form-crear");
+    const form = document.getElementById("form-crear");
 
-  form.addEventListener("submit", function(e) {
-    e.preventDefault(); 
+    form.addEventListener("submit", function(e) {
+        e.preventDefault(); 
 
-    Swal.fire({
-      title: "¿Deseas guardar este Item Costo?",
-      text: "Revisa que todos los datos sean correctos antes de continuar.",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#007bff", 
-      cancelButtonColor: "#6c757d", 
-      confirmButtonText: "Sí, guardar",
-      cancelButtonText: "Cancelar"
-    }).then((result) => {
-      if (result.isConfirmed) {
+        const errores = [];
+        {% for field in form %}
+            {% for error in field.errors %}
+                errores.push("{{ error|escapejs }}");
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            errores.push("{{ error|escapejs }}");
+        {% endfor %}
+
+        if (errores.length > 0) {
+            Swal.fire({
+                title: "Error",
+                html: errores.join("<br>"),
+                icon: "error",
+                confirmButtonColor: "#d33"
+            });
+            return;
+        }
+
         Swal.fire({
-          title: "¡Guardado!",
-          text: "El Item Costo ha sido creado exitosamente.",
-          icon: "success",
-          confirmButtonColor: "#007bff",
-          showConfirmButton: false,
-          timer: 1500
+            title: "¿Deseas guardar este Item Costo?",
+            text: "Revisa que todos los datos sean correctos antes de continuar.",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#007bff",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: "Sí, guardar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit(); 
+            }
         });
-        setTimeout(() => form.submit(), 1500);
-      }
     });
-  });
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+                Swal.fire({
+                    title: "¡Guardado!",
+                    text: "{{ message }}",
+                    icon: "success",
+                    confirmButtonColor: "#007bff",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 });
 </script>
 {% endblock %}
+
