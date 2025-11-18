@@ -122,34 +122,25 @@ def centro_costos(request):
 
 
 def costo(request):
-    costos = Costo.objects.select_related('tipo_costo', 'centro_costo', 'periodo').all()
+    costos = Costo.objects.select_related('tipo_costo').all()
 
-    periodo_id = request.GET.get('periodo')
     tipo_id = request.GET.get('tipo')
-    centro_id = request.GET.get('centro')
     search = request.GET.get('search')
 
-    if periodo_id:
-        costos = costos.filter(periodo_id=periodo_id)
     if tipo_id:
         costos = costos.filter(tipo_costo_id=tipo_id)
-    if centro_id:
-        costos = costos.filter(centro_costo_id=centro_id)
+
     if search:
         costos = costos.filter(
             Q(descripcion__icontains=search) |
             Q(tipo_costo__nombre__icontains=search)
         )
 
-    total = costos.aggregate(total=Sum('valor'))['total'] or 0
-
     context = {
         'costos': costos,
-        'total': total,
-        'periodos': Periodo.objects.all(),
         'tipos': TipoCosto.objects.all(),
-        'centros': Centro_Costos.objects.filter(deleted_at__isnull=True),
     }
+
     return render(request, 'centro_costos/costo.html', context)
 
 @login_required
@@ -199,71 +190,46 @@ def costo_eliminar(request, pk):
     return render(request, 'centro_costos/costo_eliminar.html', {'costo': costo})
 
 @login_required
-@login_required
 def dashboard(request):
-    centros = Centro_Costos.objects.prefetch_related('costo_set__periodo', 'tipo_costo')
+    centros = Centro_Costos.objects.select_related('tipo_costo')
     visitas = request.session.get('visitas', 0)
     request.session['visitas'] = visitas + 1
 
-    centros_con_periodos = []
+    centros_con_costos = []
     for centro in centros:
-        costos = centro.costo_set.all()
-        periodos = (
-            Periodo.objects
-            .filter(costo__centro_costo=centro)
-            .distinct()
-            .order_by('-año', '-mes')
-        )
-
-        centros_con_periodos.append({
+        costos = Costo.objects.filter(tipo_costo=centro.tipo_costo)
+        centros_con_costos.append({
             'centro': centro,
             'costos': costos,
-            'periodos': periodos,
         })
-
-    ultimo_periodo = Periodo.objects.order_by('-año', '-mes').first()
-    costos_recientes = (
-        Costo.objects.filter(periodo=ultimo_periodo).aggregate(total=Sum('valor'))['total']
-        if ultimo_periodo else 0
-    )
 
     proveedores = Proveedor.objects.all()
 
     context = {
-        'centros_con_periodos': centros_con_periodos,
-        'ultimo_periodo': ultimo_periodo,
-        'costos_recientes': costos_recientes,
+        'centros_con_costos': centros_con_costos,
         'total_centros': Centro_Costos.objects.filter(deleted_at__isnull=True).count(),
         'total_tipos': TipoCosto.objects.count(),
         'proveedores': proveedores,
-        'visitas': visitas,  
+        'visitas': visitas,
     }
 
-    messages.success(request, 'Costo agregado al carrito')
-    messages.error(request, 'Stock insuficiente')
-
     return render(request, 'centro_costos/dashboard.html', context)
-
-
 
 def exportar_costos_excel(request):
     wb = Workbook()
     ws = wb.active
     ws.title = "Costos"
 
-    columnas = ["ID", "Descripción", "Valor", "Tipo de Costo", "Centro de Costo", "Período"]
+    columnas = ["ID", "Descripción", "Tipo de Costo"]
     ws.append(columnas)
 
-    costos = Costo.objects.select_related("tipo_costo", "centro_costo", "periodo").all()
+    costos = Costo.objects.select_related("tipo_costo").all()
 
     for c in costos:
         ws.append([
             c.id,
             c.descripcion,
-            float(c.valor),
-            c.tipo_costo.nombre if c.tipo_costo else "Sin tipo",
-            c.centro_costo.nombre if c.centro_costo else "Sin centro",
-            str(c.periodo) if c.periodo else "Sin período"
+            c.tipo_costo.nombre if c.tipo_costo else "Sin tipo"
         ])
 
     response = HttpResponse(

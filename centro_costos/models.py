@@ -32,15 +32,15 @@ class Centro_Costos(models.Model):
 
 class Costo(models.Model):
     descripcion = models.TextField()
-    valor = models.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        default=0, 
-        verbose_name="Valor del costo"
-    )
     tipo_costo = models.ForeignKey(TipoCosto, on_delete=models.CASCADE)
-    centro_costo = models.ForeignKey(Centro_Costos, on_delete=models.CASCADE)
-    periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['descripcion', 'tipo_costo'],
+                name='unique_costo'
+            )
+        ]
 
     def __str__(self):
-        return f"{self.descripcion} - ${self.valor}"
+        return self.descripcion
