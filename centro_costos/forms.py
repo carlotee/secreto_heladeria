@@ -53,6 +53,9 @@ class CostoForm(forms.ModelForm):
     class Meta:
         model = Costo
         fields = ['descripcion', 'tipo_costo']
+        labels = {
+            'tipo_costo': 'Categoría',   # 👈 Cambia el texto visible
+        }
         widgets = {
             'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'tipo_costo': forms.Select(attrs={'class': 'form-select'}),
@@ -71,6 +74,7 @@ class CostoForm(forms.ModelForm):
                 raise forms.ValidationError("Este costo ya existe para el tipo de costo seleccionado.")
 
         return cleaned_data
+
 
 
 
