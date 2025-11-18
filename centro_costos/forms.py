@@ -83,9 +83,9 @@ class CostoForm(forms.ModelForm):
 
 
 class ConfirmarEliminarCostoForm(forms.Form):
-    """Formulario simple para confirmar la eliminación de un costo"""
+    """Formulario simple para confirmar la eliminación de un Item Costo"""
     confirmar = forms.BooleanField(
         required=True,
-        label="Confirmo la eliminación de este costo",
+        label="Confirmo la eliminación de este Item Costo",
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
