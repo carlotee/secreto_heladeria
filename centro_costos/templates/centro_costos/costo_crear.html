@@ -21,34 +21,49 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  const form = document.getElementById("form-crear");
+    const form = document.getElementById("form-crear");
 
-  form.addEventListener("submit", function(e) {
-    e.preventDefault(); 
+    form.addEventListener("submit", function(e) {
+        e.preventDefault(); // previene envío normal
 
-    Swal.fire({
-      title: "¿Deseas guardar este Item Costo?",
-      text: "Revisa que todos los datos sean correctos antes de continuar.",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#007bff", 
-      cancelButtonColor: "#6c757d", 
-      confirmButtonText: "Sí, guardar",
-      cancelButtonText: "Cancelar"
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "¡Guardado!",
-          text: "El Item Costo ha sido creado exitosamente.",
-          icon: "success",
-          confirmButtonColor: "#007bff",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        setTimeout(() => form.submit(), 1500);
-      }
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    title: "¡Guardado!",
+                    text: "El Item Costo ha sido creado exitosamente.",
+                    icon: "success",
+                    confirmButtonColor: "#007bff",
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = data.redirect_url;
+                });
+            } else {
+                let errores = "";
+                for (const field in data.errors) {
+                    data.errors[field].forEach(err => errores += err.message + "\n");
+                }
+                Swal.fire({
+                    title: "Error",
+                    text: errores,
+                    icon: "error",
+                    confirmButtonColor: "#d33"
+                });
+            }
+        })
+        .catch(err => console.log(err));
     });
-  });
 });
 </script>
 {% endblock %}
+
