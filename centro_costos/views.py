@@ -12,7 +12,7 @@ from django.http import HttpResponse
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import JsonResponse
-
+from django.db import IntegrityError
 
 @login_required
 def perfil_editar(request):
@@ -149,15 +149,13 @@ def costo_crear(request):
     if request.method == 'POST':
         form = CostoForm(request.POST)
         if form.is_valid():
-            form.save()
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'success': True, 'redirect_url': '/costo'})
-            messages.success(request, 'Item Costo creado exitosamente')
-            return redirect('costo')
+            try:
+                form.save()
+                messages.success(request, 'Item Costo creado exitosamente')
+                return redirect('costo')
+            except IntegrityError:
+                form.add_error(None, "Item Costo con esta Descripción y Categoría ya existe.")
         else:
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                errors = form.errors.get_json_data()
-                return JsonResponse({'success': False, 'errors': errors})
             messages.error(request, 'Verifica los campos e intenta nuevamente')
     else:
         form = CostoForm()
