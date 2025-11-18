@@ -150,13 +150,17 @@ def costo_crear(request):
         form = CostoForm(request.POST)
         if form.is_valid():
             form.save()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True, 'redirect_url': '/costo'})
             messages.success(request, 'Item Costo creado exitosamente')
             return redirect('costo')
         else:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                errors = form.errors.get_json_data()
+                return JsonResponse({'success': False, 'errors': errors})
             messages.error(request, 'Verifica los campos e intenta nuevamente')
     else:
         form = CostoForm()
-
     return render(request, 'centro_costos/costo_crear.html', {'form': form})
 
 @login_required
