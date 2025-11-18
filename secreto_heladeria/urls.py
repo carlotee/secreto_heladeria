@@ -57,5 +57,9 @@ urlpatterns = [
     path("exportar_excel/", produccion_views.exportar_productos_excel, name="exportar_productos_excel"),
     path('exportar_proveedores/', proveedores_views.exportar_proveedores_excel, name='exportar_proveedores_excel'),
     path('api/', include('api.urls')),
+    path('categoria/', centro_costos_views.categoria, name='categoria'),
+    path('categoria/crear/', centro_costos_views.categoria_crear, name='categoria_crear'),
+    path('categoria/<int:pk>/editar/', centro_costos_views.categoria_act, name='categoria_act'),
+    path('categoria/<int:pk>/eliminar/', centro_costos_views.categoria_eliminar, name='categoria_eliminar'),
 
 ]

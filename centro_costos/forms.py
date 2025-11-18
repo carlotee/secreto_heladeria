@@ -21,16 +21,20 @@ class PeriodoForm(forms.ModelForm):
         }
 
 class TipoCostoForm(forms.ModelForm):
-    """Formulario para crear o actualizar un tipo de costo"""
+    """Formulario para crear o actualizar una categoría (TipoCosto)"""
     class Meta:
         model = TipoCosto
         fields = ['nombre']
+        labels = {
+            'nombre': 'Nombre de la categoría'
+        }
         widgets = {
             'nombre': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Nombre del tipo de costo'
+                'placeholder': 'Nombre de la categoría'
             }),
         }
+
 
 
 class CentroCostosForm(forms.ModelForm):

@@ -1,0 +1,58 @@
+{% extends 'centro_costos/base.html' %}
+
+{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Categoría</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <h1>Editar Categoría</h1>
+
+  <form id="form-editar" method="post" action="{% url 'categoria_act' categoria.pk %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+  </form>
+
+  <a href="{% url 'categoria' %}" class="btn btn-secondary">Volver al listado</a>
+</body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("form-editar");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); 
+
+    Swal.fire({
+      title: "¿Deseas actualizar esta categoría?",
+      text: "Revisa los datos antes de continuar.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#007bff",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Sí, actualizar",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.submit();
+      }
+    });
+  });
+
+  {% if messages %}
+    {% for message in messages %}
+      Swal.fire({
+        title: "{{ message.tags|capfirst }}",
+        text: "{{ message }}",
+        icon: "{{ message.tags }}",
+        timer: 1500,
+        showConfirmButton: false
+      });
+    {% endfor %}
+  {% endif %}
+});
+</script>
+{% endblock %}

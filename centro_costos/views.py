@@ -264,3 +264,56 @@ def exportar_periodos_excel(request):
 
     wb.save(response)
     return response
+
+@login_required
+@rol_requerido('administrador')
+def categoria(request):
+    categorias = TipoCosto.objects.all()
+    return render(request, 'centro_costos/categoria.html', {'categorias': categorias})
+
+@login_required
+@rol_requerido('administrador')
+def categoria_crear(request):
+    if request.method == 'POST':
+        form = TipoCostoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Categoría creada exitosamente')
+            return redirect('categoria')
+        else:
+            messages.error(request, 'Revisa los campos e intenta nuevamente')
+    else:
+        form = TipoCostoForm()
+
+    return render(request, 'centro_costos/categoria_crear.html', {'form': form})
+
+@login_required
+@rol_requerido('administrador')
+def categoria_act(request, pk):
+    categoria = get_object_or_404(TipoCosto, pk=pk)
+
+    if request.method == 'POST':
+        form = TipoCostoForm(request.POST, instance=categoria)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Categoría actualizada exitosamente')
+            return redirect('categoria')
+        else:
+            messages.error(request, 'Error al actualizar la categoría')
+    else:
+        form = TipoCostoForm(instance=categoria)
+
+    return render(request, 'centro_costos/categoria_act.html', {'form': form, 'categoria': categoria})
+
+
+@login_required
+@rol_requerido('administrador')
+def categoria_eliminar(request, pk):
+    categoria = get_object_or_404(TipoCosto, pk=pk)
+
+    if request.method == 'POST':
+        categoria.delete()
+        messages.success(request, 'Categoría eliminada exitosamente')
+        return redirect('categoria')
+
+    return render(request, 'centro_costos/categoria_eliminar.html', {'categoria': categoria})

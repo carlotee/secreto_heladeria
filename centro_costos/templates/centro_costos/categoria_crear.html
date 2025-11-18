@@ -1,0 +1,58 @@
+{% extends 'centro_costos/base.html' %}
+
+{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <title>Crear Categoría</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <h1>Crear Categoría</h1>
+
+  <form id="form-crear" method="post" action="{% url 'categoria_crear' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>
+
+  <a href="{% url 'categoria' %}" class="btn btn-secondary">Volver al listado</a>
+</body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("form-crear");
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault(); 
+
+    Swal.fire({
+      title: "¿Deseas guardar esta categoría?",
+      text: "Revisa que todos los datos sean correctos antes de continuar.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#007bff",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Sí, guardar",
+      cancelButtonText: "Cancelar"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.submit();
+      }
+    });
+  });
+
+  {% if messages %}
+    {% for message in messages %}
+      Swal.fire({
+        title: "{{ message.tags|capfirst }}",
+        text: "{{ message }}",
+        icon: "{{ message.tags }}",
+        timer: 1500,
+        showConfirmButton: false
+      });
+    {% endfor %}
+  {% endif %}
+});
+</script>
+{% endblock %}
