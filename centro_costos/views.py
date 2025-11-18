@@ -150,7 +150,7 @@ def costo_crear(request):
         form = CostoForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Costo creado exitosamente')
+            messages.success(request, 'Item Costo creado exitosamente')
             return redirect('costo')
         else:
             messages.error(request, 'Verifica los campos e intenta nuevamente')
@@ -168,10 +168,10 @@ def costo_act(request, pk):
         form = CostoForm(request.POST, instance=costo)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Costo actualizado exitosamente')
+            messages.success(request, 'Item Costo actualizado exitosamente')
             return redirect('costo')
         else:
-            messages.error(request, 'Error al actualizar el costo')
+            messages.error(request, 'Error al actualizar el Item Costo')
     else:
         form = CostoForm(instance=costo)
 
@@ -184,7 +184,7 @@ def costo_eliminar(request, pk):
 
     if request.method == 'POST':
             costo.delete()
-            messages.success(request, 'Costo eliminado exitosamente')
+            messages.success(request, 'Item Costo eliminado exitosamente')
             return redirect('costo')
 
     return render(request, 'centro_costos/costo_eliminar.html', {'costo': costo})
