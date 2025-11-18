@@ -3,7 +3,7 @@
 {% block content %}
   <h1>Costos</h1>
 
-  <a href="{% url 'costo_crear' %}">Crear nuevo costo</a>
+  <a href="{% url 'costo_crear' %}">Crear nuevo Item Costo</a>
   <a href="{% url 'exportar_costos' %}" class="btn btn-success">📊 Exportar a Excel</a>
 
 
@@ -31,6 +31,6 @@
     </tbody>
   </table>
   {% else %}
-  <p>No hay costos registrados.</p>
+  <p>No hay Items Costos registrados.</p>
   {% endif %}
 {% endblock %}
