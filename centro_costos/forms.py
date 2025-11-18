@@ -78,10 +78,6 @@ class CostoForm(forms.ModelForm):
 
         return cleaned_data
 
-
-
-
-
 class ConfirmarEliminarCostoForm(forms.Form):
     """Formulario simple para confirmar la eliminación de un Item Costo"""
     confirmar = forms.BooleanField(
