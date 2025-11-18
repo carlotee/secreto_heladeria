@@ -4,7 +4,6 @@ admin.site.site_header = "Secreto Heladeria - Admin"
 admin.site.site_title = "Secreto Heladeria Admin"
 admin.site.index_title = "Panel de Administración"
 
-from django.contrib import admin
 from .models import Periodo, TipoCosto, Centro_Costos, Costo
 
 
@@ -29,5 +28,5 @@ class CentroCostosAdmin(admin.ModelAdmin):
 @admin.register(Costo)
 class CostoAdmin(admin.ModelAdmin):
     list_display = ('descripcion','tipo_costo')
-    list_filter = ('tipo_costo')
-    search_fields = ('descripcion')
+    list_filter = ('tipo_costo',)
+    search_fields = ('descripcion',)
