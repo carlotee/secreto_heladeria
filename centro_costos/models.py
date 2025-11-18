@@ -31,7 +31,7 @@ class Centro_Costos(models.Model):
 
 
 class Costo(models.Model):
-    descripcion = models.TextField()
+    descripcion = models.CharField(max_length=255)
     tipo_costo = models.ForeignKey(TipoCosto, on_delete=models.CASCADE)
 
     class Meta:
