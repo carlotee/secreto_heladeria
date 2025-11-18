@@ -30,4 +30,4 @@ class CentroCostosAdmin(admin.ModelAdmin):
 class CostoAdmin(admin.ModelAdmin):
     list_display = ('descripcion','tipo_costo')
     list_filter = ('tipo_costo')
-    search_fields = ('descripcion',)
+    search_fields = ('descripcion')
