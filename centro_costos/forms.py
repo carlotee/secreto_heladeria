@@ -54,6 +54,7 @@ class CentroCostosForm(forms.ModelForm):
 
 
 class CostoForm(forms.ModelForm):
+    """Formulario para crear o actualizar un Item Costo"""
     class Meta:
         model = Costo
         fields = ['descripcion', 'tipo_costo']
@@ -77,6 +78,7 @@ class CostoForm(forms.ModelForm):
                 )
 
         return cleaned_data
+
 
 class ConfirmarEliminarCostoForm(forms.Form):
     """Formulario simple para confirmar la eliminación de un Item Costo"""
