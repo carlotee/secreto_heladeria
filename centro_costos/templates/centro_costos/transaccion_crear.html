@@ -12,11 +12,45 @@
 
   <form id="form-crear" method="post" action="{% url 'transaccion_crear' %}">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Guardar</button>
-  </form>
 
-  <a href="{% url 'transaccion' %}" class="btn btn-secondary">Volver al listado</a>
+    <div class="mb-3">
+      {{ form.nombre.label_tag }}
+      {{ form.nombre }}
+      {% for error in form.nombre.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.costo.label_tag }}
+      {{ form.costo }}
+      {% for error in form.costo.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.unidad.label_tag }}
+      {{ form.unidad }}
+      {% for error in form.unidad.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.costo_total.label_tag }}
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        {{ form.costo_total }}
+      </div>
+      {% for error in form.costo_total.errors %}
+        <div class="text-danger">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{% url 'transaccion' %}" class="btn btn-secondary">Volver al listado</a>
+  </form>
 </body>
 
 <script>
