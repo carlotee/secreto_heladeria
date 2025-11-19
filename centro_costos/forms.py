@@ -92,6 +92,9 @@ class TransaccionCompraForm(forms.ModelForm):
     class Meta:
         model = TransaccionCompra
         fields = ['nombre', 'costo', 'costo_total', 'unidad']
+        labels = {
+            'costo': 'Item Costo',  
+        }
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'costo': forms.Select(attrs={'class': 'form-select'}),
