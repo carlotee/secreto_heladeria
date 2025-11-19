@@ -1,5 +1,7 @@
 {% extends 'centro_costos/base.html' %}
 
+{% block title %}Secreto Heladería{% endblock %}
+
 {% block content %}
   <style>
     .header-container {
@@ -79,10 +81,20 @@
     .user-info small {
       color: #6c757d;
     }
+
+    .descripcion-empresa {
+      margin-bottom: 30px;
+      padding: 15px;
+      background-color: #f0f8ff;
+      border-left: 5px solid #007bff;
+      border-radius: 5px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
   </style>
 
   <div class="header-container">
-    <h1>Sistema de Gestión</h1>
+    <h1>Secreto Heladería</h1>
     
     <div class="user-menu">
       <button class="user-button" onclick="toggleDropdown()">
@@ -111,6 +123,18 @@
         </a>
       </div>
     </div>
+  </div>
+
+  <div class="descripcion-empresa">
+    Secreto Heladería nace de una idea de negocio en 2013, la cual se diluyó por
+    diversas razones. En 2020, durante la pandemia, los fundadores (un periodista y una
+    cosmetóloga/esteticista, sin experiencia previa en gastronomía) decidieron retomar
+    el proyecto como un emprendimiento familiar desde su hogar.
+    Descubrieron en la pandemia una oportunidad para vender helados en potes a
+    domicilio. La apertura del local físico en Gabriel Gonzalez Videla 2777 se concretó
+    en mayo de 2024, tras un periodo de tres meses de preparación del local. La empresa
+    ha crecido a través del boca a boca y el uso de plataformas de delivery, aunque la
+    venta presencial en el local es ahora el foco principal.
   </div>
 
   <section>
