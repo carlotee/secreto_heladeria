@@ -134,12 +134,19 @@ class TransaccionCompraForm(forms.ModelForm):
 
     def clean_costo_total(self):
         costo_total = self.cleaned_data.get('costo_total')
+
         if costo_total <= 0:
-            raise forms.ValidationError("El costo total debe ser mayor a 0")
+            raise ValidationError("El costo total debe ser mayor a 0")
+
+        str_costo = f"{costo_total:.2f}"  
+        entero = str_costo.split('.')[0]  
+        if len(entero) > 10:
+            raise ValidationError("El costo total no puede tener más de 10 dígitos antes del punto decimal")
+
         return costo_total
 
     def clean_unidad(self):
         unidad = self.cleaned_data.get('unidad')
         if unidad <= 0:
-            raise forms.ValidationError("La unidad debe ser mayor a 0")
+            raise ValidationError("La unidad debe ser mayor a 0")
         return unidad

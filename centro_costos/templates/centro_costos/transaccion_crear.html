@@ -58,27 +58,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("form-crear");
 
     form.addEventListener("submit", function(e) {
-        e.preventDefault();
-
-        const errores = [];
-        {% for field in form %}
-            {% for error in field.errors %}
-                errores.push("{{ error|escapejs }}");
-            {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-            errores.push("{{ error|escapejs }}");
-        {% endfor %}
-
-        if (errores.length > 0) {
-            Swal.fire({
-                title: "Error",
-                html: errores.join("<br>"),
-                icon: "error",
-                confirmButtonColor: "#d33"
-            });
-            return;
-        }
+        e.preventDefault(); 
 
         Swal.fire({
             title: "¿Deseas guardar esta transacción?",
