@@ -125,6 +125,7 @@
     </div>
   </div>
 
+  <!-- Descripción de la Empresa -->
   <div class="descripcion-empresa">
     Secreto Heladería nace de una idea de negocio en 2013, la cual se diluyó por
     diversas razones. En 2020, durante la pandemia, los fundadores (un periodista y una
@@ -136,47 +137,6 @@
     ha crecido a través del boca a boca y el uso de plataformas de delivery, aunque la
     venta presencial en el local es ahora el foco principal.
   </div>
-
-  <section>
-    <h2>Centro de Costos</h2>
-
-    {% if centros_con_periodos %}
-      {% for item in centros_con_periodos %}
-        {% with centro=item.centro costos=item.costos periodos=item.periodos %}
-          <section style="margin-bottom: 40px; border: 1px solid #ccc; padding: 10px;">
-            <h3>{{ centro.nombre }}</h3>
-            <p><strong>Tipo de Costo:</strong> {{ centro.tipo_costo.nombre }}</p>
-
-            <h4>Costos Asociados</h4>
-            {% if costos %}
-              <table border="1" cellpadding="5">
-                <thead>
-                  <tr>
-                    <th>Descripción</th>
-                    <th>Valor</th>
-                    <th>Periodo</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for costo in costos %}
-                    <tr>
-                      <td>{{ costo.descripcion }}</td>
-                      <td>${{ costo.valor }}</td>
-                      <td>{{ costo.periodo.año }} - {{ costo.periodo.mes }}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            {% else %}
-              <p>No hay costos asociados.</p>
-            {% endif %}
-          </section>
-        {% endwith %}
-      {% endfor %}
-    {% else %}
-      <p>No hay centros de costos registrados.</p>
-    {% endif %}
-  </section>
 
   <script>
     function toggleDropdown() {
