@@ -108,21 +108,22 @@ def periodo_eliminar(request, pk):
     return render(request, 'centro_costos/periodo_eliminar.html', {'periodo': periodo})
 
 
-
+@login_required
 def tipo_costo(request):
     tipos = TipoCosto.objects.all()
     return render(request, 'centro_costos/tipo_costo.html', {'tipos': tipos})
 
 
-
+@login_required
 def centro_costos(request):
     centros = Centro_Costos.objects.filter(deleted_at__isnull=True).order_by('-created_at')
     return render(request, 'centro_costos/centro_costos.html', {'centros': centros})
 
 
-
+@login_required
 def costo(request):
     costos = Costo.objects.select_related('tipo_costo').all()
+    costos = Costo.objects.all().order_by('id')
 
     tipo_id = request.GET.get('tipo')
     search = request.GET.get('search')
