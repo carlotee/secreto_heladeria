@@ -271,7 +271,19 @@ def exportar_periodos_excel(request):
 @rol_requerido('administrador')
 def categoria(request):
     categorias = TipoCosto.objects.all()
-    return render(request, 'centro_costos/categoria.html', {'categorias': categorias})
+    search = request.GET.get('search')
+
+    if search:
+        categorias = categorias.filter(
+            Q(nombre__icontains=search)
+        )
+
+    context = {
+        'categorias': categorias,
+        'search': search,  
+    }
+
+    return render(request, 'centro_costos/categoria.html', context)
 
 @login_required
 @rol_requerido('administrador')
@@ -323,18 +335,20 @@ def categoria_eliminar(request, pk):
 @login_required
 @rol_requerido('administrador')
 def transaccion(request):
-    transacciones = TransaccionCompra.objects.select_related('costo').all()
+    transacciones = TransaccionCompra.objects.select_related('costo', 'costo__tipo_costo').all()
     
-    search = request.GET.get('search')
-    if search:
-        transacciones = transacciones.filter(
-            Q(costo__descripcion__icontains=search) |
-            Q(costo__tipo_costo__nombre__icontains=search)
-        )
+    item_costo_id = request.GET.get('item_costo')  
+    if item_costo_id:
+        transacciones = transacciones.filter(costo_id=item_costo_id)
 
-    return render(request, 'centro_costos/transaccion.html', {
-        'transacciones': transacciones
-    })
+    context = {
+        'transacciones': transacciones,
+        'item_costos': Costo.objects.all(), 
+        'selected_item_costo': item_costo_id,
+    }
+
+    return render(request, 'centro_costos/transaccion.html', context)
+
 
 
 @login_required
