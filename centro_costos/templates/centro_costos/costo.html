@@ -1,36 +1,48 @@
 {% extends 'centro_costos/base.html' %}
 
 {% block content %}
-  <h1>Item Costos</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Item Costos</h1>
+    <div>
+        <a href="{% url 'costo_crear' %}" class="btn btn-primary me-2">
+            <i class="fas fa-plus me-1"></i> Crear nuevo Item Costo
+        </a>
+        <a href="{% url 'exportar_costos' %}" class="btn btn-success">
+            <i class="fas fa-file-excel me-1"></i> Exportar a Excel
+        </a>
+    </div>
+</div>
 
-  <a href="{% url 'costo_crear' %}">Crear nuevo Item Costo</a>
-  <a href="{% url 'exportar_costos' %}" class="btn btn-success">📊 Exportar a Excel</a>
-
-
-  {% if costos %}
-  <table border="1">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Descripción</th>
-        <th>Categoría</th>
-      </tr>
+{% if costos %}
+<table class="table table-striped table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>ID</th>
+            <th>Descripción</th>
+            <th>Categoría</th>
+        </tr>
     </thead>
     <tbody>
-      {% for costo in costos %}
-      <tr>
-        <td>{{ costo.id }}</td>
-        <td>{{ costo.descripcion }}</td>
-        <td>{{ costo.tipo_costo.nombre }}</td>
-        <td>
-          <a href="{% url 'costo_act' costo.id %}">Editar</a>
-          <a href="{% url 'costo_eliminar' costo.id %}">Eliminar</a>
-        </td>
-      </tr>
-      {% endfor %}
+        {% for costo in costos %}
+        <tr>
+            <td>{{ costo.id }}</td>
+            <td>{{ costo.descripcion }}</td>
+            <td>{{ costo.tipo_costo.nombre }}</td>
+            <td>
+                <a href="{% url 'costo_act' costo.id %}" class="btn btn-warning btn-sm me-1">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                <a href="{% url 'costo_eliminar' costo.id %}" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash-alt"></i> Eliminar
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
     </tbody>
-  </table>
-  {% else %}
-  <p>No hay Items Costos registrados.</p>
-  {% endif %}
+</table>
+{% else %}
+<div class="alert alert-info" role="alert">
+    No hay Items Costos registrados.
+</div>
+{% endif %}
 {% endblock %}
