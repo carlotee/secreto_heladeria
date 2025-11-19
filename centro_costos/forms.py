@@ -1,5 +1,6 @@
 from django import forms
 from .models import Periodo, TipoCosto, Centro_Costos, Costo, TransaccionCompra
+from django.core.exceptions import ValidationError
 
 
 class PeriodoForm(forms.ModelForm):
@@ -34,6 +35,15 @@ class TipoCostoForm(forms.ModelForm):
                 'placeholder': 'Nombre de la categoría'
             }),
         }
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data.get('nombre')
+        qs = TipoCosto.objects.filter(nombre__iexact=nombre)
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.exists():
+            raise ValidationError("Ya existe una categoría con ese nombre.")
+        return nombre
 
 
 
@@ -92,15 +102,26 @@ class TransaccionCompraForm(forms.ModelForm):
     class Meta:
         model = TransaccionCompra
         fields = ['nombre', 'costo', 'costo_total', 'unidad']
-        labels = {
-            'costo': 'Item Costo',  
-        }
+        labels = {'costo': 'Item Costo'}
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'costo': forms.Select(attrs={'class': 'form-select'}),
             'costo_total': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'unidad': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        nombre = cleaned_data.get('nombre')
+        costo = cleaned_data.get('costo')
+
+        if nombre and costo:
+            qs = TransaccionCompra.objects.filter(nombre=nombre, costo=costo)
+            if self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise ValidationError("Ya existe una transacción con este Nombre y Item Costo.")
+        return cleaned_data
 
     def clean_costo_total(self):
         costo_total = self.cleaned_data.get('costo_total')

@@ -12,8 +12,14 @@ class Periodo(models.Model):
 class TipoCosto(models.Model):
     nombre = models.CharField(max_length=120)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['nombre'], name='unique_tipo_costo')
+        ]
+
     def __str__(self):
         return self.nombre
+
 
 class Centro_Costos(models.Model):
     nombre = models.CharField(max_length=120, null=True, blank=True)
@@ -46,13 +52,17 @@ class Costo(models.Model):
         return self.descripcion
     
 class TransaccionCompra(models.Model):
-    nombre = models.CharField(max_length=255,default='Sin nombre')  
+    nombre = models.CharField(max_length=255)
     costo = models.ForeignKey(Costo, on_delete=models.CASCADE, related_name='transacciones')
     costo_total = models.DecimalField(max_digits=10, decimal_places=2)
     unidad = models.PositiveIntegerField()
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['nombre', 'costo'], name='unique_transaccion_nombre_costo')
+        ]
+
     def __str__(self):
-        return f"{self.nombre} - {self.costo.descripcion} - {self.costo_total} ({self.unidad})"
+        return f"{self.nombre} - {self.costo.descripcion} ({self.unidad})"
