@@ -102,7 +102,6 @@ class ConfirmarEliminarCostoForm(forms.Form):
     )
 
 class TransaccionCompraForm(forms.ModelForm):
-    """Formulario para crear o actualizar una transacción"""
     class Meta:
         model = TransaccionCompra
         fields = ['nombre', 'costo', 'costo_total', 'unidad']
@@ -114,22 +113,21 @@ class TransaccionCompraForm(forms.ModelForm):
             'unidad': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
         }
 
-    def clean_nombre(self):
-        nombre = self.cleaned_data.get('nombre')
-        validar_solo_letras(nombre)
-        return nombre
-
     def clean(self):
         cleaned_data = super().clean()
         nombre = cleaned_data.get('nombre')
         costo = cleaned_data.get('costo')
 
+        if nombre:
+            validar_solo_letras(nombre)
+
         if nombre and costo:
-            qs = TransaccionCompra.objects.filter(nombre=nombre, costo=costo)
+            qs = TransaccionCompra.objects.filter(nombre__iexact=nombre.strip(), costo=costo)
             if self.instance.pk:
                 qs = qs.exclude(pk=self.instance.pk)
             if qs.exists():
                 raise ValidationError("Ya existe una transacción con este Nombre y Item Costo.")
+
         return cleaned_data
 
     def clean_costo_total(self):
