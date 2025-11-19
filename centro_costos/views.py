@@ -270,19 +270,16 @@ def exportar_periodos_excel(request):
 @login_required
 @rol_requerido('administrador')
 def categoria(request):
-    categorias = TipoCosto.objects.all()
-    search = request.GET.get('search')
+    search = request.GET.get('search', '')
+    categorias = TipoCosto.objects.all().order_by('id')  
 
     if search:
-        categorias = categorias.filter(
-            Q(nombre__icontains=search)
-        )
+        categorias = categorias.filter(nombre__icontains=search)
 
     context = {
         'categorias': categorias,
-        'search': search,  
+        'search': search
     }
-
     return render(request, 'centro_costos/categoria.html', context)
 
 @login_required
