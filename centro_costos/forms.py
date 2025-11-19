@@ -1,7 +1,11 @@
+import re
 from django import forms
-from .models import Periodo, TipoCosto, Centro_Costos, Costo, TransaccionCompra
 from django.core.exceptions import ValidationError
+from .models import Periodo, TipoCosto, Centro_Costos, Costo, TransaccionCompra
 
+def validar_solo_letras(valor):
+    if not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$', valor):
+        raise ValidationError('Este campo solo puede contener letras y espacios.')
 
 class PeriodoForm(forms.ModelForm):
     """Formulario para crear o actualizar un periodo"""
@@ -38,14 +42,13 @@ class TipoCostoForm(forms.ModelForm):
 
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
+        validar_solo_letras(nombre)
         qs = TipoCosto.objects.filter(nombre__iexact=nombre)
         if self.instance.pk:
             qs = qs.exclude(pk=self.instance.pk)
         if qs.exists():
             raise ValidationError("Ya existe una categoría con ese nombre.")
         return nombre
-
-
 
 class CentroCostosForm(forms.ModelForm):
     """Formulario para crear o actualizar un centro de costos"""
@@ -62,7 +65,6 @@ class CentroCostosForm(forms.ModelForm):
             }),
         }
 
-
 class CostoForm(forms.ModelForm):
     """Formulario para crear o actualizar un Item Costo"""
     class Meta:
@@ -73,6 +75,11 @@ class CostoForm(forms.ModelForm):
             'tipo_costo': forms.Select(attrs={'class': 'form-select'}),
         }
 
+    def clean_descripcion(self):
+        descripcion = self.cleaned_data.get('descripcion')
+        validar_solo_letras(descripcion)
+        return descripcion
+
     def clean(self):
         cleaned_data = super().clean()
         descripcion = cleaned_data.get('descripcion')
@@ -80,15 +87,11 @@ class CostoForm(forms.ModelForm):
 
         if descripcion and tipo_costo:
             qs = Costo.objects.filter(descripcion=descripcion, tipo_costo=tipo_costo)
-            if self.instance and self.instance.pk:
+            if self.instance.pk:
                 qs = qs.exclude(pk=self.instance.pk)
             if qs.exists():
-                raise forms.ValidationError(
-                    "Item Costo con esta Descripción y Categoría ya existe."
-                )
-
+                raise forms.ValidationError("Item Costo con esta Descripción y Categoría ya existe.")
         return cleaned_data
-
 
 class ConfirmarEliminarCostoForm(forms.Form):
     """Formulario simple para confirmar la eliminación de un Item Costo"""
@@ -99,6 +102,7 @@ class ConfirmarEliminarCostoForm(forms.Form):
     )
 
 class TransaccionCompraForm(forms.ModelForm):
+    """Formulario para crear o actualizar una transacción"""
     class Meta:
         model = TransaccionCompra
         fields = ['nombre', 'costo', 'costo_total', 'unidad']
@@ -109,6 +113,11 @@ class TransaccionCompraForm(forms.ModelForm):
             'costo_total': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'unidad': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
         }
+
+    def clean_nombre(self):
+        nombre = self.cleaned_data.get('nombre')
+        validar_solo_letras(nombre)
+        return nombre
 
     def clean(self):
         cleaned_data = super().clean()
