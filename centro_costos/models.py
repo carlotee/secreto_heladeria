@@ -46,7 +46,7 @@ class Costo(models.Model):
         return self.descripcion
     
 class TransaccionCompra(models.Model):
-    nombre = models.CharField(max_length=255)  
+    nombre = models.CharField(max_length=255,default='Sin nombre')  
     costo = models.ForeignKey(Costo, on_delete=models.CASCADE, related_name='transacciones')
     costo_total = models.DecimalField(max_digits=10, decimal_places=2)
     unidad = models.PositiveIntegerField()
