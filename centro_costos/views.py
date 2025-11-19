@@ -344,36 +344,26 @@ def transaccion_crear(request):
         form = TransaccionCompraForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Transacción creada exitosamente")
+            messages.success(request, 'Transacción creada exitosamente')
             return redirect('transaccion')
-        else:
-            messages.error(request, "Revisa los campos e intenta nuevamente")
     else:
         form = TransaccionCompraForm()
-    
-    return render(request, 'centro_costos/transaccion_form.html', {'form': form})
+    return render(request, 'centro_costos/transaccion_crear.html', {'form': form})
 
 
 @login_required
 @rol_requerido('administrador')
 def transaccion_act(request, pk):
     transaccion = get_object_or_404(TransaccionCompra, pk=pk)
-
     if request.method == 'POST':
         form = TransaccionCompraForm(request.POST, instance=transaccion)
         if form.is_valid():
             form.save()
-            messages.success(request, "Transacción actualizada exitosamente")
+            messages.success(request, 'Transacción actualizada exitosamente')
             return redirect('transaccion')
-        else:
-            messages.error(request, "Error al actualizar la transacción")
     else:
         form = TransaccionCompraForm(instance=transaccion)
-
-    return render(request, 'centro_costos/transaccion_form.html', {
-        'form': form,
-        'transaccion': transaccion
-    })
+    return render(request, 'centro_costos/transaccion_act.html', {'form': form, 'transaccion': transaccion})
 
 
 @login_required
@@ -386,6 +376,4 @@ def transaccion_eliminar(request, pk):
         messages.success(request, "Transacción eliminada exitosamente")
         return redirect('transaccion')
 
-    return render(request, 'centro_costos/transaccion_confirm_delete.html', {
-        'transaccion': transaccion
-    })
+    return render(request, 'centro_costos/transaccion_eliminar.html', {'transaccion': transaccion})

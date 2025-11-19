@@ -91,9 +91,10 @@ class ConfirmarEliminarCostoForm(forms.Form):
 class TransaccionCompraForm(forms.ModelForm):
     class Meta:
         model = TransaccionCompra
-        fields = ['costo', 'costo_total', 'unidad']
+        fields = ['nombre', 'costo', 'costo_total', 'unidad']
         widgets = {
-            'costo': forms.Select(attrs={'class': 'form-control'}),
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'costo': forms.Select(attrs={'class': 'form-select'}),
             'costo_total': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'unidad': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
         }
