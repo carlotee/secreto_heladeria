@@ -21,6 +21,7 @@ from centro_costos import views as centro_costos_views
 from produccion import views as produccion_views
 from proveedores import views as proveedores_views
 
+
 urlpatterns = [
     path('', centro_costos_views.dashboard, name='dashboard'),
     path('perfil/editar/', centro_costos_views.perfil_editar, name='perfil_editar'),
@@ -61,5 +62,9 @@ urlpatterns = [
     path('categoria/crear/', centro_costos_views.categoria_crear, name='categoria_crear'),
     path('categoria/<int:pk>/editar/', centro_costos_views.categoria_act, name='categoria_act'),
     path('categoria/<int:pk>/eliminar/', centro_costos_views.categoria_eliminar, name='categoria_eliminar'),
+    path('transacciones/', centro_costos_views.transaccion, name='transaccion'),
+    path('transacciones/nuevo/', centro_costos_views.transaccion_crear, name='transaccion_crear'),
+    path('transacciones/<int:pk>/editar/', centro_costos_views.transaccion_act, name='transaccion_act'),
+    path('transacciones/<int:pk>/eliminar/', centro_costos_views.transaccion_eliminar, name='transaccion_eliminar'),
 
 ]

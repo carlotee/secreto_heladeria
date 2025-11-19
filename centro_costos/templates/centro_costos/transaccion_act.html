@@ -1,0 +1,81 @@
+{% extends 'centro_costos/base.html' %}
+
+{% block content %}
+<head>
+  <meta charset="UTF-8">
+  <title>Editar Transacción</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+  <h1>Editar Transacción</h1>
+
+  <form id="form-editar" method="post" action="{% url 'transaccion_act' transaccion.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+  </form>
+
+  <a href="{% url 'transaccion_list' %}" class="btn btn-secondary">Volver al listado</a>
+</body>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("form-editar");
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const errores = [];
+        {% for field in form %}
+            {% for error in field.errors %}
+                errores.push("{{ error|escapejs }}");
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            errores.push("{{ error|escapejs }}");
+        {% endfor %}
+
+        if (errores.length > 0) {
+            Swal.fire({
+                title: "Error",
+                html: errores.join("<br>"),
+                icon: "error",
+                confirmButtonColor: "#d33"
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: "¿Deseas actualizar esta transacción?",
+            text: "Revisa que todos los datos sean correctos antes de continuar.",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#007bff",
+            cancelButtonColor: "#6c757d",
+            confirmButtonText: "Sí, actualizar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+                Swal.fire({
+                    title: "¡Actualizado!",
+                    text: "{{ message }}",
+                    icon: "success",
+                    confirmButtonColor: "#007bff",
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+});
+</script>
+{% endblock %}

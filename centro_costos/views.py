@@ -2,8 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Q, Sum
-from .models import Periodo, TipoCosto, Centro_Costos, Costo
-from .forms import PeriodoForm, TipoCostoForm, CentroCostosForm, CostoForm, ConfirmarEliminarCostoForm
+from .models import Periodo, TipoCosto, Centro_Costos, Costo, TransaccionCompra
+from .forms import PeriodoForm, TipoCostoForm, CentroCostosForm, CostoForm, ConfirmarEliminarCostoForm, TransaccionCompraForm
 from proveedores.models import Proveedor
 from common.decorators_cost import rol_requerido_costos as rol_requerido
 from common.decorators_pe import rol_requerido_pe
@@ -319,3 +319,73 @@ def categoria_eliminar(request, pk):
         return redirect('categoria')
 
     return render(request, 'centro_costos/categoria_eliminar.html', {'categoria': categoria})
+
+@login_required
+@rol_requerido('administrador')
+def transaccion(request):
+    transacciones = TransaccionCompra.objects.select_related('costo').all()
+    
+    search = request.GET.get('search')
+    if search:
+        transacciones = transacciones.filter(
+            Q(costo__descripcion__icontains=search) |
+            Q(costo__tipo_costo__nombre__icontains=search)
+        )
+
+    return render(request, 'centro_costos/transaccion.html', {
+        'transacciones': transacciones
+    })
+
+
+@login_required
+@rol_requerido('administrador')
+def transaccion_crear(request):
+    if request.method == 'POST':
+        form = TransaccionCompraForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Transacción creada exitosamente")
+            return redirect('transaccion')
+        else:
+            messages.error(request, "Revisa los campos e intenta nuevamente")
+    else:
+        form = TransaccionCompraForm()
+    
+    return render(request, 'centro_costos/transaccion_form.html', {'form': form})
+
+
+@login_required
+@rol_requerido('administrador')
+def transaccion_act(request, pk):
+    transaccion = get_object_or_404(TransaccionCompra, pk=pk)
+
+    if request.method == 'POST':
+        form = TransaccionCompraForm(request.POST, instance=transaccion)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Transacción actualizada exitosamente")
+            return redirect('transaccion')
+        else:
+            messages.error(request, "Error al actualizar la transacción")
+    else:
+        form = TransaccionCompraForm(instance=transaccion)
+
+    return render(request, 'centro_costos/transaccion_form.html', {
+        'form': form,
+        'transaccion': transaccion
+    })
+
+
+@login_required
+@rol_requerido('administrador')
+def transaccion_eliminar(request, pk):
+    transaccion = get_object_or_404(TransaccionCompra, pk=pk)
+
+    if request.method == 'POST':
+        transaccion.delete()
+        messages.success(request, "Transacción eliminada exitosamente")
+        return redirect('transaccion')
+
+    return render(request, 'centro_costos/transaccion_confirm_delete.html', {
+        'transaccion': transaccion
+    })

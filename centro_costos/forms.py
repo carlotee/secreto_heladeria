@@ -1,5 +1,5 @@
 from django import forms
-from .models import Periodo, TipoCosto, Centro_Costos, Costo
+from .models import Periodo, TipoCosto, Centro_Costos, Costo, TransaccionCompra
 
 
 class PeriodoForm(forms.ModelForm):
@@ -87,3 +87,25 @@ class ConfirmarEliminarCostoForm(forms.Form):
         label="Confirmo la eliminación de este Item Costo",
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
+
+class TransaccionCompraForm(forms.ModelForm):
+    class Meta:
+        model = TransaccionCompra
+        fields = ['costo', 'costo_total', 'unidad']
+        widgets = {
+            'costo': forms.Select(attrs={'class': 'form-control'}),
+            'costo_total': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'unidad': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
+        }
+
+    def clean_costo_total(self):
+        costo_total = self.cleaned_data.get('costo_total')
+        if costo_total <= 0:
+            raise forms.ValidationError("El costo total debe ser mayor a 0")
+        return costo_total
+
+    def clean_unidad(self):
+        unidad = self.cleaned_data.get('unidad')
+        if unidad <= 0:
+            raise forms.ValidationError("La unidad debe ser mayor a 0")
+        return unidad

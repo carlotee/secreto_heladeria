@@ -44,3 +44,14 @@ class Costo(models.Model):
 
     def __str__(self):
         return self.descripcion
+    
+class TransaccionCompra(models.Model):
+    costo = models.ForeignKey(Costo, on_delete=models.CASCADE, related_name='transacciones')
+    costo_total = models.DecimalField(max_digits=10, decimal_places=2)
+    unidad = models.PositiveIntegerField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.costo.descripcion} - {self.costo_total} ({self.unidad})"
