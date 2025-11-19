@@ -105,7 +105,7 @@ class TransaccionCompraForm(forms.ModelForm):
     """Formulario para crear o actualizar una transacción"""
     class Meta:
         model = TransaccionCompra
-        fields = ['nombre', 'costo', 'costo_total', 'unidad']
+        fields = ['nombre', 'costo', 'costo_total']
         labels = {'costo': 'Item Costo'}
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),

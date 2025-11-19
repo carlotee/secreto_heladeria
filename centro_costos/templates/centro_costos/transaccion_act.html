@@ -11,7 +11,7 @@
 
 <form method="post" action="{% url 'transaccion_act' transaccion.id %}">
     {% csrf_token %}
-    
+
     <div class="mb-3">
         <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre</label>
         {{ form.nombre }}
@@ -41,16 +41,6 @@
         {% if form.costo_total.errors %}
             <div class="text-danger">
                 {% for error in form.costo_total.errors %}{{ error }}<br>{% endfor %}
-            </div>
-        {% endif %}
-    </div>
-
-    <div class="mb-3">
-        <label for="{{ form.unidad.id_for_label }}" class="form-label">Unidad</label>
-        {{ form.unidad }}
-        {% if form.unidad.errors %}
-            <div class="text-danger">
-                {% for error in form.unidad.errors %}{{ error }}<br>{% endfor %}
             </div>
         {% endif %}
     </div>
