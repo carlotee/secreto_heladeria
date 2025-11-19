@@ -38,7 +38,7 @@
             <td>{{ t.nombre }}</td>
             <td>{{ t.costo.descripcion }}</td>
             <td>{{ t.costo.tipo_costo.nombre }}</td>
-            <td>{{ t.costo_total }}</td>
+            <td>${{ t.costo_total }}</td>
             <td>{{ t.unidad }}</td>
             <td>
                 <a href="{% url 'transaccion_act' t.id %}" class="btn btn-warning btn-sm">Editar</a>
