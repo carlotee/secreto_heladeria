@@ -60,7 +60,7 @@ def login_view(request):
                         print(f"✅ Login correcto para {user.username} (Rol: {user.rol})")
                         print(f"✅ Grupos: {[g.name for g in user.groups.all()]}")
                         
-                        messages.success(request, 'login_exitoso')
+                        messages.success(request, 'Bienvenido')
                         return redirect('dashboard')
                     else:
                         print("⚠️ Contraseña incorrecta")
