@@ -20,6 +20,8 @@ from accounts import views as accounts_views
 from centro_costos import views as centro_costos_views
 from produccion import views as produccion_views
 from proveedores import views as proveedores_views
+from rest_framework.authtoken.views import obtain_auth_token
+
 
 
 urlpatterns = [
@@ -66,5 +68,6 @@ urlpatterns = [
     path('transacciones/nuevo/', centro_costos_views.transaccion_crear, name='transaccion_crear'),
     path('transacciones/<int:pk>/editar/', centro_costos_views.transaccion_act, name='transaccion_act'),
     path('transacciones/<int:pk>/eliminar/', centro_costos_views.transaccion_eliminar, name='transaccion_eliminar'),
+    path('api/login/', obtain_auth_token, name='api_login'),
 
 ]
