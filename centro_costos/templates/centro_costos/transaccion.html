@@ -4,9 +4,10 @@
 <h2>Listado de Transacciones</h2>
 
 <form method="get" class="mb-3">
+    {# Usamos flex-wrap y gap-3 para que los filtros se vean bien en pantallas pequeñas y grandes #}
     <div class="d-flex flex-wrap align-items-center gap-3">
         
-        {# --- FILTRO POR ITEM COSTO --- #}
+        {# --- FILTRO POR ITEM COSTO (EXISTENTE) --- #}
         <div class="d-flex align-items-center gap-2">
             <label for="item_costo" class="form-label mb-0">Item Costo:</label>
             <select name="item_costo" id="item_costo" class="form-select w-auto">
@@ -38,30 +39,13 @@
         <a href="{% url 'transaccion' %}" class="btn btn-secondary">Limpiar Filtros</a>
         
         {# --- BOTÓN EXTRA: TRANSACCIONES DE HOY --- #}
+        {# Este botón envía filtro_rapido=hoy, que es capturado por tu vista #}
         <button type="submit" name="filtro_rapido" value="hoy" class="btn btn-info text-white">
             <i class="fas fa-calendar-day me-1"></i> Hoy
         </button>
 
     </div>
 </form>
-
----
-
-### 💰 Gasto Total Filtrado
-
-{# --- BLOQUE DE GASTO TOTAL (NUEVO) --- #}
-<div class="card bg-warning-subtle mb-3 shadow-sm">
-    <div class="card-body p-3">
-        <h5 class="card-title mb-0 text-dark d-flex justify-content-between align-items-center">
-            <span>💸 **Gasto Total Filtrado:**</span>
-            {# Muestra la variable 'gasto_total' con formato de dos decimales #}
-            <span class="fw-bold fs-4 text-primary">${{ gasto_total|floatformat:2 }}</span>
-        </h5>
-    </div>
-</div>
-{# --- FIN BLOQUE DE GASTO TOTAL --- #}
-
----
 
 <a href="{% url 'transaccion_crear' %}" class="btn btn-success mb-2">Nueva Transacción</a>
 
@@ -86,6 +70,7 @@
             <td>{{ t.costo.descripcion }}</td>
             <td>{{ t.costo.tipo_costo.nombre }}</td>
             <td>${{ t.costo_total }}</td>
+            {# Mostrar el nombre del proveedor usando .nombre o dejar solo .proveedor si __str__ es suficiente #}
             <td>{{ t.proveedor}}</td> 
             <td>{{ t.created_at|date:"Y-m-d H:i" }}</td> 
             <td>
@@ -95,6 +80,7 @@
         </tr>
         {% empty %}
         <tr>
+            {# Ajustar el colspan a 8, ya que ahora hay 8 columnas en total #}
             <td colspan="8" class="text-center">No hay transacciones</td>
         </tr>
         {% endfor %}
