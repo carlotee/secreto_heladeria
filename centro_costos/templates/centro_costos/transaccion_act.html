@@ -2,9 +2,9 @@
 
 {% block content %}
 <head>
-  <meta charset="UTF-8">
-  <title>Editar Transacción - Secreto Heladería</title>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8">
+    <title>Editar Transacción - Secreto Heladería</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <h1>Editar Transacción</h1>
@@ -32,6 +32,18 @@
         {% endif %}
     </div>
 
+    {# --- NUEVO CAMPO: PROVEEDOR --- #}
+    <div class="mb-3">
+        <label for="{{ form.proveedor.id_for_label }}" class="form-label">Proveedor</label>
+        {{ form.proveedor }}
+        {% if form.proveedor.errors %}
+            <div class="text-danger">
+                {% for error in form.proveedor.errors %}{{ error }}<br>{% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    {# --- FIN NUEVO CAMPO --- #}
+
     <div class="mb-3">
         <label for="{{ form.costo_total.id_for_label }}" class="form-label">Costo Total</label>
         <div class="input-group">
@@ -51,6 +63,14 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('form input:not([type="submit"]):not([type="button"]), form select').forEach(element => {
+        if (element.tagName === 'SELECT' && !element.classList.contains('form-select')) {
+            element.classList.add('form-select');
+        } else if (element.tagName === 'INPUT' && !element.classList.contains('form-control')) {
+            element.classList.add('form-control');
+        }
+    });
+    
     const form = document.querySelector("form");
 
     form.addEventListener("submit", function(e) {
