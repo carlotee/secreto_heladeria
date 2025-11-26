@@ -1,21 +1,25 @@
 {% extends 'centro_costos/base.html' %}
 
 {% block content %}
+<h2>Listado de Proveedores</h2>
 
-<h1>Listado de Proveedores</h1>
-
-<form method="get" class="mb-3">
-    <div class="input-group" style="max-width: 400px;">
-        <input type="text" name="search" placeholder="Buscar proveedor..." value="{{ search }}" class="form-control">
-        <button type="submit" class="btn btn-outline-primary">Buscar</button>
-    </div>
+{# --- CONTENEDOR DE FILTRO (Similar a Categorías) --- #}
+<form method="get" class="mb-3 d-flex gap-2 align-items-center" style="max-width: 500px;">
+    <input type="text" name="search" placeholder="Buscar proveedor..." value="{{ search }}" class="form-control">
+    <button type="submit" class="btn btn-primary">Filtrar</button>
+    <a href="{% url 'proveedor' %}" class="btn btn-secondary">Limpiar</a>
 </form>
 
+{# --- BOTÓN DE CREAR (Separado, similar a Categorías) --- #}
+<div class="mb-3">
+    <a href="{% url 'proveedor_crear' %}" class="btn btn-success">Crear Proveedor</a>
+</div>
+
+{# --- OPCIONES ADICIONALES Y TOTAL --- #}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-        <a href="{% url 'dashboard' %}" class="btn btn-secondary me-2">🔙 Volver</a> 
-        <a href="{% url 'exportar_proveedores_excel' %}" class="btn btn-success me-2">📥 Exportar a Excel</a>
-        <a href="{% url 'proveedor_crear' %}" class="btn btn-primary">➕ Nuevo proveedor</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-sm btn-secondary me-2">🔙 Volver</a> 
+        <a href="{% url 'exportar_proveedores_excel' %}" class="btn btn-sm btn-outline-success">📥 Exportar a Excel</a>
     </div>
     <p class="mb-0">Total: **{{ total_proveedores }}**</p>
 </div>
