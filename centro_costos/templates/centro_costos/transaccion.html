@@ -27,6 +27,7 @@
             <th>Item Costo</th>
             <th>Tipo de Costo</th>
             <th>Costo Total</th>
+            <th>Fecha Creación</th> {# <-- **NUEVA COLUMNA** #}
             <th>Acciones</th>
         </tr>
     </thead>
@@ -38,6 +39,7 @@
             <td>{{ t.costo.descripcion }}</td>
             <td>{{ t.costo.tipo_costo.nombre }}</td>
             <td>${{ t.costo_total }}</td>
+            <td>{{ t.created_at|date:"Y-m-d H:i" }}</td> {# <-- **NUEVO CAMPO** #}
             <td>
                 <a href="{% url 'transaccion_act' t.id %}" class="btn btn-warning btn-sm">Editar</a>
                 <a href="{% url 'transaccion_eliminar' t.id %}" class="btn btn-danger btn-sm">Eliminar</a>
