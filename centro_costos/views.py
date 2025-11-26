@@ -335,21 +335,26 @@ def categoria_eliminar(request, pk):
 @login_required
 @rol_requerido('administrador')
 def transaccion(request):
-    transacciones = TransaccionCompra.objects.select_related('costo', 'costo__tipo_costo').all()
+    # 1. Base del queryset: Optimizado para proveedor, costo y tipo_costo
+    transacciones = TransaccionCompra.objects.select_related('costo', 'costo__tipo_costo', 'proveedor').all()
     
-    item_costo_id = request.GET.get('item_costo')  
+    item_costo_id = request.GET.get('item_costo')  
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    filtro_rapido = request.GET.get('filtro_rapido') 
+
+    # 2. Aplicar filtro por Item Costo
     if item_costo_id:
         transacciones = transacciones.filter(costo_id=item_costo_id)
 
-    fecha_inicio = request.GET.get('fecha_inicio')
-    fecha_fin = request.GET.get('fecha_fin')
-    filtro_rapido = request.GET.get('filtro_rapido')
-
+    # 3. Aplicar filtros de fecha
     if filtro_rapido == 'hoy':
         hoy = timezone.localdate()
         transacciones = transacciones.filter(created_at__date=hoy)
-        fecha_inicio = None
-        fecha_fin = None
+        
+        # Al usar el filtro rápido 'hoy', establecemos las fechas para que el HTML se muestre filtrado.
+        fecha_inicio = hoy.strftime('%Y-%m-%d')
+        fecha_fin = hoy.strftime('%Y-%m-%d')
     
     elif fecha_inicio and fecha_fin:
         try:
@@ -363,6 +368,14 @@ def transaccion(request):
         except ValueError:
             messages.error(request, 'El formato de las fechas ingresadas no es válido.')
 
+    # 4. CALCULAR GASTO TOTAL (CLAVE para evitar el Error 500 si el HTML lo espera)
+    # Si la suma es None (no hay transacciones), asigna 0.00
+    gasto_total = transacciones.aggregate(Sum('costo_total'))['costo_total__sum'] or 0.00
+
+    # 5. Ordenar el queryset
+    transacciones = transacciones.order_by('-created_at') 
+
+    # 6. Construir el contexto, incluyendo el GASTO TOTAL
     context = {
         'transacciones': transacciones,
         'item_costos': Costo.objects.all(), 
@@ -370,6 +383,7 @@ def transaccion(request):
         'selected_fecha_inicio': fecha_inicio,
         'selected_fecha_fin': fecha_fin,
         'selected_filtro_rapido': filtro_rapido,
+        'gasto_total': gasto_total, # ¡VARIABLE NECESARIA PARA TU HTML!
     }
 
     return render(request, 'centro_costos/transaccion.html', context)
