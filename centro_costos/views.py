@@ -13,6 +13,8 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import JsonResponse
 from django.db import IntegrityError
+import datetime
+from django.utils import timezone
 
 @login_required
 def perfil_editar(request):
@@ -339,10 +341,35 @@ def transaccion(request):
     if item_costo_id:
         transacciones = transacciones.filter(costo_id=item_costo_id)
 
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    filtro_rapido = request.GET.get('filtro_rapido')
+
+    if filtro_rapido == 'hoy':
+        hoy = timezone.localdate()
+        transacciones = transacciones.filter(created_at__date=hoy)
+        fecha_inicio = None
+        fecha_fin = None
+    
+    elif fecha_inicio and fecha_fin:
+        try:
+            fecha_inicio_dt = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
+            fecha_fin_dt = datetime.datetime.strptime(fecha_fin, '%Y-%m-%d').date()
+            
+            transacciones = transacciones.filter(
+                created_at__date__gte=fecha_inicio_dt,
+                created_at__date__lte=fecha_fin_dt
+            )
+        except ValueError:
+            messages.error(request, 'El formato de las fechas ingresadas no es válido.')
+
     context = {
         'transacciones': transacciones,
         'item_costos': Costo.objects.all(), 
         'selected_item_costo': item_costo_id,
+        'selected_fecha_inicio': fecha_inicio,
+        'selected_fecha_fin': fecha_fin,
+        'selected_filtro_rapido': filtro_rapido,
     }
 
     return render(request, 'centro_costos/transaccion.html', context)
