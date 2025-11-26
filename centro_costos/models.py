@@ -1,4 +1,5 @@
 from django.db import models
+from proveedores.models import Proveedor
 
 # Create your models here.
 class Periodo(models.Model):
@@ -57,6 +58,7 @@ class TransaccionCompra(models.Model):
     costo_total = models.DecimalField(max_digits=10, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
 
     class Meta:
         constraints = [
@@ -64,4 +66,4 @@ class TransaccionCompra(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.nombre} - {self.costo.descripcion} ({self.unidad})"
+        return f"{self.nombre} - {self.costo.descripcion} "
