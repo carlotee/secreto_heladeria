@@ -105,13 +105,18 @@ class TransaccionCompraForm(forms.ModelForm):
     """Formulario para crear o actualizar una transacción"""
     class Meta:
         model = TransaccionCompra
-        fields = ['nombre', 'costo', 'costo_total']
-        labels = {'costo': 'Item Costo'}
+        fields = ['nombre', 'costo', 'proveedor', 'costo_total'] 
+        
+        labels = {
+            'costo': 'Item Costo',
+            'proveedor': 'Proveedor', 
+        }
+        
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'costo': forms.Select(attrs={'class': 'form-select'}),
+            'proveedor': forms.Select(attrs={'class': 'form-select'}),
             'costo_total': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'unidad': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
         }
 
     def clean_nombre(self):
@@ -144,9 +149,3 @@ class TransaccionCompraForm(forms.ModelForm):
             raise ValidationError("El costo total no puede tener más de 10 dígitos antes del punto decimal")
 
         return costo_total
-
-    def clean_unidad(self):
-        unidad = self.cleaned_data.get('unidad')
-        if unidad <= 0:
-            raise ValidationError("La unidad debe ser mayor a 0")
-        return unidad

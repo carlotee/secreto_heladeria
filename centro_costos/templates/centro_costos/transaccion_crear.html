@@ -29,7 +29,6 @@
             {% endfor %}
         </div>
         
-        {# --- NUEVO CAMPO: PROVEEDOR --- #}
         <div class="mb-3">
             {{ form.proveedor.label_tag }}
             {{ form.proveedor }}
@@ -37,7 +36,6 @@
                 <div class="text-danger">{{ error }}</div>
             {% endfor %}
         </div>
-        {# --- FIN NUEVO CAMPO --- #}
 
         <div class="mb-3">
             {{ form.costo_total.label_tag }}
@@ -57,7 +55,6 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // Asegúrate de que los select y inputs tengan la clase form-control de Bootstrap
     document.querySelectorAll('#form-crear select, #form-crear input[type="text"], #form-crear input[type="number"]').forEach(element => {
         if (!element.classList.contains('form-control')) {
             element.classList.add('form-control');
