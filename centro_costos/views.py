@@ -335,24 +335,28 @@ def categoria_eliminar(request, pk):
 @login_required
 @rol_requerido('administrador')
 def transaccion(request):
-    transacciones = TransaccionCompra.objects.select_related('costo', 'costo__tipo_costo').all()
+    transacciones = TransaccionCompra.objects.select_related('costo', 'costo__tipo_costo', 'proveedor').all()
     
-    item_costo_id = request.GET.get('item_costo')  
+    item_costo_id = request.GET.get('item_costo')  
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    filtro_rapido = request.GET.get('filtro_rapido') 
+
     if item_costo_id:
         transacciones = transacciones.filter(costo_id=item_costo_id)
 
-    fecha_inicio = request.GET.get('fecha_inicio')
-    fecha_fin = request.GET.get('fecha_fin')
-    filtro_rapido = request.GET.get('filtro_rapido')
-
+    
     if filtro_rapido == 'hoy':
         hoy = timezone.localdate()
         transacciones = transacciones.filter(created_at__date=hoy)
-        fecha_inicio = None
-        fecha_fin = None
+        
+        # Mantener los campos de fecha en el formulario para indicar el rango
+        fecha_inicio = hoy.strftime('%Y-%m-%d')
+        fecha_fin = hoy.strftime('%Y-%m-%d')
     
-    elif fecha_inicio and fecha_fin:
+    elif fecha_inicio and fecha_fin: 
         try:
+            # datetime.datetime.strptime requiere la importación 'import datetime'
             fecha_inicio_dt = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
             fecha_fin_dt = datetime.datetime.strptime(fecha_fin, '%Y-%m-%d').date()
             
@@ -362,6 +366,8 @@ def transaccion(request):
             )
         except ValueError:
             messages.error(request, 'El formato de las fechas ingresadas no es válido.')
+
+    transacciones = transacciones.order_by('-created_at') 
 
     context = {
         'transacciones': transacciones,
