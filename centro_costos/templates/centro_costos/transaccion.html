@@ -22,14 +22,14 @@
 
         {# --- FILTRO: FECHA DE INICIO --- #}
         <div class="d-flex align-items-center gap-2">
-            <label for="fecha_inicio" class="form-label mb-0">Fecha Inicio:</label>
+            <label for="fecha_inicio" class="form-label mb-0">Fecha Desde:</label>
             <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control w-auto" 
                    value="{{ selected_fecha_inicio|default:'' }}">
         </div>
 
         {# --- FILTRO: FECHA DE FIN --- #}
         <div class="d-flex align-items-center gap-2">
-            <label for="fecha_fin" class="form-label mb-0">Fecha Fin:</label>
+            <label for="fecha_fin" class="form-label mb-0">Fecha Hasta:</label>
             <input type="date" name="fecha_fin" id="fecha_fin" class="form-control w-auto" 
                    value="{{ selected_fecha_fin|default:'' }}">
         </div>
