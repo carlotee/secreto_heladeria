@@ -335,9 +335,9 @@ def categoria_eliminar(request, pk):
 @login_required
 @rol_requerido('administrador')
 def transaccion(request):
-    # SOLUCIÓN DE CONTINGENCIA: Quitamos select_related. 
-    # Esto es más lento (hace más consultas a la DB) pero EVITA ERRORES 500
-    # si hay registros con costo o proveedor NULO.
+    # SOLUCIÓN ROBUSTA: Eliminamos select_related para evitar el Error 500
+    # causado por registros con 'costo' o 'proveedor' nulo en la DB.
+    # Esto garantiza que el QuerySet inicial se cargue sin fallos.
     transacciones = TransaccionCompra.objects.all()
     
     item_costo_id = request.GET.get('item_costo')  
@@ -378,7 +378,8 @@ def transaccion(request):
         if date_filter:
             transacciones = transacciones.filter(**date_filter)
 
-    # 3. CALCULAR GASTO TOTAL
+    # 3. CALCULAR GASTO TOTAL (Necesario para el HTML)
+    # Utilizamos Sum() que ya está importado arriba.
     gasto_total = transacciones.aggregate(Sum('costo_total'))['costo_total__sum'] or 0.00
     
     # 4. Ordenar el queryset
@@ -391,7 +392,7 @@ def transaccion(request):
         'selected_fecha_inicio': fecha_inicio,
         'selected_fecha_fin': fecha_fin,
         'selected_filtro_rapido': filtro_rapido,
-        'gasto_total': gasto_total, 
+        'gasto_total': gasto_total, # ¡Esta variable es clave!
     }
 
     return render(request, 'centro_costos/transaccion.html', context)
