@@ -3,45 +3,18 @@
 {% block content %}
 <h2>Listado de Transacciones</h2>
 
-<form method="get" class="mb-3 d-flex flex-wrap align-items-center gap-3">
-    
-    {# --- FILTRO POR ITEM COSTO --- #}
-    <div class="d-flex align-items-center gap-2">
-        <label for="item_costo" class="form-label mb-0">Item Costo:</label>
-        <select name="item_costo" id="item_costo" class="form-select w-auto">
-            <option value="">Todos</option>
-            {% for c in item_costos %}
-                <option value="{{ c.id }}" {% if selected_item_costo == c.id|stringformat:"s" %}selected{% endif %}>
-                    {{ c.descripcion }}
-                </option>
-            {% endfor %}
-        </select>
-    </div>
-
-    {# --- FILTROS POR RANGO DE FECHA --- #}
-    <div class="d-flex align-items-center gap-2">
-        <label for="fecha_inicio" class="form-label mb-0">Desde:</label>
-        <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" 
-               value="{{ selected_fecha_inicio }}" style="width: 150px;">
-    </div>
-    
-    <div class="d-flex align-items-center gap-2">
-        <label for="fecha_fin" class="form-label mb-0">Hasta:</label>
-        <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" 
-               value="{{ selected_fecha_fin }}" style="width: 150px;">
-    </div>
-
-    {# --- BOTONES DE ACCIÓN Y FILTRO RÁPIDO --- #}
-    <button type="submit" class="btn btn-primary">Filtrar Rango</button>
-    
-    {# Botón para el filtro rápido 'Hoy' #}
-    <a href="{% url 'transaccion' %}?filtro_rapido=hoy" 
-       class="btn {% if selected_filtro_rapido == 'hoy' %}btn-info{% else %}btn-outline-info{% endif %}">
-        Hoy
-    </a>
-
-    {# Botón para limpiar todos los filtros #}
-    <a href="{% url 'transaccion' %}" class="btn btn-secondary">Limpiar Filtros</a>
+<form method="get" class="mb-3 d-flex align-items-center gap-2">
+    <label for="item_costo" class="form-label mb-0">Filtrar por Item Costo:</label>
+    <select name="item_costo" id="item_costo" class="form-select w-auto">
+        <option value="">Todos</option>
+        {% for c in item_costos %}
+            <option value="{{ c.id }}" {% if selected_item_costo == c.id|stringformat:"s" %}selected{% endif %}>
+                {{ c.descripcion }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Filtrar</button>
+    <a href="{% url 'transaccion' %}" class="btn btn-secondary">Limpiar</a>
 </form>
 
 <a href="{% url 'transaccion_crear' %}" class="btn btn-success mb-2">Nueva Transacción</a>
@@ -54,7 +27,7 @@
             <th>Item Costo</th>
             <th>Tipo de Costo</th>
             <th>Costo Total</th>
-            <th>Fecha Creación</th>
+            <th>Fecha Creación</th> 
             <th>Acciones</th>
         </tr>
     </thead>
@@ -66,7 +39,7 @@
             <td>{{ t.costo.descripcion }}</td>
             <td>{{ t.costo.tipo_costo.nombre }}</td>
             <td>${{ t.costo_total }}</td>
-            <td>{{ t.created_at|date:"Y-m-d H:i" }}</td>
+            <td>{{ t.created_at|date:"Y-m-d H:i" }}</td> {# <-- **NUEVO CAMPO** #}
             <td>
                 <a href="{% url 'transaccion_act' t.id %}" class="btn btn-warning btn-sm">Editar</a>
                 <a href="{% url 'transaccion_eliminar' t.id %}" class="btn btn-danger btn-sm">Eliminar</a>
