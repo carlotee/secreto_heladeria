@@ -335,7 +335,7 @@ def categoria_eliminar(request, pk):
 @login_required
 @rol_requerido('administrador')
 def transaccion(request):
-    # 1. Base del queryset
+    # 1. OPTIMIZACIÓN: Añadir 'proveedor' a select_related
     transacciones = TransaccionCompra.objects.select_related('costo', 'costo__tipo_costo', 'proveedor').all()
     
     item_costo_id = request.GET.get('item_costo')  
@@ -352,11 +352,13 @@ def transaccion(request):
         hoy = timezone.localdate()
         transacciones = transacciones.filter(created_at__date=hoy)
         
+        # Al usar el filtro rápido, rellenamos los campos de fecha en el contexto.
         fecha_inicio = hoy.strftime('%Y-%m-%d')
         fecha_fin = hoy.strftime('%Y-%m-%d')
     
     elif fecha_inicio and fecha_fin: 
         try:
+            # Asegúrate que 'datetime' esté importado
             fecha_inicio_dt = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
             fecha_fin_dt = datetime.datetime.strptime(fecha_fin, '%Y-%m-%d').date()
             
@@ -365,14 +367,17 @@ def transaccion(request):
                 created_at__date__lte=fecha_fin_dt
             )
         except ValueError:
+            # Manejar error de formato de fecha
             messages.error(request, 'El formato de las fechas ingresadas no es válido.')
-
-    # 4. Calcular el Gasto Total solo después de aplicar todos los filtros
+    
+    # 4. CALCULAR GASTO TOTAL (Lo que faltaba y causaba el error 500)
+    # Si la suma es None (no hay transacciones), asigna 0.00
     gasto_total = transacciones.aggregate(Sum('costo_total'))['costo_total__sum'] or 0.00
     
+    # 5. Ordenar el queryset
     transacciones = transacciones.order_by('-created_at') 
 
-    # 5. Pasar el gasto total al contexto
+    # 6. Construir el contexto, incluyendo el GASTO TOTAL
     context = {
         'transacciones': transacciones,
         'item_costos': Costo.objects.all(), 
@@ -380,7 +385,7 @@ def transaccion(request):
         'selected_fecha_inicio': fecha_inicio,
         'selected_fecha_fin': fecha_fin,
         'selected_filtro_rapido': filtro_rapido,
-        'gasto_total': gasto_total, # ¡NUEVA VARIABLE!
+        'gasto_total': gasto_total, # ¡Esto resuelve el error 500 si la plantilla lo espera!
     }
 
     return render(request, 'centro_costos/transaccion.html', context)
