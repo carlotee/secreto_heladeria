@@ -2,51 +2,68 @@
 
 {% block content %}
 <head>
-  <meta charset="UTF-8">
-  <title>Crear Transacción</title>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8">
+    <title>Crear Transacción</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-  <h1>Crear Transacción</h1>
+    <h1>Crear Transacción</h1>
 
-  <form id="form-crear" method="post" action="{% url 'transaccion_crear' %}">
-    {% csrf_token %}
+    <form id="form-crear" method="post" action="{% url 'transaccion_crear' %}">
+        {% csrf_token %}
 
-    <div class="mb-3">
-      {{ form.nombre.label_tag }}
-      {{ form.nombre }}
-      {% for error in form.nombre.errors %}
-        <div class="text-danger">{{ error }}</div>
-      {% endfor %}
-    </div>
+        <div class="mb-3">
+            {{ form.nombre.label_tag }}
+            {{ form.nombre }}
+            {% for error in form.nombre.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
 
-    <div class="mb-3">
-      {{ form.costo.label_tag }}
-      {{ form.costo }}
-      {% for error in form.costo.errors %}
-        <div class="text-danger">{{ error }}</div>
-      {% endfor %}
-    </div>
+        <div class="mb-3">
+            {{ form.costo.label_tag }}
+            {{ form.costo }}
+            {% for error in form.costo.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        {# --- NUEVO CAMPO: PROVEEDOR --- #}
+        <div class="mb-3">
+            {{ form.proveedor.label_tag }}
+            {{ form.proveedor }}
+            {% for error in form.proveedor.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        {# --- FIN NUEVO CAMPO --- #}
 
-    <div class="mb-3">
-      {{ form.costo_total.label_tag }}
-      <div class="input-group">
-        <span class="input-group-text">$</span>
-        {{ form.costo_total }}
-      </div>
-      {% for error in form.costo_total.errors %}
-        <div class="text-danger">{{ error }}</div>
-      {% endfor %}
-    </div>
+        <div class="mb-3">
+            {{ form.costo_total.label_tag }}
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                {{ form.costo_total }}
+            </div>
+            {% for error in form.costo_total.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <a href="{% url 'transaccion' %}" class="btn btn-secondary">Volver al listado</a>
-  </form>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'transaccion' %}" class="btn btn-secondary">Volver al listado</a>
+    </form>
 </body>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    // Asegúrate de que los select y inputs tengan la clase form-control de Bootstrap
+    document.querySelectorAll('#form-crear select, #form-crear input[type="text"], #form-crear input[type="number"]').forEach(element => {
+        if (!element.classList.contains('form-control')) {
+            element.classList.add('form-control');
+        }
+    });
+
     const form = document.getElementById("form-crear");
 
     form.addEventListener("submit", function(e) {
