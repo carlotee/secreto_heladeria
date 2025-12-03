@@ -69,17 +69,6 @@
     </div>
 </form>
 
-{# -------------------------------------------------------------------------------- #}
-{#                       CORRECCIÓN PARA EL MENSAJE DE ÉXITO                        #}
-{#  Ahora usa 'alert-{{ message.tags }}' para aplicar el color correcto (ej. verde) #}
-{# -------------------------------------------------------------------------------- #}
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}" role="alert">
-            {{ message }}
-        </div>
-    {% endfor %}
-{% endif %}
 
 <a href="{% url 'transaccion_crear' %}" class="btn btn-success mb-2">Nueva Transacción</a>
 
