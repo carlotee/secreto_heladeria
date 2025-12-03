@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'rest_framework.authtoken',
+    'django.contrib.humanize',
 ]
 
 REST_FRAMEWORK = {
