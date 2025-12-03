@@ -335,22 +335,27 @@ def categoria_eliminar(request, pk):
 @login_required
 @rol_requerido('administrador')
 def transaccion(request):
+    # 1. Base QuerySet
     transacciones = TransaccionCompra.objects.select_related('costo', 'costo__tipo_costo').all()
     
+    # 2. Obtener Parámetros de Filtro
     item_costo_id = request.GET.get('item_costo')  
-    if item_costo_id:
-        transacciones = transacciones.filter(costo_id=item_costo_id)
-
     fecha_inicio = request.GET.get('fecha_inicio')
     fecha_fin = request.GET.get('fecha_fin')
     filtro_rapido = request.GET.get('filtro_rapido')
 
+    # 3. Aplicar Filtro por Item Costo
+    if item_costo_id:
+        transacciones = transacciones.filter(costo_id=item_costo_id)
+
+    # 4. Aplicar Filtro Rápido 'Hoy'
     if filtro_rapido == 'hoy':
         hoy = timezone.localdate()
         transacciones = transacciones.filter(created_at__date=hoy)
         fecha_inicio = None
         fecha_fin = None
     
+    # 5. Aplicar Filtro por Rango de Fechas
     elif fecha_inicio and fecha_fin:
         try:
             fecha_inicio_dt = datetime.datetime.strptime(fecha_inicio, '%Y-%m-%d').date()
@@ -363,6 +368,13 @@ def transaccion(request):
         except ValueError:
             messages.error(request, 'El formato de las fechas ingresadas no es válido.')
 
+    # 6. Calcular el Gasto Total (Agregación)
+    # Usa .aggregate(Sum('campo')) en el QuerySet filtrado
+    gasto_total_resultado = transacciones.aggregate(total=Sum('costo_total'))
+    # Obtiene el valor y usa 0.00 si es None (cuando no hay transacciones)
+    gasto_total = gasto_total_resultado['total'] if gasto_total_resultado['total'] is not None else 0.00
+
+    # 7. Contexto para la Plantilla
     context = {
         'transacciones': transacciones,
         'item_costos': Costo.objects.all(), 
@@ -370,6 +382,8 @@ def transaccion(request):
         'selected_fecha_inicio': fecha_inicio,
         'selected_fecha_fin': fecha_fin,
         'selected_filtro_rapido': filtro_rapido,
+        # ¡Añadir el gasto total al contexto!
+        'gasto_total': gasto_total, 
     }
 
     return render(request, 'centro_costos/transaccion.html', context)
