@@ -335,9 +335,10 @@ def categoria_eliminar(request, pk):
 @login_required
 @rol_requerido('administrador')
 def transaccion(request):
+    
     transacciones = TransaccionCompra.objects.select_related('costo', 'costo__tipo_costo').all()
     
-    item_costo_id = request.GET.get('item_costo')  
+    item_costo_id = request.GET.get('item_costo') 
     fecha_inicio = request.GET.get('fecha_inicio')
     fecha_fin = request.GET.get('fecha_fin')
     filtro_rapido = request.GET.get('filtro_rapido')
@@ -387,7 +388,7 @@ def transaccion_crear(request):
         form = TransaccionCompraForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Transacción creada exitosamente')
+            messages.success(request, 'Transacción creada exitosamente') 
             return redirect('transaccion')
     else:
         form = TransaccionCompraForm()
