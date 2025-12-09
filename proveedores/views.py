@@ -29,7 +29,7 @@ def validar_telefono(telefono):
 
 
 @login_required 
-@rol_requerido_pe('administrador')
+@rol_requerido_pe('administrador',"proveedor")
 def proveedor(request):
     """Muestra el listado paginado de proveedores activos."""
     proveedores = Proveedor.objects.filter(deleted_at__isnull=True).order_by('nombre')
