@@ -40,7 +40,7 @@ def cambiar_contrasena(request):
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            update_session_auth_hash(request, user)  
+            update_session_auth_hash(request, user) 	
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': True, 'redirect_url': '/'})
@@ -126,7 +126,7 @@ def centro_costos(request):
 
 
 @login_required
-@rol_requerido_pe('administrador')
+@rol_requerido('administrador') 
 def costo(request):
     costos = Costo.objects.select_related('tipo_costo').all()
     costos = Costo.objects.all().order_by('id')
@@ -198,7 +198,7 @@ def costo_eliminar(request, pk):
 
     return render(request, 'centro_costos/costo_eliminar.html', {'costo': costo})
 
-@login_required
+@login_required 
 def dashboard(request):
     centros = Centro_Costos.objects.select_related('tipo_costo')
     visitas = request.session.get('visitas', 0)
@@ -212,7 +212,10 @@ def dashboard(request):
             'costos': costos,
         })
 
-    proveedores = Proveedor.objects.all()
+    if hasattr(request.user, 'rol') and request.user.rol == 'administrador':
+        proveedores = Proveedor.objects.all()
+    else:
+        proveedores = Proveedor.objects.none()
 
     context = {
         'centros_con_costos': centros_con_costos,
@@ -278,7 +281,7 @@ def exportar_periodos_excel(request):
 @rol_requerido('administrador')
 def categoria(request):
     search = request.GET.get('search', '')
-    categorias = TipoCosto.objects.all().order_by('id')  
+    categorias = TipoCosto.objects.all().order_by('id') 	
 
     if search:
         categorias = categorias.filter(nombre__icontains=search)

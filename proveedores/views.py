@@ -12,55 +12,24 @@ from produccion.models import Producto
 from produccion.forms import ProductoForm
 from common.decorators_prov import rol_requerido_proveedor 
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from openpyxl import Workbook
+
 
 
 def validar_rut(rut):
-    rut_limpio = rut.replace(".", "").replace("-", "")
-    
-    if len(rut_limpio) < 2:
-        return False
-    
-    rut_numero = rut_limpio[:-1]
-    dv = rut_limpio[-1].upper()
-    
-    if not rut_numero.isdigit():
-        return False
-    
-    suma = 0
-    multiplo = 2
-    
-    for digito in reversed(rut_numero):
-        suma += int(digito) * multiplo
-        multiplo = 2 if multiplo == 7 else multiplo + 1
-    
-    dv_calculado = 11 - (suma % 11)
-    
-    if dv_calculado == 11:
-        dv_calculado = '0'
-    elif dv_calculado == 10:
-        dv_calculado = 'K'
-    else:
-        dv_calculado = str(dv_calculado)
-    
-    return dv == dv_calculado
-
+    """Valida formato simple de RUT chileno: 12.345.678-9 o 12345678-9"""
+    return bool(re.match(r'^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$', rut))
 
 def validar_telefono(telefono):
-    if not telefono:
-        return True  
-    
-    tel_limpio = re.sub(r'[\s\-\(\)]', '', telefono)
-    
-    if not re.match(r'^\+?\d+$', tel_limpio):
-        return False
-    
-    tel_numeros = tel_limpio.replace('+', '')
-    
-    return 8 <= len(tel_numeros) <= 15
+    """Valida formato chileno: +569XXXXXXXX (debe incluir +)"""
+    return bool(re.match(r'^\+569\d{8}$', telefono))
 
 
 
+@login_required 
 def proveedor(request):
+    """Muestra el listado paginado de proveedores activos."""
     proveedores = Proveedor.objects.filter(deleted_at__isnull=True).order_by('nombre')
     
     search = request.GET.get('search', '')
@@ -80,7 +49,7 @@ def proveedor(request):
         deleted_at__isnull=True
     ).values_list('ciudad', flat=True).distinct().order_by('ciudad')
     
-    paginator = Paginator(proveedores, 15)  
+    paginator = Paginator(proveedores, 15) 	
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -94,9 +63,11 @@ def proveedor(request):
     return render(request, 'proveedores/proveedor.html', context)
 
 
+@login_required 
 def proveedor_detalle(request, pk):
+    """Muestra el detalle de un proveedor y sus productos asociados."""
     proveedor = get_object_or_404(Proveedor, pk=pk)
-    productos = proveedor.productos.all()  
+    productos = proveedor.productos.all() 	
 
     context = {
         'proveedor': proveedor,
@@ -104,18 +75,12 @@ def proveedor_detalle(request, pk):
     }
     return render(request, 'proveedores/proveedor_detalle.html', context)
 
-def validar_rut(rut):
-    """Valida formato simple de RUT chileno: 12.345.678-9 o 12345678-9"""
-    return bool(re.match(r'^\d{1,2}\.?\d{3}\.?\d{3}-[\dkK]$', rut))
 
-def validar_telefono(telefono):
-    """Valida formato chileno: +569XXXXXXXX o 9XXXXXXXX"""
-    return bool(re.match(r'^(\+?56)?(\s?9\d{8})$', telefono))
 
 @login_required
 @rol_requerido_proveedor('proveedor', 'administrador')
 def proveedor_crear(request):
-    """Crea un nuevo proveedor según el modelo actual."""
+    """Crea un nuevo proveedor."""
     if request.method == 'POST':
         nombre = request.POST.get('nombre', '').strip()
         rut = request.POST.get('rut', '').strip()
@@ -126,42 +91,33 @@ def proveedor_crear(request):
 
         errores = []
 
-        # Validación del nombre
         if not nombre:
             errores.append('El nombre es obligatorio.')
         elif len(nombre) > 50:
             errores.append('El nombre no puede exceder los 50 caracteres.')
 
-        # Validación del RUT
         if not rut:
             errores.append('El RUT es obligatorio.')
         elif not validar_rut(rut):
             errores.append('El formato del RUT no es válido (usa 12.345.678-9).')
-        elif Proveedor.objects.filter(rut=rut).exists():
-            errores.append('Ya existe un proveedor con ese RUT.')
+        elif Proveedor.objects.filter(rut=rut, deleted_at__isnull=True).exists():
+            errores.append('Ya existe un proveedor activo con ese RUT.')
 
-        # Validación del teléfono
         if telefono:
             if not telefono.startswith('+'):
                 errores.append('El teléfono debe comenzar con el símbolo +')
             elif not validar_telefono(telefono):
-                errores.append('El formato del teléfono no es válido (usa +569XXXXXXXX).')
+                 errores.append('El formato del teléfono no es válido (usa +569XXXXXXXX).')
 
-        # Validación del correo
         if correo:
-            if '@' not in correo:
-                errores.append('El correo debe contener el símbolo @')
-            else:
-                try:
-                    validate_email(correo)
-                except ValidationError:
-                    errores.append('El formato del correo no es válido.')
+            try:
+                validate_email(correo)
+            except ValidationError:
+                errores.append('El formato del correo no es válido.')
 
-        # Validación de la ciudad
         if ciudad and len(ciudad) > 30:
             errores.append('La ciudad no puede exceder los 30 caracteres.')
 
-        # Si hay errores → mostrar en la misma página
         if errores:
             for error in errores:
                 messages.error(request, error)
@@ -176,7 +132,6 @@ def proveedor_crear(request):
             }
             return render(request, 'proveedores/proveedor_crear.html', context)
 
-        # Crear proveedor si todo es válido
         Proveedor.objects.create(
             nombre=nombre,
             rut=rut,
@@ -186,31 +141,21 @@ def proveedor_crear(request):
             ciudad=ciudad
         )
 
-        # Mostrar mensaje de éxito (sin redirect aún)
         messages.success(request, f'Proveedor "{nombre}" creado exitosamente ✅')
 
-        # Limpiar el formulario (dejarlo vacío)
-        context = {
-            'nombre': '',
-            'rut': '',
-            'telefono': '',
-            'correo': '',
-            'direccion': '',
-            'ciudad': '',
-        }
+        context = {}
         return render(request, 'proveedores/proveedor_crear.html', context)
 
     return render(request, 'proveedores/proveedor_crear.html')
 
+
+@login_required 
 @rol_requerido_proveedor('proveedor', 'administrador')
 def proveedor_act(request, pk):
+    """Actualiza un proveedor existente."""
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
     
-    print(f"Método: {request.method}")  
-    
     if request.method == 'POST':
-        print("Entró al POST")  
-        
         nombre = request.POST.get('nombre', '').strip()
         rut = request.POST.get('rut', '').strip()
         telefono = request.POST.get('telefono', '').strip()
@@ -218,18 +163,24 @@ def proveedor_act(request, pk):
         direccion = request.POST.get('direccion', '').strip()
         ciudad = request.POST.get('ciudad', '').strip()
         
-        print(f"Datos recibidos - Nombre: {nombre}, RUT: {rut}") 
-        
         errores = []
         
         if not nombre:
             errores.append('El nombre es obligatorio')
+        
         if not rut:
             errores.append('El RUT es obligatorio')
         elif not validar_rut(rut):
             errores.append('El RUT ingresado no es válido')
-        if telefono and not validar_telefono(telefono):
-            errores.append('El formato del teléfono no es válido')
+        elif Proveedor.objects.filter(rut=rut, deleted_at__isnull=True).exclude(pk=proveedor.pk).exists():
+            errores.append('Ya existe otro proveedor activo con ese RUT.')
+        
+        if telefono:
+            if not telefono.startswith('+'):
+                errores.append('El teléfono debe comenzar con el símbolo +')
+            elif not validar_telefono(telefono):
+                errores.append('El formato del teléfono no es válido')
+        
         if not correo:
             errores.append('El correo es obligatorio')
         else:
@@ -237,12 +188,12 @@ def proveedor_act(request, pk):
                 validate_email(correo)
             except ValidationError:
                 errores.append('El formato del correo no es válido')
+                
         if not direccion:
             errores.append('La dirección es obligatoria')
         if not ciudad:
             errores.append('La ciudad es obligatoria')
         
-        print(f"Errores: {errores}") 
         
         if errores:
             for error in errores:
@@ -262,7 +213,7 @@ def proveedor_act(request, pk):
             }
             return render(request, 'proveedores/proveedor_act.html', context)
         
-        print("Guardando cambios...")  
+        
         proveedor.nombre = nombre
         proveedor.rut = rut
         proveedor.telefono = telefono if telefono else None
@@ -270,13 +221,11 @@ def proveedor_act(request, pk):
         proveedor.direccion = direccion
         proveedor.ciudad = ciudad
         proveedor.save()
-        print("Cambios guardados exitosamente") 
-
+        
         messages.success(request, f'Proveedor "{nombre}" actualizado exitosamente.')
 
         return redirect('proveedor')
     
-    print("Entró al GET")  
     context = {
         'proveedor': proveedor,
         'is_edit': True
@@ -287,6 +236,7 @@ def proveedor_act(request, pk):
 @login_required
 @rol_requerido_proveedor('administrador')
 def proveedor_eliminar(request, pk):
+    """Realiza la eliminación lógica (soft-delete) de un proveedor."""
     proveedor = get_object_or_404(Proveedor, pk=pk, deleted_at__isnull=True)
     
     if request.method == 'POST':
@@ -300,9 +250,11 @@ def proveedor_eliminar(request, pk):
     }
     return render(request, 'proveedores/proveedor_confirm_elim.html', context)
 
+
 @login_required
 @rol_requerido_proveedor('administrador')
 def proveedor_restore(request, pk):
+    """Restaura (quita soft-delete) un proveedor."""
     proveedor = get_object_or_404(Proveedor, pk=pk)
     
     if request.method == 'POST':
@@ -312,15 +264,18 @@ def proveedor_restore(request, pk):
             messages.success(request, f'Proveedor "{proveedor.nombre}" restaurado exitosamente')
         else:
             messages.warning(request, 'El proveedor no estaba eliminado')
-        return redirect('proveedores')
+        return redirect('proveedor_deleted_list') 
     
     context = {
         'proveedor': proveedor
     }
     return render(request, 'proveedores/proveedor_confirm_restore.html', context)
 
+
+@login_required 
 @rol_requerido_proveedor('administrador')
 def proveedor_deleted_list(request):
+    """Muestra la lista de proveedores eliminados (soft-deleted)."""
     proveedores = Proveedor.objects.filter(deleted_at__isnull=False).order_by('-deleted_at')
     
     search = request.GET.get('search', '')
@@ -337,8 +292,11 @@ def proveedor_deleted_list(request):
     }
     return render(request, 'proveedores/proveedor_deleted_list.html', context)
 
+
+@login_required 
 @rol_requerido_proveedor('administrador')
 def proveedor_permanent_delete(request, pk):
+    """Elimina permanentemente un proveedor de la base de datos."""
     proveedor = get_object_or_404(Proveedor, pk=pk)
     
     if request.method == 'POST':
@@ -352,7 +310,11 @@ def proveedor_permanent_delete(request, pk):
     }
     return render(request, 'proveedores/proveedor_confirm_permanent_delete.html', context)
 
+
+@login_required 
+@rol_requerido_proveedor('proveedor', 'administrador')
 def proveedor_dashboard(request, proveedor_id):
+    """Dashboard para la gestión de productos de un proveedor."""
     proveedor = get_object_or_404(Proveedor, pk=proveedor_id, deleted_at__isnull=True)
     productos = Producto.objects.filter(proveedor=proveedor).order_by('nombre')
 
@@ -364,6 +326,8 @@ def proveedor_dashboard(request, proveedor_id):
             producto.save()
             messages.success(request, f'✅ Producto "{producto.nombre}" agregado correctamente.')
             return redirect('proveedor_dashboard', proveedor_id=proveedor.id)
+        
+        messages.error(request, 'Error al agregar producto. Revisa los campos.')
     else:
         producto_form = ProductoForm()
 
@@ -374,16 +338,15 @@ def proveedor_dashboard(request, proveedor_id):
     }
     return render(request, 'proveedores/prov_dashboard.html', context)
 
-from django.http import HttpResponse
-from openpyxl import Workbook
-from .models import Proveedor 
 
+@rol_requerido_proveedor('administrador') 
 def exportar_proveedores_excel(request):
+    """Exporta la lista completa de proveedores a un archivo Excel."""
     wb = Workbook()
     ws = wb.active
     ws.title = "Proveedores"
 
-    columnas = ["ID", "Nombre", "RUT", "Teléfono", "Correo", "Dirección", "Descripción"]
+    columnas = ["ID", "Nombre", "RUT", "Teléfono", "Correo", "Dirección", "Ciudad"]
     ws.append(columnas)
 
     proveedores = Proveedor.objects.all()
@@ -396,7 +359,7 @@ def exportar_proveedores_excel(request):
             p.telefono if hasattr(p, "telefono") else "",
             p.correo if hasattr(p, "correo") else "",
             p.direccion if hasattr(p, "direccion") else "",
-            p.descripcion if hasattr(p, "descripcion") else "",
+            p.ciudad if hasattr(p, "ciudad") else "",
         ])
 
     response = HttpResponse(
