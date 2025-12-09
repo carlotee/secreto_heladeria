@@ -15,10 +15,6 @@
         <form method="post" id="registro-form">
             {% csrf_token %}
             
-            {# ========================================================= #}
-            {# Renderización Campo por Campo para un control preciso de errores #}
-            {# Usando los nombres de campo EXACTOS de tu RegistroForm: username, email, numero, rol, password, password_confirm #}
-            {# ========================================================= #}
             
             {# 1. Campo Usuario #}
             <div class="form-field">
@@ -88,9 +84,6 @@
         <a href="{% url 'login' %}" class="btn-volver">Volver a inicio de sesión</a>
     </div>
 
-    {# ========================================================= #}
-    {# Lógica de SweetAlert para Mensajes del framework Django #}
-    {# ========================================================= #}
     {% if messages %}
         {% for message in messages %}
             {% if 'registro_exitoso' in message.message %}
