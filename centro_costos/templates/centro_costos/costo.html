@@ -31,7 +31,6 @@
 <table class="table table-striped table-hover align-middle">
     <thead class="table-light">
         <tr>
-            {# CAMBIO 1: Encabezado para la columna de conteo #}
             <th>#</th>
             <th>Descripción</th>
             <th>Categoría</th>
@@ -41,7 +40,6 @@
     <tbody>
         {% for costo in costos %}
         <tr>
-            {# CAMBIO 2: Uso de forloop.counter para el número consecutivo (1, 2, 3...) #}
             <td>{{ forloop.counter }}</td> 
             
             <td>{{ costo.descripcion }}</td>
