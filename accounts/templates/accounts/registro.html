@@ -1,71 +1,68 @@
-<div class="form-container">
-    <h2>Registro</h2>
-    <form method="post" id="registro-form">
-        {% csrf_token %}
-        
-        {# Renderización campo por campo #}
-        
-        <div class="form-field">
-            {{ form.username.label_tag }}
-            {{ form.username }}
-            {# Mostrar errores específicos del campo Usuario (si existen) #}
-            {% for error in form.username.errors %}
-                <p class="errorlist">{{ error }}</p>
-            {% endfor %}
-        </div>
-        
-        <div class="form-field">
-            {{ form.email.label_tag }}
-            {{ form.email }}
-            {# Mostrar errores específicos del campo Correo electrónico (¡Aquí es donde quieres que aparezca!) #}
-            {% for error in form.email.errors %}
-                <p class="errorlist error-email">{{ error }}</p>
-            {% endfor %}
-        </div>
+<form method="post" id="registro-form">
+    {% csrf_token %}
+    
+    {# 1. Campo Usuario #}
+    <div class="form-field">
+        <label for="{{ form.username.id_for_label }}">Usuario:</label>
+        {{ form.username }}
+        {% for error in form.username.errors %}
+            <p class="error-text">{{ error }}</p>
+        {% endfor %}
+    </div>
+    
+    {# 2. Campo Correo electrónico (Aparición de error controlada) #}
+    <div class="form-field">
+        <label for="{{ form.email.id_for_label }}">Correo electrónico:</label>
+        {{ form.email }}
+        {% for error in form.email.errors %}
+            <p class="error-text error-email-fix">{{ error }}</p>
+        {% endfor %}
+    </div>
 
-        <div class="form-field">
-            {{ form.telefono.label_tag }}
-            {{ form.telefono }}
-            {% for error in form.telefono.errors %}
-                <p class="errorlist">{{ error }}</p>
-            {% endfor %}
-        </div>
+    {# 3. Campo Teléfono #}
+    <div class="form-field">
+        <label for="{{ form.telefono.id_for_label }}">Teléfono:</label>
+        {{ form.telefono }}
+        {% for error in form.telefono.errors %}
+            <p class="error-text">{{ error }}</p>
+        {% endfor %}
+    </div>
 
-        <div class="form-field">
-            {{ form.rol.label_tag }}
-            {{ form.rol }}
-            {% for error in form.rol.errors %}
-                <p class="errorlist">{{ error }}</p>
-            {% endfor %}
-        </div>
-        
-        {# Campos de Contraseña (Ajusta los nombres de campo si son diferentes, aquí asumo password y password2) #}
-        <div class="form-field">
-            {{ form.password.label_tag }}
-            {{ form.password }}
-            {% for error in form.password.errors %}
-                <p class="errorlist">{{ error }}</p>
-            {% endfor %}
-        </div>
-        
-        <div class="form-field">
-            {{ form.password2.label_tag }} {# O el nombre de tu campo de confirmación #}
-            {{ form.password2 }}
-            {% for error in form.password2.errors %}
-                <p class="errorlist">{{ error }}</p>
-            {% endfor %}
-        </div>
+    {# 4. Campo Rol #}
+    <div class="form-field">
+        <label for="{{ form.rol.id_for_label }}">Rol:</label>
+        {{ form.rol }}
+        {% for error in form.rol.errors %}
+            <p class="error-text">{{ error }}</p>
+        {% endfor %}
+    </div>
+    
+    {# 5. Campo Contraseña (Ajusta el nombre real del campo si no es 'password') #}
+    <div class="form-field">
+        <label for="{{ form.contrasena.id_for_label }}">Contraseña:</label>
+        {{ form.contrasena }}
+        {% for error in form.contrasena.errors %}
+            <p class="error-text">{{ error }}</p>
+        {% endfor %}
+    </div>
+    
+    {# 6. Campo Confirmar contraseña (Ajusta el nombre real del campo si no es 'password2') #}
+    <div class="form-field">
+        <label for="{{ form.confirmar_contrasena.id_for_label }}">Confirmar contraseña:</label>
+        {{ form.confirmar_contrasena }}
+        {% for error in form.confirmar_contrasena.errors %}
+            <p class="error-text">{{ error }}</p>
+        {% endfor %}
+    </div>
 
-        {# Errores No-de-campo (como errores de validación global) #}
-        {% if form.non_field_errors %}
-            <div class="non-field-errors">
-                {% for error in form.non_field_errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
+    {# Errores de validación global del formulario (si existen) #}
+    {% if form.non_field_errors %}
+        <div class="non-field-errors">
+            {% for error in form.non_field_errors %}
+                <p class="error-text">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
 
-        <button type="submit">Registrarse</button>
-    </form>
-    <a href="{% url 'login' %}" class="btn-volver">Volver a inicio de sesión</a>
-</div>
+    <button type="submit">Registrarse</button>
+</form>
