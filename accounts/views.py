@@ -39,6 +39,7 @@ def registro(request):
         form = RegistroForm()
     
     return render(request, 'accounts/registro.html', {'form': form})
+
 def login_view(request):
     User = get_user_model()
 
