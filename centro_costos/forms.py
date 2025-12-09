@@ -37,18 +37,29 @@ class TipoCostoForm(forms.ModelForm):
         widgets = {
             'nombre': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Nombre de la categoría'
+                'placeholder': 'Nombre de la categoría',
+                'maxlength': 30, 
             }),
         }
 
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
-        validar_solo_letras(nombre)
-        qs = TipoCosto.objects.filter(nombre__iexact=nombre)
-        if self.instance.pk:
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
-            raise ValidationError("Ya existe una categoría con ese nombre.")
+        
+        if nombre:
+            if len(nombre) < 5:
+                raise ValidationError("El nombre de la categoría debe tener un mínimo de 5 caracteres.")
+            
+            if len(nombre) > 30:
+                raise ValidationError("El nombre de la categoría no puede exceder los 30 caracteres.")
+
+            validar_solo_letras(nombre)
+            
+            qs = TipoCosto.objects.filter(nombre__iexact=nombre)
+            if self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise ValidationError("Ya existe una categoría con ese nombre.")
+                
         return nombre
 
 class CentroCostosForm(forms.ModelForm):
