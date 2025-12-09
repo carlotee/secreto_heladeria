@@ -141,7 +141,6 @@ class ConfirmarEliminarCostoForm(forms.Form):
         label="Confirmo la eliminación de este Item Costo",
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
-
 class TransaccionCompraForm(forms.ModelForm):
     """Formulario para crear o actualizar una transacción"""
     class Meta:
@@ -154,7 +153,10 @@ class TransaccionCompraForm(forms.ModelForm):
         }
         
         widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'nombre': forms.TextInput(attrs={
+                'class': 'form-control',
+                'maxlength': 40,
+            }),
             'costo': forms.Select(attrs={'class': 'form-select'}),
             'proveedor': forms.Select(attrs={'class': 'form-select'}),
             'costo_total': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
@@ -162,7 +164,16 @@ class TransaccionCompraForm(forms.ModelForm):
 
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
-        validar_solo_letras(nombre)
+        
+        if nombre:
+            if len(nombre) < 5:
+                raise ValidationError("El nombre de la transacción debe tener un mínimo de 5 caracteres.")
+            
+            if len(nombre) > 40:
+                raise ValidationError("El nombre de la transacción no puede exceder los 40 caracteres.")
+            
+            validar_solo_letras(nombre)
+            
         return nombre
 
     def clean(self):
@@ -181,12 +192,17 @@ class TransaccionCompraForm(forms.ModelForm):
     def clean_costo_total(self):
         costo_total = self.cleaned_data.get('costo_total')
 
-        if costo_total <= 0:
-            raise ValidationError("El costo total debe ser mayor a 0")
+        if costo_total is not None:
+            if costo_total <= 0:
+                raise ValidationError("El costo total debe ser mayor a 0")
 
-        str_costo = f"{costo_total:.2f}"  
-        entero = str_costo.split('.')[0]  
-        if len(entero) > 10:
-            raise ValidationError("El costo total no puede tener más de 10 dígitos antes del punto decimal")
+            str_costo = f"{costo_total:.2f}" 
+            if '.' in str_costo:
+                entero = str_costo.split('.')[0] 
+            else:
+                entero = str_costo
+                
+            if len(entero) > 10:
+                raise ValidationError("El costo total no puede tener más de 10 dígitos antes del punto decimal")
 
         return costo_total
