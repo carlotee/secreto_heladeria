@@ -2,6 +2,7 @@ import re
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Periodo, TipoCosto, Centro_Costos, Costo, TransaccionCompra
+from .validators import validar_solo_letras
 
 def validar_solo_letras(valor):
     if not re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$', valor):
@@ -77,7 +78,16 @@ class CostoForm(forms.ModelForm):
 
     def clean_descripcion(self):
         descripcion = self.cleaned_data.get('descripcion')
-        validar_solo_letras(descripcion)
+        
+        if descripcion:
+            if len(descripcion) < 5:
+                raise forms.ValidationError("La descripción debe tener un mínimo de 5 caracteres.")
+            
+            if len(descripcion) > 35:
+                raise forms.ValidationError("La descripción no puede exceder los 35 caracteres.")
+        
+        validar_solo_letras(descripcion) 
+        
         return descripcion
 
     def clean(self):
@@ -87,10 +97,13 @@ class CostoForm(forms.ModelForm):
 
         if descripcion and tipo_costo:
             qs = Costo.objects.filter(descripcion=descripcion, tipo_costo=tipo_costo)
+            
             if self.instance.pk:
                 qs = qs.exclude(pk=self.instance.pk)
+                
             if qs.exists():
                 raise forms.ValidationError("Item Costo con esta Descripción y Categoría ya existe.")
+                
         return cleaned_data
 
 class ConfirmarEliminarCostoForm(forms.Form):
