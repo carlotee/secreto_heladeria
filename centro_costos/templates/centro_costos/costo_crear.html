@@ -2,21 +2,38 @@
 
 {% block content %}
 <head>
-  <meta charset="UTF-8">
-  <title>Crear Item Costo</title>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8">
+    <title>Crear Item Costo</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-  <h1>Crear Item Costo</h1>
+    <h1>Crear Item Costo</h1>
 
-  <form id="form-crear" method="post" action="{% url 'costo_crear' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Guardar</button>
-  </form>
+    <form id="form-crear" method="post" action="{% url 'costo_crear' %}">
+        {% csrf_token %}
+        {# ---------------------------------------------------- #}
+        {# Mostrar errores de campo directamente, sin SweetAlert2 #}
+        {# ---------------------------------------------------- #}
+        {% for field in form %}
+            <div class="form-field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                {{ field }}
+                {% for error in field.errors %}
+                    <p class="error-text">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        
+        {# Errores globales del formulario #}
+        {% for error in form.non_field_errors %}
+            <p class="error-text">{{ error }}</p>
+        {% endfor %}
+        
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
 
-  <a href="{% url 'costo' %}" class="btn btn-secondary">Volver al listado</a>
+    <a href="{% url 'costo' %}" class="btn btn-secondary">Volver al listado</a>
 </body>
 
 <script>
@@ -25,27 +42,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     form.addEventListener("submit", function(e) {
         e.preventDefault(); 
-
-        const errores = [];
-        {% for field in form %}
-            {% for error in field.errors %}
-                errores.push("{{ error|escapejs }}");
-            {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-            errores.push("{{ error|escapejs }}");
-        {% endfor %}
-
-        if (errores.length > 0) {
-            Swal.fire({
-                title: "Error",
-                html: errores.join("<br>"),
-                icon: "error",
-                confirmButtonColor: "#d33"
-            });
-            return;
-        }
-
+        
+        
         Swal.fire({
             title: "¿Deseas guardar este Item Costo?",
             text: "Revisa que todos los datos sean correctos antes de continuar.",
@@ -73,10 +71,16 @@ document.addEventListener("DOMContentLoaded", function() {
                     timer: 1500,
                     showConfirmButton: false
                 });
+            {% elif message.tags == 'error' %}
+                Swal.fire({
+                    title: "Error",
+                    text: "{{ message|escapejs }}",
+                    icon: "error",
+                    confirmButtonColor: "#d33"
+                });
             {% endif %}
         {% endfor %}
     {% endif %}
 });
 </script>
 {% endblock %}
-
