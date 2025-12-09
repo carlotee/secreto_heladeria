@@ -14,6 +14,7 @@ from common.decorators_prov import rol_requerido_proveedor
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from openpyxl import Workbook
+from common.decorators_pe import rol_requerido_pe
 
 
 
@@ -28,6 +29,7 @@ def validar_telefono(telefono):
 
 
 @login_required 
+@rol_requerido_pe('administrador')
 def proveedor(request):
     """Muestra el listado paginado de proveedores activos."""
     proveedores = Proveedor.objects.filter(deleted_at__isnull=True).order_by('nombre')
