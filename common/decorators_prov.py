@@ -6,9 +6,6 @@ def rol_requerido_proveedor(*roles_permitidos):
     """
     Decorador que verifica si el usuario tiene uno de los roles permitidos
     para las vistas del módulo de Proveedores.
-    
-    Uso:
-        @rol_requerido_proveedor('Proveedor', 'Administrador')
     """
     def decorator(view_func):
         @wraps(view_func)
@@ -36,7 +33,7 @@ def rol_requerido_proveedor(*roles_permitidos):
                     f'Tu rol actual es: {request.user.get_rol_display()}. '
                     f'Se requiere uno de estos roles: {", ".join(roles_permitidos)}'
                 )
-                return redirect('proveedor')  
+                return redirect('dashboard') 	
 
             return view_func(request, *args, **kwargs)
         return wrapper

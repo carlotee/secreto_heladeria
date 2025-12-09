@@ -6,9 +6,6 @@ def rol_requerido_costos(*roles_permitidos):
     """
     Decorador que verifica si el usuario tiene uno de los roles permitidos
     para las vistas del módulo de Centro de Costos.
-    
-    Uso:
-        @rol_requerido_costos('Administrador')
     """
     def decorator(view_func):
         @wraps(view_func)
@@ -36,8 +33,8 @@ def rol_requerido_costos(*roles_permitidos):
                     f'Tu rol actual es: {request.user.get_rol_display()}. '
                     f'Se requiere uno de estos roles: {", ".join(roles_permitidos)}'
                 )
-                return redirect('costo')  
-
+                return redirect('dashboard') 	
+                
             return view_func(request, *args, **kwargs)
         return wrapper
     return decorator
