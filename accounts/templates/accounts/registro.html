@@ -15,6 +15,10 @@
         <form method="post" id="registro-form">
             {% csrf_token %}
             
+            {# ========================================================= #}
+            {# Renderización Campo por Campo para un control preciso de errores #}
+            {# Usando los nombres de campo EXACTOS de tu RegistroForm: username, email, numero, rol, password, password_confirm #}
+            {# ========================================================= #}
             
             {# 1. Campo Usuario #}
             <div class="form-field">
@@ -25,7 +29,7 @@
                 {% endfor %}
             </div>
             
-            {# 2. Campo Correo electrónico (Error de posición corregido) #}
+            {# 2. Campo Correo electrónico #}
             <div class="form-field">
                 <label for="{{ form.email.id_for_label }}">Correo electrónico:</label>
                 {{ form.email }}
@@ -34,11 +38,11 @@
                 {% endfor %}
             </div>
 
-            {# 3. Campo Teléfono #}
+            {# 3. Campo Teléfono (Nombre Exacto: 'numero') #}
             <div class="form-field">
-                <label for="{{ form.telefono.id_for_label }}">Teléfono:</label>
-                {{ form.telefono }}
-                {% for error in form.telefono.errors %}
+                <label for="{{ form.numero.id_for_label }}">Teléfono:</label>
+                {{ form.numero }}
+                {% for error in form.numero.errors %}
                     <p class="error-text">{{ error }}</p>
                 {% endfor %}
             </div>
@@ -52,7 +56,7 @@
                 {% endfor %}
             </div>
             
-            {# 5. Campo Contraseña (Ajusta 'password' si tu campo se llama 'contrasena') #}
+            {# 5. Campo Contraseña (Nombre Exacto: 'password') #}
             <div class="form-field">
                 <label for="{{ form.password.id_for_label }}">Contraseña:</label>
                 {{ form.password }}
@@ -61,16 +65,16 @@
                 {% endfor %}
             </div>
             
-            {# 6. Campo Confirmar contraseña (Ajusta 'password2' si tu campo se llama 'confirmar_contrasena') #}
+            {# 6. Campo Confirmar contraseña (Nombre Exacto: 'password_confirm') #}
             <div class="form-field">
-                <label for="{{ form.password2.id_for_label }}">Confirmar contraseña:</label>
-                {{ form.password2 }}
-                {% for error in form.password2.errors %}
+                <label for="{{ form.password_confirm.id_for_label }}">Confirmar contraseña:</label>
+                {{ form.password_confirm }}
+                {% for error in form.password_confirm.errors %}
                     <p class="error-text">{{ error }}</p>
                 {% endfor %}
             </div>
 
-            {# Errores globales del formulario (Non-field errors) #}
+            {# Errores globales del formulario (Non-field errors, por ejemplo, "Las contraseñas no coinciden") #}
             {% if form.non_field_errors %}
                 <div class="non-field-errors">
                     {% for error in form.non_field_errors %}
@@ -84,18 +88,13 @@
         <a href="{% url 'login' %}" class="btn-volver">Volver a inicio de sesión</a>
     </div>
 
-    {% if form.errors and not form.non_field_errors %}
-    <script>
-    </script>
-    {% endif %}
-
     {# ========================================================= #}
-    {# Lógica de SweetAlert para ÉXITO #}
-    {# (Mantenemos la redirección vía JS por si no usas el patrón PRG con `redirect` en la vista) #}
+    {# Lógica de SweetAlert para Mensajes del framework Django #}
     {# ========================================================= #}
     {% if messages %}
         {% for message in messages %}
             {% if 'registro_exitoso' in message.message %}
+            {# Mensaje de Éxito #}
             <script>
                 Swal.fire({
                     title: "¡Registro Exitoso!",
@@ -109,6 +108,7 @@
                 });
             </script>
             {% elif message.tags == 'error' %}
+            {# Mensaje de Error General #}
             <script>
                 Swal.fire({
                     title: "Error",
