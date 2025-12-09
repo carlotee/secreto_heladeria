@@ -1,68 +1,117 @@
-<form method="post" id="registro-form">
-    {% csrf_token %}
-    
-    {# 1. Campo Usuario #}
-    <div class="form-field">
-        <label for="{{ form.username.id_for_label }}">Usuario:</label>
-        {{ form.username }}
-        {% for error in form.username.errors %}
-            <p class="error-text">{{ error }}</p>
-        {% endfor %}
-    </div>
-    
-    {# 2. Campo Correo electrónico (Aparición de error controlada) #}
-    <div class="form-field">
-        <label for="{{ form.email.id_for_label }}">Correo electrónico:</label>
-        {{ form.email }}
-        {% for error in form.email.errors %}
-            <p class="error-text error-email-fix">{{ error }}</p>
-        {% endfor %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <link rel="stylesheet" href="{% static 'accounts/registro.css' %}"> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Registro</h2>
+        <form method="post" id="registro-form">
+            {% csrf_token %}
+            
+            {# RENDERIZACIÓN CAMPO POR CAMPO PARA CONTROL DE ERRORES #}
+            
+            {# 1. Campo Usuario #}
+            <div class="form-field">
+                <label for="{{ form.username.id_for_label }}">Usuario:</label>
+                {{ form.username }}
+                {% for error in form.username.errors %}
+                    <p class="error-text">{{ error }}</p>
+                {% endfor %}
+            </div>
+            
+            {# 2. Campo Correo electrónico (Error de posición corregido) #}
+            <div class="form-field">
+                <label for="{{ form.email.id_for_label }}">Correo electrónico:</label>
+                {{ form.email }}
+                {% for error in form.email.errors %}
+                    <p class="error-text">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            {# 3. Campo Teléfono #}
+            <div class="form-field">
+                <label for="{{ form.telefono.id_for_label }}">Teléfono:</label>
+                {{ form.telefono }}
+                {% for error in form.telefono.errors %}
+                    <p class="error-text">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            {# 4. Campo Rol #}
+            <div class="form-field">
+                <label for="{{ form.rol.id_for_label }}">Rol:</label>
+                {{ form.rol }}
+                {% for error in form.rol.errors %}
+                    <p class="error-text">{{ error }}</p>
+                {% endfor %}
+            </div>
+            
+            {# 5. Campo Contraseña #}
+            <div class="form-field">
+                <label for="{{ form.contrasena.id_for_label }}">Contraseña:</label>
+                {{ form.contrasena }}
+                {% for error in form.contrasena.errors %}
+                    <p class="error-text">{{ error }}</p>
+                {% endfor %}
+            </div>
+            
+            {# 6. Campo Confirmar contraseña #}
+            <div class="form-field">
+                <label for="{{ form.confirmar_contrasena.id_for_label }}">Confirmar contraseña:</label>
+                {{ form.confirmar_contrasena }}
+                {% for error in form.confirmar_contrasena.errors %}
+                    <p class="error-text">{{ error }}
+                    {% if forloop.last %}
+                        </p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            {# Errores globales del formulario #}
+            {% if form.non_field_errors %}
+                <div class="non-field-errors">
+                    {% for error in form.non_field_errors %}
+                        <p class="error-text">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <button type="submit">Registrarse</button>
+        </form>
+        <a href="{% url 'login' %}" class="btn-volver">Volver a inicio de sesión</a>
     </div>
 
-    {# 3. Campo Teléfono #}
-    <div class="form-field">
-        <label for="{{ form.telefono.id_for_label }}">Teléfono:</label>
-        {{ form.telefono }}
-        {% for error in form.telefono.errors %}
-            <p class="error-text">{{ error }}</p>
-        {% endfor %}
-    </div>
-
-    {# 4. Campo Rol #}
-    <div class="form-field">
-        <label for="{{ form.rol.id_for_label }}">Rol:</label>
-        {{ form.rol }}
-        {% for error in form.rol.errors %}
-            <p class="error-text">{{ error }}</p>
-        {% endfor %}
-    </div>
-    
-    {# 5. Campo Contraseña (Ajusta el nombre real del campo si no es 'password') #}
-    <div class="form-field">
-        <label for="{{ form.contrasena.id_for_label }}">Contraseña:</label>
-        {{ form.contrasena }}
-        {% for error in form.contrasena.errors %}
-            <p class="error-text">{{ error }}</p>
-        {% endfor %}
-    </div>
-    
-    {# 6. Campo Confirmar contraseña (Ajusta el nombre real del campo si no es 'password2') #}
-    <div class="form-field">
-        <label for="{{ form.confirmar_contrasena.id_for_label }}">Confirmar contraseña:</label>
-        {{ form.confirmar_contrasena }}
-        {% for error in form.confirmar_contrasena.errors %}
-            <p class="error-text">{{ error }}</p>
-        {% endfor %}
-    </div>
-
-    {# Errores de validación global del formulario (si existen) #}
-    {% if form.non_field_errors %}
-        <div class="non-field-errors">
-            {% for error in form.non_field_errors %}
-                <p class="error-text">{{ error }}</p>
-            {% endfor %}
-        </div>
+    {# Lógica de SweetAlert para ERRORES (Muestra errores no validados por el campo) #}
+    {% if form.errors %}
+    <script>
+    </script>
     {% endif %}
 
-    <button type="submit">Registrarse</button>
-</form>
+    {# Lógica de SweetAlert para ÉXITO (Requeriría la vista ajustada con `redirect`) #}
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'registro_exitoso' in message.message %}
+            <script>
+                Swal.fire({
+                    title: "¡Registro Exitoso!",
+                    text: "Tu cuenta ha sido creada. Redirigiendo al login...",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                }).then(() => {
+                    window.location.href = "{% url 'login' %}"; 
+                });
+            </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
