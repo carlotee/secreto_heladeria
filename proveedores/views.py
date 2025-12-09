@@ -12,6 +12,7 @@ from produccion.models import Producto
 from produccion.forms import ProductoForm
 from common.decorators_prov import rol_requerido_proveedor 
 from django.contrib.auth.decorators import login_required
+from common.decorators_pe import rol_requerido_pe
 
 
 def validar_rut(rut):
@@ -58,8 +59,8 @@ def validar_telefono(telefono):
     
     return 8 <= len(tel_numeros) <= 15
 
-
-
+@login_required
+@rol_requerido_pe('administrador')
 def proveedor(request):
     proveedores = Proveedor.objects.filter(deleted_at__isnull=True).order_by('nombre')
     

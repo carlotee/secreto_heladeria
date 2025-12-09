@@ -60,7 +60,8 @@ def cambiar_contrasena(request):
 
     return render(request, 'centro_costos/cambiar_contrasena.html', {'form': form})
 
-
+@login_required
+@rol_requerido_pe('administrador')
 def periodo(request):
     periodos = Periodo.objects.all().order_by('-año', '-mes')
     return render(request, 'centro_costos/periodo.html', {'periodos': periodos})
