@@ -72,7 +72,11 @@ class CostoForm(forms.ModelForm):
         model = Costo
         fields = ['descripcion', 'tipo_costo']
         widgets = {
-            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'descripcion': forms.Textarea(attrs={
+                'class': 'form-control', 
+                'rows': 3,
+                'maxlength': 35, 
+            }),
             'tipo_costo': forms.Select(attrs={'class': 'form-select'}),
         }
 
@@ -85,10 +89,23 @@ class CostoForm(forms.ModelForm):
             
             if len(descripcion) > 35:
                 raise forms.ValidationError("La descripción no puede exceder los 35 caracteres.")
-        
-        validar_solo_letras(descripcion) 
-        
+            
+            validar_solo_letras(descripcion) 
+            
         return descripcion
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        descripcion = cleaned_data.get('descripcion')
+        tipo_costo = cleaned_data.get('tipo_costo')
+
+        if descripcion and tipo_costo:
+            qs = Costo.objects.filter(descripcion=descripcion, tipo_costo=tipo_costo)
+            if self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            if qs.exists():
+                raise forms.ValidationError("Item Costo con esta Descripción y Categoría ya existe.")
+        return cleaned_data
 
     def clean(self):
         cleaned_data = super().clean()
