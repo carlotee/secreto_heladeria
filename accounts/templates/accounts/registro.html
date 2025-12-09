@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
-    <link rel="stylesheet" href="{% static 'accounts/registro.css' %}"> 
+    <link rel="stylesheet" href="{% static 'accounts/registro.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -15,7 +15,6 @@
         <form method="post" id="registro-form">
             {% csrf_token %}
             
-            {# RENDERIZACIÓN CAMPO POR CAMPO PARA CONTROL DE ERRORES #}
             
             {# 1. Campo Usuario #}
             <div class="form-field">
@@ -53,28 +52,25 @@
                 {% endfor %}
             </div>
             
-            {# 5. Campo Contraseña #}
+            {# 5. Campo Contraseña (Ajusta 'password' si tu campo se llama 'contrasena') #}
             <div class="form-field">
-                <label for="{{ form.contrasena.id_for_label }}">Contraseña:</label>
-                {{ form.contrasena }}
-                {% for error in form.contrasena.errors %}
+                <label for="{{ form.password.id_for_label }}">Contraseña:</label>
+                {{ form.password }}
+                {% for error in form.password.errors %}
                     <p class="error-text">{{ error }}</p>
                 {% endfor %}
             </div>
             
-            {# 6. Campo Confirmar contraseña #}
+            {# 6. Campo Confirmar contraseña (Ajusta 'password2' si tu campo se llama 'confirmar_contrasena') #}
             <div class="form-field">
-                <label for="{{ form.confirmar_contrasena.id_for_label }}">Confirmar contraseña:</label>
-                {{ form.confirmar_contrasena }}
-                {% for error in form.confirmar_contrasena.errors %}
-                    <p class="error-text">{{ error }}
-                    {% if forloop.last %}
-                        </p>
-                    {% endif %}
+                <label for="{{ form.password2.id_for_label }}">Confirmar contraseña:</label>
+                {{ form.password2 }}
+                {% for error in form.password2.errors %}
+                    <p class="error-text">{{ error }}</p>
                 {% endfor %}
             </div>
 
-            {# Errores globales del formulario #}
+            {# Errores globales del formulario (Non-field errors) #}
             {% if form.non_field_errors %}
                 <div class="non-field-errors">
                     {% for error in form.non_field_errors %}
@@ -88,13 +84,15 @@
         <a href="{% url 'login' %}" class="btn-volver">Volver a inicio de sesión</a>
     </div>
 
-    {# Lógica de SweetAlert para ERRORES (Muestra errores no validados por el campo) #}
-    {% if form.errors %}
+    {% if form.errors and not form.non_field_errors %}
     <script>
     </script>
     {% endif %}
 
-    {# Lógica de SweetAlert para ÉXITO (Requeriría la vista ajustada con `redirect`) #}
+    {# ========================================================= #}
+    {# Lógica de SweetAlert para ÉXITO #}
+    {# (Mantenemos la redirección vía JS por si no usas el patrón PRG con `redirect` en la vista) #}
+    {# ========================================================= #}
     {% if messages %}
         {% for message in messages %}
             {% if 'registro_exitoso' in message.message %}
@@ -108,6 +106,15 @@
                     timerProgressBar: true
                 }).then(() => {
                     window.location.href = "{% url 'login' %}"; 
+                });
+            </script>
+            {% elif message.tags == 'error' %}
+            <script>
+                Swal.fire({
+                    title: "Error",
+                    text: "{{ message }}",
+                    icon: "error",
+                    confirmButtonText: "Aceptar"
                 });
             </script>
             {% endif %}
